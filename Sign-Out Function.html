@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Out</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f8f8f8; }
+        .container { max-width: 400px; margin: 100px auto; text-align: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #d32f2f; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sign Out</h2>
+    <p>Click the button below to log out of your account.</p>
+    <button onclick="signOut()">Sign Out</button>
+</div>
+
+<script>
+    function signOut() {
+        // 模拟结束 session（本地存储方式）
+        localStorage.removeItem("isLoggedIn");
+
+        // 跳转回首页或登录页
+        window.location.href = "signin.html"; // 这里你可以改成 homepage.html
+    }
+</script>
+
+</body>
+</html>
