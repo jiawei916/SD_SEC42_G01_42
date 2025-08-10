@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign In</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            margin: 100px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+        h2 {
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        button {
+            width: 100%;
+            padding: 8px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sign In</h2>
+    <form id="signinForm">
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <button type="submit">Sign In</button>
+        <p id="errorMessage" class="error"></p>
+    </form>
+</div>
+
+<script>
+    document.getElementById("signinForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        var email = document.getElementById("email").value.trim();
+        var password = document.getElementById("password").value.trim();
+        var errorMessage = document.getElementById("errorMessage");
+
+        errorMessage.textContent = "";
+
+        var emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+        if (!emailPattern.test(email)) {
+            errorMessage.textContent = "Please enter a valid email address.";
+            return;
+        }
+
+        if (password === "") {
+            errorMessage.textContent = "Please enter your password.";
+            return;
+        }
+
+        var validEmail = "customer@example.com";
+        var validPassword = "12345";
+
+        if (email === validEmail && password === validPassword) {
+            window.location.href = "dashboard.html";
+        } else {
+            errorMessage.textContent = "Invalid email or password.";
+        }
+    });
+</script>
+
+</body>
+</html>
