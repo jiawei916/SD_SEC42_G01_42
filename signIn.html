@@ -1,20 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Sign In</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
-        .container { width: 300px; padding: 20px; margin: 100px auto; background: white; border-radius: 8px; box-shadow: 0px 0px 10px #ccc; }
-        h2 { text-align: center; }
-        input { width: 100%; padding: 8px; margin: 8px 0; }
-        button { width: 100%; padding: 8px; border: none; border-radius: 4px; cursor: pointer; }
-        .signin-btn { background: #4CAF50; color: white; }
-        .signin-btn:hover { background: #45a049; }
-        .register-btn { background: #2196F3; color: white; margin-top: 5px; }
-        .register-btn:hover { background: #1976D2; }
-        .error { color: red; font-size: 14px; margin-top: 5px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
@@ -23,11 +12,9 @@
     <form id="signinForm">
         <input type="email" id="email" placeholder="Enter your email" required>
         <input type="password" id="password" placeholder="Enter your password" required>
-        <button type="submit" class="signin-btn">Sign In</button>
+        <button type="submit">Sign In</button>
         <p id="errorMessage" class="error"></p>
     </form>
-    <!-- Register Button -->
-    <button class="register-btn" onclick="window.location.href='registerGuest.html'">Register</button>
 </div>
 
 <script>
@@ -52,18 +39,36 @@
             return;
         }
 
-        var validEmail = "customer@example.com";
-        var validPassword = "12345";
+    // Simulated accounts 
+    var accounts = {
+    "guest@example.com": {
+        password: "guest123",
+        role: "guest"
+    },
+    "staff@example.com": {
+        password: "staff123",
+        role: "staff"
+    },
+    "admin@example.com": {
+        password: "admin123",
+        role: "admin"
+    }
+};
+        if (accounts[email] && accounts[email].password === password) {
+    var role = accounts[email].role;
 
-        if (email === validEmail && password === validPassword) {
-            localStorage.setItem("isLoggedIn", "true");
-            window.location.href = "dashboard.html";
-        } else {
-            errorMessage.textContent = "Invalid email or password.";
-        }
+    if (role === "guest") {
+        window.location.href = "homepage.html";
+    } else if (role === "staff") {
+        window.location.href = "homepageStaff.html";
+    } else if (role === "admin") {
+        window.location.href = "homepageAdmin.html";
+    }
+} else {
+    errorMessage.textContent = "Invalid email or password.";
+}
     });
 </script>
 
 </body>
 </html>
-
