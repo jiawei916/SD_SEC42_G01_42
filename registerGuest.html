@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Guest Registration</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -13,11 +14,9 @@
         <input type="email" id="email" placeholder="Email Address" required>
         <input type="password" id="password" placeholder="Password" required>
         <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-        <button type="submit" class="register-btn">Register</button>
+        <button type="submit" style="margin-top: 8px;">Register</button>
         <p id="message"></p>
     </form>
-    <!-- Back to Sign In Button -->
-    <button class="back-btn" onclick="window.location.href='signIn.html'">Back to Sign In</button>
 </div>
 
 <script>
@@ -33,6 +32,7 @@ document.getElementById("registerForm").addEventListener("submit", function(even
     message.textContent = "";
     message.className = "";
 
+    // Email format validation
     let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
 
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
@@ -59,19 +59,14 @@ document.getElementById("registerForm").addEventListener("submit", function(even
         return;
     }
 
-    // Registration successful
-    message.textContent = "Registration successful! Redirecting to Sign In...";
+    // Simulate successful registration
+    message.textContent = "Registration successful! Welcome, " + name + ".";
     message.className = "success";
 
-    // Redirect to Sign In after 2 seconds
-    setTimeout(function() {
-        window.location.href = "signIn.html";
-    }, 2000);
+    // Optional: Reset form
+    document.getElementById("registerForm").reset();
 });
 </script>
 
 </body>
 </html>
-
-
-
