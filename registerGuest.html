@@ -17,6 +17,10 @@
         <button type="submit" style="margin-top: 8px;">Register</button>
         <p id="message"></p>
     </form>
+    <!-- Back to Sign In button -->
+    <p style="margin-top: 15px;">
+        <a href="signIn.html">Already have an account? Sign In</a>
+    </p>
 </div>
 
 <script>
@@ -60,13 +64,19 @@ document.getElementById("registerForm").addEventListener("submit", function(even
     }
 
     // Simulate successful registration
-    message.textContent = "Registration successful! Welcome, " + name + ".";
+    message.textContent = "Registration successful! Redirecting to Sign In...";
     message.className = "success";
 
-    // Optional: Reset form
+    // Reset form
     document.getElementById("registerForm").reset();
+
+    setTimeout(function() {
+        window.location.href = "signIn.html";
+    }, 1000);
 });
 </script>
 
 </body>
 </html>
+
+
