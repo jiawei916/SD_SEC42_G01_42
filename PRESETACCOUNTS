@@ -1,0 +1,11 @@
+guest@example.com
+  password: guest123
+  role: guest
+
+staff@example.com
+  password: staff123
+  role: staff
+
+admin@example.com
+  password: admin123
+  role: admin
