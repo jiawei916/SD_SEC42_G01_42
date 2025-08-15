@@ -1,0 +1,102 @@
+/* ===== Global Styles ===== */
+body { 
+  font-family: system-ui, sans-serif; 
+  margin: 0; 
+  background: #f9f9f9; 
+}
+
+/* ===== Header ===== */
+header {
+  text-align: center;
+  background: #004d80;
+  color: white;
+  padding: 20px 10px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+/* ===== Navigation Bar ===== */
+nav {
+  display: flex;
+  align-items: center;
+  background: #0077cc;
+  padding: 10px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== Main Content Box ===== */
+main {
+  max-width: 800px;
+  margin: 40px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ===== Sign-In Form Container ===== */
+.container {
+  max-width: 320px;
+  padding: 20px;
+  margin: 80px auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+/* Sign-In Heading */
+.container h2 {
+  text-align: center;
+  margin-top: 0;
+  color: #004d80;
+}
+
+/* Input Fields */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 10px;
+  background: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button:hover {
+  background: #005fa3;
+}
+
+/* Error Message */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: center;
+}
