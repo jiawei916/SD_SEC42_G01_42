@@ -3,7 +3,6 @@
 <head>
     <title>Sign In</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
 
@@ -12,9 +11,12 @@
     <form id="signinForm">
         <input type="email" id="email" placeholder="Enter your email" required>
         <input type="password" id="password" placeholder="Enter your password" required>
-        <button type="submit">Sign In</button>
+        <button type="submit" class="signin-btn" style="margin-top: 8px;">Sign In</button>
         <p id="errorMessage" class="error"></p>
     </form>
+
+    <!-- Register Button -->
+    <button class="register-btn" onclick="window.location.href='registerGuest.html'">Register</button>
 </div>
 
 <script>
@@ -39,34 +41,26 @@
             return;
         }
 
-    // Simulated accounts 
-    var accounts = {
-    "guest@example.com": {
-        password: "guest123",
-        role: "guest"
-    },
-    "staff@example.com": {
-        password: "staff123",
-        role: "staff"
-    },
-    "admin@example.com": {
-        password: "admin123",
-        role: "admin"
-    }
-};
-        if (accounts[email] && accounts[email].password === password) {
-    var role = accounts[email].role;
+        // Simulated accounts 
+        var accounts = {
+            "guest@example.com": { password: "guest123", role: "guest" },
+            "staff@example.com": { password: "staff123", role: "staff" },
+            "admin@example.com": { password: "admin123", role: "admin" }
+        };
 
-    if (role === "guest") {
-        window.location.href = "homepage.html";
-    } else if (role === "staff") {
-        window.location.href = "homepageStaff.html";
-    } else if (role === "admin") {
-        window.location.href = "homepageAdmin.html";
-    }
-} else {
-    errorMessage.textContent = "Invalid email or password.";
-}
+        if (accounts[email] && accounts[email].password === password) {
+            var role = accounts[email].role;
+
+            if (role === "guest") {
+                window.location.href = "homepage.html";
+            } else if (role === "staff") {
+                window.location.href = "homepageStaff.html";
+            } else if (role === "admin") {
+                window.location.href = "homepageAdmin.html";
+            }
+        } else {
+            errorMessage.textContent = "Invalid email or password.";
+        }
     });
 </script>
 
