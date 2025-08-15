@@ -22,13 +22,14 @@
         button {
             width: 100%;
             padding: 8px;
-            background: #4CAF50;
-            color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
-        button:hover { background: #45a049; }
+        .register-btn { background: #4CAF50; color: white; }
+        .register-btn:hover { background: #45a049; }
+        .back-btn { background: #2196F3; color: white; margin-top: 5px; }
+        .back-btn:hover { background: #1976D2; }
         .error { color: red; font-size: 14px; }
         .success { color: green; font-size: 14px; }
     </style>
@@ -42,9 +43,11 @@
         <input type="email" id="email" placeholder="Email Address" required>
         <input type="password" id="password" placeholder="Password" required>
         <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-        <button type="submit">Register</button>
+        <button type="submit" class="register-btn">Register</button>
         <p id="message"></p>
     </form>
+    <!-- Back to Sign In Button -->
+    <button class="back-btn" onclick="window.location.href='signIn.html'">Back to Sign In</button>
 </div>
 
 <script>
@@ -60,7 +63,6 @@ document.getElementById("registerForm").addEventListener("submit", function(even
     message.textContent = "";
     message.className = "";
 
-    // Email format validation
     let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
 
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
@@ -87,14 +89,18 @@ document.getElementById("registerForm").addEventListener("submit", function(even
         return;
     }
 
-    // Simulate successful registration
-    message.textContent = "Registration successful! Welcome, " + name + ".";
+    // Registration successful
+    message.textContent = "Registration successful! Redirecting to Sign In...";
     message.className = "success";
 
-    // Optional: Reset form
-    document.getElementById("registerForm").reset();
+    // Redirect to Sign In after 2 seconds
+    setTimeout(function() {
+        window.location.href = "signIn.html";
+    }, 2000);
 });
 </script>
 
 </body>
 </html>
+
+
