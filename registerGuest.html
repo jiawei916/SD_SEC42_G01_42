@@ -1,95 +1,133 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Guest Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Registration - VetGroom Hub</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* Extra quick styles for messages */
         #message.success { color: green; }
         #message.error { color: red; }
         #message.warning { color: orange; }
+        .container {
+            margin-top: 40px;   /* moves the box higher (default is usually larger) */
+            max-width: 400px;   /* keeps it neat */
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        main {
+    display: flex;
+    justify-content: center;   /* centers horizontally */
+    align-items: flex-start;   /* keep it at the top */
+    min-height: auto;          /* 🔑 no forced tall height */
+    padding: 20px;             /* some breathing space */
+}
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Guest Registration</h2>
-    <form id="registerForm" method="POST">
-        <input type="text" id="name" name="name" placeholder="Full Name" required>
-        <input type="email" id="email" name="email" placeholder="Email Address" required>
-        <input type="password" id="password" name="password" placeholder="Password" required>
-        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
-        <button type="submit" style="margin-top: 8px;">Register</button>
-        <p id="message"></p>
-    </form>
-</div>
+    <!-- Site title -->
+    <header>
+        <h1>VetGroom Hub</h1>
+    </header>
 
-<script>
-document.getElementById("registerForm").addEventListener("submit", function(event) {
-    event.preventDefault();
+    <!-- Navigation bar -->
+    <nav>
+        <!-- Homepage button at top-left -->
+        <a href="homepage.html"><strong>Homepage</strong></a>
+        <!-- Other nav links -->
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="registerGuest.html">Register</a> <!-- ✅ Link points to this page -->
+    </nav>
 
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let password = document.getElementById("password").value.trim();
-    let confirmPassword = document.getElementById("confirmPassword").value.trim();
-    let message = document.getElementById("message");
+    <!-- Main registration content -->
+    <main>
+        <div class="container">
+            <h2>Guest Registration</h2>
+            <form id="registerForm" method="POST">
+                <input type="text" id="name" name="name" placeholder="Full Name" required>
+                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                <button type="submit" style="margin-top: 8px;">Register</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
 
-    message.textContent = "";
-    message.className = "";
+    <!-- JavaScript for form handling -->
+    <script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
 
-    // Email format validation
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+        let name = document.getElementById("name").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let confirmPassword = document.getElementById("confirmPassword").value.trim();
+        let message = document.getElementById("message");
 
-    if (name === "" || email === "" || password === "" || confirmPassword === "") {
-        message.textContent = "All fields are required.";
-        message.className = "error";
-        return;
-    }
+        message.textContent = "";
+        message.className = "";
 
-    if (!emailPattern.test(email)) {
-        message.textContent = "Please enter a valid email address.";
-        message.className = "error";
-        return;
-    }
+        // Email format validation
+        let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
 
-    if (password.length < 5) {
-        message.textContent = "Password must be at least 5 characters.";
-        message.className = "error";
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        message.textContent = "Passwords do not match.";
-        message.className = "error";
-        return;
-    }
-
-    // Prepare data to send
-    let formData = new FormData(this);
-
-    fetch("register.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json()) 
-    .then(data => {
-        // ✅ Always expect JSON with {status, message}
-        message.textContent = data.message;
-
-        if (data.status === "success") {
-            message.className = "success";
-            this.reset();
-        } else if (data.status === "warning") {
-            message.className = "warning";
-        } else {
+        if (name === "" || email === "" || password === "" || confirmPassword === "") {
+            message.textContent = "All fields are required.";
             message.className = "error";
+            return;
         }
-    })
-    .catch(error => {
-        message.textContent = "⚠️ Network error: " + error;
-        message.className = "error";
+
+        if (!emailPattern.test(email)) {
+            message.textContent = "Please enter a valid email address.";
+            message.className = "error";
+            return;
+        }
+
+        if (password.length < 5) {
+            message.textContent = "Password must be at least 5 characters.";
+            message.className = "error";
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            message.textContent = "Passwords do not match.";
+            message.className = "error";
+            return;
+        }
+
+        // Prepare data to send
+        let formData = new FormData(this);
+
+        fetch("register.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            // ✅ Always expect JSON with {status, message}
+            message.textContent = data.message;
+
+            if (data.status === "success") {
+                message.className = "success";
+                this.reset();
+            } else if (data.status === "warning") {
+                message.className = "warning";
+            } else {
+                message.className = "error";
+            }
+        })
+        .catch(error => {
+            message.textContent = "⚠️ Network error: " + error;
+            message.className = "error";
+        });
     });
-});
-</script>
+    </script>
+
 </body>
 </html>
