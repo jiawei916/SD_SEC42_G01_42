@@ -9,18 +9,14 @@
 
 <div class="container">
     <h2>Guest Registration</h2>
-    <form id="registerForm">
-        <input type="text" id="name" placeholder="Full Name" required>
-        <input type="email" id="email" placeholder="Email Address" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+    <form id="registerForm" method="POST">
+        <input type="text" id="name" name="name" placeholder="Full Name" required>
+        <input type="email" id="email" name="email" placeholder="Email Address" required>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
         <button type="submit" style="margin-top: 8px;">Register</button>
         <p id="message"></p>
     </form>
-    <!-- Back to Sign In button -->
-    <p style="margin-top: 15px;">
-        <a href="signIn.html">Already have an account? Sign In</a>
-    </p>
 </div>
 
 <script>
@@ -37,7 +33,7 @@ document.getElementById("registerForm").addEventListener("submit", function(even
     message.className = "";
 
     // Email format validation
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
 
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
         message.textContent = "All fields are required.";
@@ -63,20 +59,29 @@ document.getElementById("registerForm").addEventListener("submit", function(even
         return;
     }
 
-    // Simulate successful registration
-    message.textContent = "Registration successful! Redirecting to Sign In...";
-    message.className = "success";
+    // Prepare data to send
+    let formData = new FormData(this);
 
-    // Reset form
-    document.getElementById("registerForm").reset();
-
-    setTimeout(function() {
-        window.location.href = "signIn.html";
-    }, 1000);
+    fetch("register.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        message.textContent = data;
+        if (data.toLowerCase().includes("success")) {
+            message.className = "success";
+            document.getElementById("registerForm").reset();
+        } else {
+            message.className = "error";
+        }
+    })
+    .catch(error => {
+        message.textContent = "Error: " + error;
+        message.className = "error";
+    });
 });
 </script>
 
 </body>
 </html>
-
-
