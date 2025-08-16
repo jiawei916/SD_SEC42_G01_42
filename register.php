@@ -1,48 +1,54 @@
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root";     // change if needed
-$password = "";         // change if needed
-$dbname = "vetGroomList";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check DB connection
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
-}
+header("Content-Type: application/json");
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Enable exceptions for mysqli
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name  = trim($_POST["name"]);
-    $email = trim($_POST["email"]);
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $servername = "localhost";
+    $username   = "root";
+    $password   = "";
+    $dbname     = "vetGroomList";
 
-    // Check if email already exists
-    $check = $conn->prepare("SELECT id FROM users WHERE email=?");
-    $check->bind_param("s", $email);
-    $check->execute();
-    $check->store_result();
+    try {
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn->set_charset("utf8mb4");
 
-    if ($check->num_rows > 0) {
-        echo "Error: Email already registered.";
-        $check->close();
+        $name     = trim($_POST["name"] ?? "");
+        $email    = trim($_POST["email"] ?? "");
+        $rawPass  = $_POST["password"] ?? "";
+
+        // Simple validation before DB insert
+        if (empty($name) || empty($email) || empty($rawPass)) {
+            echo json_encode(["status" => "error", "message" => "All fields are required."]);
+            exit;
+        }
+
+        $hashedPass = password_hash($rawPass, PASSWORD_DEFAULT);
+        $token      = bin2hex(random_bytes(16));
+
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password, token, verified) VALUES (?, ?, ?, ?, 0)");
+        $stmt->bind_param("ssss", $name, $email, $hashedPass, $token);
+
+        if ($stmt->execute()) {
+            $verifyLink = "http://localhost/vetgroom/verify.php?email=" . urlencode($email) . "&token=" . $token;
+
+            if (mail($email, "Verify your VetGroom account",
+                "Click here to verify your account: $verifyLink",
+                "From: no-reply@vetgroom.com")) {
+                echo json_encode(["status" => "success", "message" => "Registration successful! Please check your email to verify your account."]);
+            } else {
+                echo json_encode(["status" => "warning", "message" => "⚠️ Email not sent (dev mode). Use this link: $verifyLink"]);
+            }
+        }
+
+        $stmt->close();
         $conn->close();
-        exit;
+
+    } catch (mysqli_sql_exception $e) {
+        if ($e->getCode() == 1062) { 
+            // Duplicate email (unique key violation)
+            echo json_encode('This email is already registered. Please log in instead.');
+        } else {
+            echo json_encode('Unexpected error: ' . $e->getMessage());
+        }
     }
-    $check->close();
-
-    // Insert user
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password, verified) VALUES (?, ?, ?, 0)");
-    $stmt->bind_param("sss", $name, $email, $password);
-
-    if ($stmt->execute()) {
-        echo "Registration successful! Please check your email for verification.";
-    } else {
-        echo "Error: Could not register user.";
-    }
-
-    $stmt->close();
 }
-
-$conn->close();
-?>
