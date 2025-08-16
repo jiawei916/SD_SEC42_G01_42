@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Guest Registration</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        #message.success { color: green; }
+        #message.error { color: red; }
+        #message.warning { color: orange; }
+    </style>
 </head>
 <body>
 
@@ -66,22 +71,25 @@ document.getElementById("registerForm").addEventListener("submit", function(even
         method: "POST",
         body: formData
     })
-    .then(response => response.text())
+    .then(response => response.json()) 
     .then(data => {
-        message.textContent = data;
-        if (data.toLowerCase().includes("success")) {
+        // ✅ Always expect JSON with {status, message}
+        message.textContent = data.message;
+
+        if (data.status === "success") {
             message.className = "success";
-            document.getElementById("registerForm").reset();
+            this.reset();
+        } else if (data.status === "warning") {
+            message.className = "warning";
         } else {
             message.className = "error";
         }
     })
     .catch(error => {
-        message.textContent = "Error: " + error;
+        message.textContent = "⚠️ Network error: " + error;
         message.className = "error";
     });
 });
 </script>
-
 </body>
 </html>
