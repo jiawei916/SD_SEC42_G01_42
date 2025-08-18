@@ -1,40 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Sign In</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h2>Sign In</h2>
-    <form id="signinForm">
-        <input type="email" id="email" placeholder="Enter your email" required>
-        <input type="password" id="password" placeholder="Enter your password" required>
-        <button type="submit" class="signin-btn" style="margin-top: 8px;">Sign In</button>
-        <p id="errorMessage" class="error"></p>
-    </form>
+<!-- ===== Top Header ===== -->
+<header>
+    <h1>VetGroom Hub</h1>
+</header>
 
-<!-- Register Button -->
-<button class="register-btn" style="margin-top: 8px;" onclick="window.location.href='registerGuest.html'">Register</button>
+<!-- ===== Navigation Bar ===== -->
+<nav>
+    <a href="homepage.php">Home</a>
+    <a href="registerGuest.html">Register</a>
+    <a href="signIn.html">Sign In</a>
+    <a href="signOut.php">Sign Out</a>
+</nav>
 
-<!-- Forgot Password Button -->
-<button class="forgot-btn" style="margin-top: 8px;" onclick="window.location.href='forgetPassword.html'">Forgot Password</button>
+<!-- ===== Main Content ===== -->
+<main>
+    <div class="container">
+        <h2>Sign In</h2>
+        <form id="signinForm">
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <button type="submit" class="signin-btn" style="margin-top: 8px;">Sign In</button>
+            <p id="errorMessage" class="error"></p>
+        </form>
 
-</div>
+        <!-- Register Button -->
+        <button class="register-btn" onclick="window.location.href='registerGuest.html'">Register</button>
+    </div>
+</main>
 
 <script>
-    document.getElementById("signinForm").addEventListener("submit", function(event) {
+    document.getElementById("signinForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
-        var email = document.getElementById("email").value.trim();
-        var password = document.getElementById("password").value.trim();
-        var errorMessage = document.getElementById("errorMessage");
-
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const errorMessage = document.getElementById("errorMessage");
         errorMessage.textContent = "";
 
-        var emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-
+        // Email format validation
+        const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
         if (!emailPattern.test(email)) {
             errorMessage.textContent = "Please enter a valid email address.";
             return;
@@ -45,29 +57,28 @@
             return;
         }
 
-        // Simulated accounts 
-        var accounts = {
-            "guest@example.com": { password: "guest123", role: "guest" },
-            "staff@example.com": { password: "staff123", role: "staff" },
-            "admin@example.com": { password: "admin123", role: "admin" }
-        };
+        try {
+            const response = await fetch("signIn.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ email, password })
+            });
 
-        if (accounts[email] && accounts[email].password === password) {
-            var role = accounts[email].role;
+            const result = await response.json();
 
-            if (role === "guest") {
-                window.location.href = "homepage.html";
-            } else if (role === "staff") {
-                window.location.href = "homepageStaff.html";
-            } else if (role === "admin") {
-                window.location.href = "homepageAdmin.html";
+            if (result.status === "success") {
+                // ✅ Redirect to homepage (all users share the same page since no role)
+                window.location.href = "homepage.php";
+            } else {
+                errorMessage.textContent = result.message || "Login failed.";
             }
-        } else {
-            errorMessage.textContent = "Invalid email or password.";
+
+        } catch (error) {
+            errorMessage.textContent = "⚠️ Server error. Please try again later.";
+            console.error("Error:", error);
         }
     });
 </script>
 
 </body>
 </html>
-
