@@ -23,17 +23,24 @@
 <!-- ===== Main Content ===== -->
 <main>
     <div class="container">
-        <h2>Sign In</h2>
-        <form id="signinForm">
-            <input type="email" id="email" placeholder="Enter your email" required>
-            <input type="password" id="password" placeholder="Enter your password" required>
-            <button type="submit" class="signin-btn" style="margin-top: 8px;">Sign In</button>
-            <p id="errorMessage" class="error"></p>
-        </form>
+    <h2>Sign In</h2>
+    <form id="signinForm">
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <input type="password" id="password" placeholder="Enter your password" required>
 
-        <!-- Register Button -->
-        <button class="register-btn" onclick="window.location.href='registerGuest.html'">Register</button>
-    </div>
+        <!--Forgot Password Row -->
+        <div class="form-options">
+            </label>
+            <a href="forgetPassword.html" class="forgot-password">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="signin-btn" style="margin-top: 8px;">Sign In</button>
+        <p id="errorMessage" class="error"></p>
+    </form>
+
+    <!-- Register Button -->
+    <button class="register-btn" onclick="window.location.href='registerGuest.html'">Register</button>
+</div>
 </main>
 
 <script>
@@ -82,3 +89,4 @@
 
 </body>
 </html>
+
