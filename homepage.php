@@ -85,7 +85,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
     <!-- Profile Dropdown -->
     <div class="profile-dropdown">
         <span class="profile-icon"><?php echo $isLoggedIn ? "👤" : "👤"; ?></span>
-        <span class="profile-name"><?php echo htmlspecialchars($userName); ?></span>
+        <span class="profile-name"><?php echo htmlspecialchars($userName); ?>  ▼</span>
         <div class="dropdown-content">
             <?php if ($isLoggedIn): ?>
                 <a href="profile.html">Profile</a>
@@ -116,3 +116,4 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
 </body>
 </html>
+
