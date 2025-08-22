@@ -55,7 +55,7 @@
                                     <nav> 
                                         <ul id="navigation">
                                             <li><a href="homepage.php">Home</a></li>
-                                            <li><a href="about.php">About</a></li>
+                                            <li><a href="aboutUs.php">About</a></li>
                                             <li><a href="services.php">Services</a></li>
                                             <li><a href="blog.php">Blog</a>
                                                 <ul class="submenu">
@@ -69,7 +69,7 @@
                                     </nav>
                                 </div>
                                 <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                    <a href="contact.php" class="header-btn">Book: +60 12-345 6789</a>
+                                    <a href="signIn.html" class="header-btn">Sign In</a>
                                 </div>
                             </div>
                         </div>   
