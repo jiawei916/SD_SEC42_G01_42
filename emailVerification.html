@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Email Verification</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>VetGroom Hub</h1>
+</header>
+
+<nav>
+  <a href="homepage.php">Home</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="registerGuest.html">Register</a>
+  <a href="signIn.html">Login</a>
+</nav>
+
+<main>
+  <div class="container">
+    <h2>Email Verification</h2>
+    
+    <!-- User pastes token or auto-fills from URL -->
+    <form id="verifyForm">
+      <input type="text" id="token" name="token" placeholder="Enter verification token" required>
+      <button type="submit">Verify Email</button>
+      <p id="message" class="error"></p>
+    </form>
+  </div>
+</main>
+
+<script>
+  // Auto-fill token from URL if present
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  if (token) {
+    document.getElementById("token").value = token;
+  }
+
+  // Handle form submission with AJAX
+  document.getElementById("verifyForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const tokenValue = document.getElementById("token").value.trim();
+    const message = document.getElementById("message");
+
+    fetch("verifyEmail.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "token=" + encodeURIComponent(tokenValue)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        message.style.color = "green";
+        message.textContent = "✅ Email verified successfully! You may now log in.";
+      } else {
+        message.style.color = "red";
+        message.textContent = "❌ Verification failed: " + data.message;
+      }
+    })
+    .catch(err => {
+      message.style.color = "red";
+      message.textContent = "⚠️ Error connecting to server.";
+    });
+  });
+</script>
+
+</body>
+</html>
