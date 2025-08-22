@@ -1,119 +1,623 @@
-<?php
-session_start();
-
-// Check login session
-$isLoggedIn = isset($_SESSION['user_name']);
-$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
-?>
-
 <!doctype html>
-<html lang="en">
+<html class="no-js" lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Homepage - VetGroom Hub</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Profile dropdown */
-    .profile-dropdown {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        background-color: #3aa9e4;
-        padding: 6px 10px;
-        border-radius: 6px;
-        box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
-    }
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>VetGroom Hub — Home</title>
+    <meta name="description" content="VetGroom Hub - Pet grooming and veterinary care services">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
-    .profile-icon {
-        font-size: 26px;
-        margin-right: 8px;
-    }
-
-    .profile-name {
-        font-size: 16px;
-        font-weight: bold;
-        color: white;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        top: 40px;
-        background: white;
-        min-width: 140px;
-        box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
-        border-radius: 5px;
-        z-index: 1;
-    }
-
-    .dropdown-content a {
-        display: block;
-        padding: 8px 12px;
-        font-size: 14px;
-        text-decoration: none;
-        color: #333;
-        transition: background 0.2s ease;
-    }
-
-    .dropdown-content a:hover {
-        background-color: #f1f1f1;
-    }
-
-    .profile-dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    header {
-        position: relative;
-        padding: 15px;
-        color: white;
-        text-align: center;
-    }
-  </style>
+    <!-- CSS here -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/css/slicknav.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/nice-select.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-
-  <!-- Site title -->
-  <header>
-    <h1>VetGroom Hub</h1>
-
-    <!-- Profile Dropdown -->
-    <div class="profile-dropdown">
-        <span class="profile-icon"><?php echo $isLoggedIn ? "👤" : "👤"; ?></span>
-        <span class="profile-name"><?php echo htmlspecialchars($userName); ?>  ▼</span>
-        <div class="dropdown-content">
-            <?php if ($isLoggedIn): ?>
-                <a href="profile.html">Profile</a>
-                <a href="signOut.php">Sign Out</a>
-            <?php else: ?>
-                <a href="signIn.html">Sign In</a>
-                <a href="registerGuest.html">Register</a>
-            <?php endif; ?>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="assets/img/logo/logo.png" alt="VetGroom Hub">
+                </div>
+            </div>
         </div>
     </div>
-  </header>
+    <!-- Preloader End -->
+    <header>
+        <!-- Header Start -->
+        <div class="header-area header-transparent">
+            <div class="main-header header-sticky">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <!-- Logo -->
+                        <div class="col-xl-2 col-lg-2 col-md-1">
+                            <div class="logo">
+                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-10 col-lg-10 col-md-10">
+                            <div class="menu-main d-flex align-items-center justify-content-end">
+                                <!-- Main-menu -->
+                                <div class="main-menu f-right d-none d-lg-block">
+                                    <nav> 
+                                        <ul id="navigation">
+                                            <li><a href="homepage.php">Home</a></li>
+                                            <li><a href="about.php">About</a></li>
+                                            <li><a href="services.php">Services</a></li>
+                                            <li><a href="blog.php">Blog</a>
+                                                <ul class="submenu">
+                                                    <li><a href="blog.php">Blog</a></li>
+                                                    <li><a href="blog_details.php">Blog Details</a></li>
+                                                    <li><a href="elements.php">Element</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="contact.php">Contact</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="header-right-btn f-right d-none d-lg-block ml-30">
+                                    <a href="contact.php" class="header-btn">Book: +60 12-345 6789</a>
+                                </div>
+                            </div>
+                        </div>   
+                        <!-- Mobile Menu -->
+                        <div class="col-12">
+                            <div class="mobile_menu d-block d-lg-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+    </header>
+    <main> 
+        <!-- Slider Area Start-->
+        <div class="slider-area">
+            <div class="slider-active dot-style">
+                <!-- Slider Single -->
+                <div class="single-slider d-flex align-items-center slider-height">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-xl-7 col-lg-8 col-md-10 ">
+                                <!-- Video icon -->
+                                <div class="video-icon">
+                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=up68UAfH0d0" data-animation="bounceIn" data-delay=".4s">
+                                        <i class="fas fa-play"></i>
+                                    </a>
+                                </div>
+                                <div class="hero__caption">
+                                    <span data-animation="fadeInUp" data-delay=".3s">Professional pet care in one place</span>
+                                    <h1 data-animation="fadeInUp" data-delay=".3s">VetGroom Hub — We Care for Your Pets</h1>
+                                    <p data-animation="fadeInUp" data-delay=".6s">Full grooming, veterinary services and convenient appointment bookings for dogs and cats.</p>
+                                    <a href="contact.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+                <!-- Slider Single (duplicate slide retained from template for visual continuity) -->
+                <div class="single-slider d-flex align-items-center slider-height">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-xl-7 col-lg-8 col-md-10 ">
+                                <div class="video-icon">
+                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU" data-animation="bounceIn" data-delay=".4s">
+                                        <i class="fas fa-play"></i>
+                                    </a>
+                                </div>
+                                <div class="hero__caption">
+                                    <span data-animation="fadeInUp" data-delay=".3s">Safe — Gentle — Professional</span>
+                                    <h1 data-animation="fadeInUp" data-delay=".3s">Trusted grooming & veterinary care</h1>
+                                    <p data-animation="fadeInUp" data-delay=".6s">Experienced groomers and qualified veterinarians working together for your pet's health and comfort.</p>
+                                    <a href="services.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Our Services<i class="ti-arrow-right"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <!-- slider Social -->
+            <div class="button-text d-none d-md-block">
+            <span>Scroll</span>
+            </div>
+        </div>
+        <!-- Slider Area End -->
+        <!--? Our Services Start -->
+        <div class="our-services section-padding30">
+            <div class="container">
+                <div class="row justify-content-sm-center">
+                    <div class="cl-xl-7 col-lg-8 col-md-10">
+                        <!-- Section Tittle -->
+                        <div class="section-tittle text-center mb-70">
+                            <span>Our Professional Services</span>
+                            <h2>Best Pet Care Services</h2>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class=" col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-services text-center mb-30">
+                            <div class="services-ion">
+                                <span class="flaticon-animal-kingdom"></span>
+                            </div>
+                            <div class="services-cap">
+                                <h5><a href="services.php#grooming">Pet Grooming</a></h5>
+                                <p>Full grooming packages: bath, haircut, nail trim and ear cleaning tailored to your pet.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-services text-center mb-30">
+                            <div class="services-ion">
+                                <span class="flaticon-animals"></span>
+                            </div>
+                            <div class="services-cap">
+                                <h5><a href="services.php#vet">Veterinary Care</a></h5>
+                                <p>Consultations, minor procedures and on-site diagnostics provided by our licensed vets.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-services text-center mb-30">
+                            <div class="services-ion">
+                                <span class="flaticon-animals-1"></span>
+                            </div>
+                            <div class="services-cap">
+                                <h5><a href="services.php#vaccination">Vaccinations</a></h5>
+                                <p>Core vaccinations and preventive care plans to keep your pet healthy year-round.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Our Services End -->
+        <!--? About Area Start-->
+        <div class="about-area fix">
+            <!--Right Contents  -->
+            <div class="about-img">
+                <div class="info-man text-center">
+                <div class="head-cap">
+                    <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="39px">
+                        <path fill-rule="evenodd"  fill="rgb(255, 255, 255)"
+                        d="M24.000,19.000 C21.791,19.000 20.000,17.209 20.000,15.000 C20.000,12.790 21.791,11.000 24.000,11.000 C26.209,11.000 28.000,12.790 28.000,15.000 C28.000,17.209 26.209,19.000 24.000,19.000 ZM24.000,8.000 C21.791,8.000 20.000,6.209 20.000,4.000 C20.000,1.790 21.791,-0.001 24.000,-0.001 C26.209,-0.001 28.000,1.790 28.000,4.000 C28.000,6.209 26.209,8.000 24.000,8.000 ZM14.000,38.999 C11.791,38.999 10.000,37.209 10.000,35.000 C10.000,32.791 11.791,31.000 14.000,31.000 C16.209,31.000 18.000,32.791 18.000,35.000 C18.000,37.209 16.209,38.999 14.000,38.999 ZM14.000,29.000 C11.791,29.000 10.000,27.209 10.000,25.000 C10.000,22.791 11.791,21.000 14.000,21.000 C16.209,21.000 18.000,22.791 18.000,25.000 C18.000,27.209 16.209,29.000 14.000,29.000 ZM14.000,19.000 C11.791,19.000 10.000,17.209 10.000,15.000 C10.000,12.790 11.791,11.000 14.000,11.000 C16.209,11.000 18.000,12.790 18.000,15.000 C18.000,17.209 16.209,19.000 14.000,19.000 ZM14.000,8.000 C11.791,8.000 10.000,6.209 10.000,4.000 C10.000,1.790 11.791,-0.001 14.000,-0.001 C16.209,-0.001 18.000,1.790 18.000,4.000 C18.000,6.209 16.209,8.000 14.000,8.000 ZM4.000,29.000 C1.791,29.000 -0.000,27.209 -0.000,25.000 C-0.000,22.791 1.791,21.000 4.000,21.000 C6.209,21.000 8.000,22.791 8.000,25.000 C8.000,27.209 6.209,29.000 4.000,29.000 ZM4.000,19.000 C1.791,19.000 -0.000,17.209 -0.000,15.000 C-0.000,12.790 1.791,11.000 4.000,11.000 C6.209,11.000 8.000,12.790 8.000,15.000 C8.000,17.209 6.209,19.000 4.000,19.000 ZM4.000,8.000 C1.791,8.000 -0.000,6.209 -0.000,4.000 C-0.000,1.790 1.791,-0.001 4.000,-0.001 C6.209,-0.001 8.000,1.790 8.000,4.000 C8.000,6.209 6.209,8.000 4.000,8.000 ZM24.000,21.000 C26.209,21.000 28.000,22.791 28.000,25.000 C28.000,27.209 26.209,29.000 24.000,29.000 C21.791,29.000 20.000,27.209 20.000,25.000 C20.000,22.791 21.791,21.000 24.000,21.000 Z"/>
+                    </svg>
+                    <h3>354</h3>
+                </div>
+                    <p>Successful<br>Treatments</p>
+                </div>
+                <div class="info-man info-man2 text-center">
+                <div class="head-cap">
+                        <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="39px">
+                            <path fill-rule="evenodd"  fill="rgb(255, 255, 255)"
+                            d="M24.000,19.000 C21.791,19.000 20.000,17.209 20.000,15.000 C20.000,12.790 21.791,11.000 24.000,11.000 C26.209,11.000 28.000,12.790 28.000,15.000 C28.000,17.209 26.209,19.000 24.000,19.000 ZM24.000,8.000 C21.791,8.000 20.000,6.209 20.000,4.000 C20.000,1.790 21.791,-0.001 24.000,-0.001 C26.209,-0.001 28.000,1.790 28.000,4.000 C28.000,6.209 26.209,8.000 24.000,8.000 ZM14.000,38.999 C11.791,38.999 10.000,37.209 10.000,35.000 C10.000,32.791 11.791,31.000 14.000,31.000 C16.209,31.000 18.000,32.791 18.000,35.000 C18.000,37.209 16.209,38.999 14.000,38.999 ZM14.000,29.000 C11.791,29.000 10.000,27.209 10.000,25.000 C10.000,22.791 11.791,21.000 14.000,21.000 C16.209,21.000 18.000,22.791 18.000,25.000 C18.000,27.209 16.209,29.000 14.000,29.000 ZM14.000,19.000 C11.791,19.000 10.000,17.209 10.000,15.000 C10.000,12.790 11.791,11.000 14.000,11.000 C16.209,11.000 18.000,12.790 18.000,15.000 C18.000,17.209 16.209,19.000 14.000,19.000 ZM14.000,8.000 C11.791,8.000 10.000,6.209 10.000,4.000 C10.000,1.790 11.791,-0.001 14.000,-0.001 C16.209,-0.001 18.000,1.790 18.000,4.000 C18.000,6.209 16.209,8.000 14.000,8.000 ZM4.000,29.000 C1.791,29.000 -0.000,27.209 -0.000,25.000 C-0.000,22.791 1.791,21.000 4.000,21.000 C6.209,21.000 8.000,22.791 8.000,25.000 C8.000,27.209 6.209,29.000 4.000,29.000 ZM4.000,19.000 C1.791,19.000 -0.000,17.209 -0.000,15.000 C-0.000,12.790 1.791,11.000 4.000,11.000 C6.209,11.000 8.000,12.790 8.000,15.000 C8.000,17.209 6.209,19.000 4.000,19.000 ZM4.000,8.000 C1.791,8.000 -0.000,6.209 -0.000,4.000 C-0.000,1.790 1.791,-0.001 4.000,-0.001 C6.209,-0.001 8.000,1.790 8.000,4.000 C8.000,6.209 6.209,8.000 4.000,8.000 ZM24.000,21.000 C26.209,21.000 28.000,22.791 28.000,25.000 C28.000,27.209 26.209,29.000 24.000,29.000 C21.791,29.000 20.000,27.209 20.000,25.000 C20.000,22.791 21.791,21.000 24.000,21.000 Z"/>
+                        </svg>
+                        <h3>12</h3>
+                </div>
+                    <p>Years of<br>Experience</p>
+                </div>
+            </div>
+            <!-- left Contents -->
+            <div class="about-details">
+                <div class="right-caption">
+                    <!-- Section Tittle -->
+                    <div class="section-tittle mb-50">
+                        <h2>About VetGroom Hub<br> Your pet's health is our priority</h2>
+                    </div>
+                    <div class="about-more">
+                        <p class="pera-top">VetGroom Hub provides professional grooming and veterinary services with a focus on safety and comfort for every pet.</p>
+                        <p class="mb-65 pera-bottom">Our team includes certified veterinarians and experienced groomers. We offer appointment bookings, preventive care plans, and grooming packages suitable for dogs and cats of all sizes.</p>
+                        <a href="about.php" class="btn">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About Area End-->
+        <!--? Gallery Area Start -->
+        <div class="gallery-area section-padding30">
+            <div class="container fix">
+                <div class="row justify-content-sm-center">
+                    <div class="cl-xl-7 col-lg-8 col-md-10">
+                        <!-- Section Tittle -->
+                        <div class="section-tittle text-center mb-70">
+                            <span>Our Recent Photos</span>
+                            <h2>Pets Photo Gallery</h2>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery1.png);"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery2.png);"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery3.png);"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4  col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery4.png);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Gallery Area End -->
+        <!--? Contact form Start -->
+        <div class="contact-form-main pb-top">
+            <div class="container">
+                <div class="row justify-content-md-end">
+                    <div class="col-xl-7 col-lg-7">
+                        <div class="form-wrapper">
+                            <!--Section Tittle  -->
+                            <div class="form-tittle">
+                                <div class="row ">
+                                    <div class="col-xl-12">
+                                        <div class="section-tittle section-tittle2 mb-70">
+                                            <h2>Book an appointment with VetGroom Hub</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--End Section Tittle  -->
+                            <form id="contact-form" action="contact.php" method="POST">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-box user-icon mb-30">
+                                            <input type="text" name="name" placeholder="Full name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-box email-icon mb-30">
+                                            <input type="text" name="phone" placeholder="Phone" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 mb-30">
+                                        <div class="select-itms">
+                                            <select name="service" id="select2">
+                                                <option value="grooming">Pet Grooming</option>
+                                                <option value="vet">Veterinary Consultation</option>
+                                                <option value="vaccination">Vaccination</option>
+                                                <option value="boarding">Pet Boarding</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-box subject-icon mb-30">
+                                            <input type="email" name="email" placeholder="Email" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-box message-icon mb-65">
+                                            <textarea name="message" id="message" placeholder="Tell us about your pet / request" required></textarea>
+                                        </div>
+                                        <div class="submit-info">
+                                            <button class="btn submit-btn2" type="submit">Send Request</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- shape-dog -->
+                                <div class="shape-dog">
+                                    <img src="assets/img/gallery/shape1.png" alt="">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- contact left Img-->
+            <div class="from-left d-none d-lg-block">
+                <img src="assets/img/gallery/contact_form.png" alt="Contact VetGroom Hub">
+            </div>
+        </div>
+        <!-- Contact form End -->
+        <!--? Team Start -->
+        <div class="team-area section-padding30">
+            <div class="container">
+                <div class="row justify-content-sm-center">
+                    <div class="cl-xl-7 col-lg-8 col-md-10">
+                        <!-- Section Tittle -->
+                        <div class="section-tittle text-center mb-70">
+                            <span>Our Professional members </span>
+                            <h2>Our Team Members</h2>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- single Tem -->
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
+                        <div class="single-team mb-30">
+                            <div class="team-img">
+                                <img src="assets/img/gallery/team1.png" alt="">
+                            </div>
+                            <div class="team-caption">
+                                <span>Dr. Mike Janathon</span>
+                                <h3><a href="#">Veterinarian</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
+                        <div class="single-team mb-30">
+                            <div class="team-img">
+                                <img src="assets/img/gallery/team2.png" alt="">
+                            </div>
+                            <div class="team-caption">
+                                <span>Jane Smith</span>
+                                <h3><a href="#">Head Groomer</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
+                        <div class="single-team mb-30">
+                            <div class="team-img">
+                                <img src="assets/img/gallery/team3.png" alt="">
+                            </div>
+                            <div class="team-caption">
+                                <span>Pule W Smith</span>
+                                <h3><a href="#">Veterinary Nurse</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+        <!--? Testimonial Start -->
+        <div class="testimonial-area testimonial-padding section-bg" data-background="assets/img/gallery/section_bg03.png">
+            <div class="container">
+                <!-- Testimonial contents -->
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-8 col-lg-8 col-md-10">
+                        <div class="h1-testimonial-active dot-style">
+                            <!-- Single Testimonial -->
+                            <div class="single-testimonial text-center">
+                                <div class="testimonial-caption ">
+                                    <!-- founder -->
+                                    <div class="testimonial-founder">
+                                        <div class="founder-img mb-40">
+                                            <img src="assets/img/gallery/testi-logo.png" alt="">
+                                            <span>Margaret Lawson</span>
+                                            <p>Pet Owner</p>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial-top-cap">
+                                        <p>“VetGroom Hub took great care of my dog — friendly staff and a clean facility.”</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Additional testimonials retained from template for layout -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Testimonial End -->
+        <!--? Blog start -->
+        <div class="home_blog-area section-padding30">
+            <div class="container">
+                <div class="row justify-content-sm-center">
+                    <div class="cl-xl-7 col-lg-8 col-md-10">
+                        <!-- Section Tittle -->
+                        <div class="section-tittle text-center mb-70">
+                            <span>Our recent news</span>
+                            <h2>From the VetGroom Hub Blog</h2>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="single-blogs mb-30">
+                            <div class="blog-img">
+                                <img src="assets/img/gallery/blog1.png" alt="">
+                            </div>
+                            <div class="blogs-cap">
+                                <div class="date-info">
+                                    <span>Pet care</span>
+                                    <p>Nov 30, 2020</p>
+                                </div>
+                                <h4>How to Keep Your Pet Healthy This Season</h4>
+                                <a href="blog_details.php" class="read-more1">Read more</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="single-blogs mb-30">
+                            <div class="blog-img">
+                                <img src="assets/img/gallery/blog2.png" alt="">
+                            </div>
+                            <div class="blogs-cap">
+                                <div class="date-info">
+                                    <span>Grooming</span>
+                                    <p>Nov 30, 2020</p>
+                                </div>
+                                <h4>Preparing Your Pet for Grooming</h4>
+                                <a href="blog_details.php" class="read-more1">Read more</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="single-blogs mb-30">
+                            <div class="blog-img">
+                                <img src="assets/img/gallery/blog3.png" alt="">
+                            </div>
+                            <div class="blogs-cap">
+                                <div class="date-info">
+                                    <span>Health</span>
+                                    <p>Nov 30, 2020</p>
+                                </div>
+                                <h4>Vaccination: What You Need to Know</h4>
+                                <a href="blog_details.php" class="read-more1">Read more</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Blog End -->
+        <!--? contact-animal-owner Start -->
+        <div class="contact-animal-owner section-bg" data-background="assets/img/gallery/section_bg04.png">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="contact_text text-center">
+                            <div class="section_title text-center">
+                                <h3>Need urgent advice? Call us!</h3>
+                                <p>Our team is available to answer booking and care questions during business hours.</p>
+                            </div>
+                            <div class="contact_btn d-flex align-items-center justify-content-center">
+                                <a href="contact.php" class="btn white-btn">Contact Us</a>
+                                <p>Or <a href="tel:+60123456789"> +60 12-345 6789</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- contact-animal-owner End -->
+    </main>
+    <footer>
+        <!-- Footer Start-->
+        <div class="footer-area footer-padding">
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
+                       <div class="single-footer-caption mb-50">
+                         <div class="single-footer-caption mb-30">
+                              <!-- logo -->
+                             <div class="footer-logo mb-25">
+                                 <a href="homepage.php"><img src="assets/img/logo/logo2_footer.png" alt="VetGroom Hub"></a>
+                             </div>
+                             <div class="footer-tittle">
+                                 <div class="footer-pera">
+                                     <p>Professional grooming and veterinary services for your beloved pets.</p>
+                                </div>
+                             </div>
+                             <!-- social -->
+                             <div class="footer-social">
+                                 <a href="#"><i class="fab fa-facebook-square"></i></a>
+                                 <a href="#"><i class="fab fa-twitter-square"></i></a>
+                                 <a href="#"><i class="fab fa-linkedin"></i></a>
+                                 <a href="#"><i class="fab fa-pinterest-square"></i></a>
+                             </div>
+                         </div>
+                       </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-4 col-sm-5">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Company</h4>
+                                <ul>
+                                    <li><a href="homepage.php">Home</a></li>
+                                    <li><a href="about.php">About Us</a></li>
+                                    <li><a href="services.php">Services</a></li>
+                                    <li><a href="#">Cases</a></li>
+                                    <li><a href="contact.php">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Services</h4>
+                                <ul>
+                                    <li><a href="services.php#grooming">Pet Grooming</a></li>
+                                    <li><a href="services.php#vet">Veterinary Care</a></li>
+                                    <li><a href="services.php#vaccination">Vaccination</a></li>
+                                    <li><a href="services.php#boarding">Pet Boarding</a></li>
+                                    <li><a href="services.php#packages">Packages</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Get in Touch</h4>
+                                <ul>
+                                 <li><a href="tel:+60123456789">+60 12-345 6789</a></li>
+                                 <li><a href="mailto:info@vetgroomhub.com">info@vetgroomhub.com</a></li>
+                                 <li><a href="#">Kuala Lumpur, Malaysia</a></li>
+                             </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer-bottom area -->
+        <div class="footer-bottom-area">
+            <div class="container">
+                <div class="footer-border">
+                     <div class="row d-flex align-items-center">
+                         <div class="col-xl-12 ">
+                             <div class="footer-copy-right text-center">
+                                 <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> VetGroom Hub. All rights reserved.</p>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End-->
+    </footer>
+    <!-- Scroll Up -->
+    <div id="back-top" >
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+    </div>
 
-  <!-- Navigation bar -->
-  <nav>
-    <a href="homepage.php"><strong>Homepage</strong></a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-    <a href="registerGuest.php">Register</a>
-    <a href="emailVerification.php">Verification</a>
-  </nav>
+    <!-- JS here -->
+    
+    <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="./assets/js/jquery.slicknav.min.js"></script>
 
-  <!-- Main content -->
-  <main>
-    <h2>Welcome to the Homepage</h2>
-    <p>This is the homepage for VetGroom Hub, we'll workshop this page later.</p>
-    <p>Use the navigation bar above to explore.</p>
-  </main>
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="./assets/js/owl.carousel.min.js"></script>
+    <script src="./assets/js/slick.min.js"></script>
+    <!-- One Page, Animated-HeadLin -->
+    <script src="./assets/js/wow.min.js"></script>
+    <script src="./assets/js/animated.headline.js"></script>
+    <script src="./assets/js/jquery.magnific-popup.js"></script>
 
-</body>
+    <!-- Nice-select, sticky -->
+    <script src="./assets/js/jquery.nice-select.min.js"></script>
+    <script src="./assets/js/jquery.sticky.js"></script>
+    
+    <!-- contact js -->
+    <script src="./assets/js/contact.js"></script>
+    <script src="./assets/js/jquery.form.js"></script>
+    <script src="./assets/js/jquery.validate.min.js"></script>
+    <script src="./assets/js/mail-script.js"></script>
+    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+    
+    <!-- Jquery Plugins, main Jquery -->    
+    <script src="./assets/js/plugins.js"></script>
+    <script src="./assets/js/main.js"></script>
+        
+    </body>
 </html>
-
