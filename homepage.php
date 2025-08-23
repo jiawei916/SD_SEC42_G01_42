@@ -56,14 +56,7 @@
                                         <ul id="navigation">
                                             <li><a href="homepage.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
-                                            <li><a href="feedback.php">Feedbakc</a></li>
-                                            <li><a href="blog.php">Blog</a>
-                                                <ul class="submenu">
-                                                    <li><a href="blog.php">Blog</a></li>
-                                                    <li><a href="blog_details.php">Blog Details</a></li>
-                                                    <li><a href="elements.php">Element</a></li>
-                                                </ul>
-                                            </li>
+                                            <li><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
                                         </ul>
                                     </nav>
@@ -621,3 +614,4 @@
         
     </body>
 </html>
+
