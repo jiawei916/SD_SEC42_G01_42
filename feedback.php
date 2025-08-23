@@ -66,7 +66,7 @@ input,
     <a href="aboutUs.php">About</a>
     <a href="contact.php">Contact</a>
     <a href="feedback.php"><strong>Feedback</strong></a>
-    <a href="emailVerification.php">Verification</a>
+    <a href="emailVerification.html">Verification</a>
   </nav>
 
   <!-- Main content -->
