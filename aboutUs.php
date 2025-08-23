@@ -100,7 +100,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
   </header>
 
   <!-- Navigation bar -->
@@ -116,9 +115,6 @@
   <main>
     <h2>About Us</h2>
     <p>Welcome to <strong>VetGroom Hub</strong>, your trusted partner in pet care and grooming. Our mission is to create a seamless platform that connects pet owners with professional groomers and veterinary services.</p>
-=======
-    <!-- Preloader Start -->
->>>>>>> 2f6f594204d3ba53ed51e39146703ecb34c9073f
     
     <?php
     session_start();
