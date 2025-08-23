@@ -113,9 +113,6 @@
 
   <!-- Main content -->
   <main>
-    <h2>About Us</h2>
-    <p>Welcome to <strong>VetGroom Hub</strong>, your trusted partner in pet care and grooming. Our mission is to create a seamless platform that connects pet owners with professional groomers and veterinary services.</p>
-    
     <?php
     session_start();
     // Check login session
@@ -142,8 +139,7 @@
                                     <nav> 
                                         <ul id="navigation">
                                             <li><a href="homepage.php">Home</a></li>
-                                            <li><a href="about.html">About</a></li>
-                                            <li><a href="services.html">Services</a></li>
+                                            <li><a href="aboutUs.php">About</a></li>
                                             <li><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
                                             <?php if ($isLoggedIn): ?>

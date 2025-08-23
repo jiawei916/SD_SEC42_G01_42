@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+// Check login session
+$isLoggedIn = isset($_SESSION['user_name']);
+$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+?>
+
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
@@ -135,33 +143,23 @@
                                         <ul id="navigation">
                                             <li><a href="homepage.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
-                                            <li><a href="services.php">Services</a></li>
                                             <li><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
                                         </ul>
                                     </nav>
                                 </div>
                             </div>
-                        </div>
+                        </div>                       
                         <div class="col-xl-2 col-lg-2 col-md-2">
                             <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                <!-- Profile Dropdown -->
-                                <div class="profile-dropdown">
-                                    <span class="profile-icon">👤</span>
-                                    <span class="profile-name"><?php echo htmlspecialchars($userName); ?></span>
-                                    <div class="dropdown-content">
-                                        <?php if ($isLoggedIn): ?>
-                                            <a href="profile.php">Profile</a>
-                                            <a href="appointments.php">My Appointments</a>
-                                            <a href="signOut.php">Sign Out</a>
-                                        <?php else: ?>
-                                            <a href="signIn.php">Sign In</a>
-                                            <a href="registerGuest.php">Register</a>
+                                <!-- Sign In Button Only -->
+                                 <?php if (!$isLoggedIn): ?>
+                                    <a href="signIn.html" class="header-btn">Sign In</a>
+                                    <?php else: ?>
+                                        <a href="signOut.php" class="header-btn">Sign Out</a>
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                            </div>
-                        </div>   
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>
