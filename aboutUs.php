@@ -85,6 +85,10 @@
             color: #3aa9e4;
             font-weight: bold;
         }
+
+        .profile-dropdown {
+            display: none;
+        }
     </style>
 </head>
 
@@ -100,19 +104,8 @@
             </div>
         </div>
     </div>
-  </header>
-
-  <!-- Navigation bar -->
-  <nav>
-    <a href="homepage.php">Homepage</a>
-    <a href="aboutUs.php"><strong>About</strong></a>
-    <a href="contact.php">Contact</a>
-    <a href="registerGuest.html">Register</a>
-    <a href="emailVerification.html">Verification</a>
-  </nav>
-
-  <!-- Main content -->
-  <main>
+    <!-- Preloader Start -->
+    
     <?php
     session_start();
     // Check login session
@@ -142,21 +135,23 @@
                                             <li><a href="aboutUs.php">About</a></li>
                                             <li><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
-                                            <?php if ($isLoggedIn): ?>
-                                                <li><a href="profile.html">Profile</a></li>
-                                            <?php endif; ?>
                                         </ul>
                                     </nav>
                                 </div>
                                 <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                    <?php if ($isLoggedIn): ?>
-                                        <a href="signOut.php" class="header-btn">Sign Out</a>
-                                    <?php else: ?>
-                                        <a href="signIn.html" class="header-btn">Sign In</a>
-                                    <?php endif; ?>
+                                    <a href="signIn.html" class="header-btn">Sign In</a>
+                                    <div class="dropdown-content">
+                                        <?php if ($isLoggedIn): ?>
+                                            <a href="profile.html">Profile</a>
+                                            <a href="signOut.php">Sign Out</a>
+                                        <?php else: ?>
+                                            <a href="signIn.html">Sign In</a>
+                                            <a href="registerGuest.html">Register</a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>   
+                            </div>   
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>
