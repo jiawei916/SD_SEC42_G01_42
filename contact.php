@@ -298,10 +298,9 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                 <h4>Company</h4>
                                 <ul>
                                     <li><a href="homepage.php">Home</a></li>
-                                    <li><a href="aboutUs.php">About Us</a></li>
-                                    <li><a href="services.php">Services</a></li>
-                                    <li><a href="blog.php">Blog</a></li>
-                                    <li><a href="contact.php">Contact Us</a></li>
+                                    <li><a href="aboutUs.php">About</a></li>
+                                    <li><a href="feedback.php">Feedback</a></li>
+                                    <li><a href="contact.php">Contact</a></li>
                                 </ul>
                             </div>
                         </div>
