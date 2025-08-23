@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+// Check login session
+$isLoggedIn = isset($_SESSION['user_name']);
+$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -62,7 +69,7 @@
                                     </nav>
                                 </div>
                                 <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                    <a href="signIn.html" class="header-btn">Sign In</a>
+                                    <a href="signIn.php" class="header-btn">Sign In</a>
                                 </div>
                             </div>
                         </div>   

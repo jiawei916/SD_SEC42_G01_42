@@ -1,61 +1,171 @@
 <?php
-header("Content-Type: application/json");
 session_start();
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $servername = "localhost";
-    $username   = "root";
-    $password   = "";
-    $dbname     = "vetGroomList";
+// Check login session
+$isLoggedIn = isset($_SESSION['user_name']);
+$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <style>
+        /* Profile dropdown (same as About Us page) */
+        .profile-dropdown {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background-color: #3aa9e4;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+        }
+        .profile-icon {
+            font-size: 26px;
+            margin-right: 8px;
+        }
+        .profile-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background: white;
+            min-width: 140px;
+            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 1;
+        }
+        .dropdown-content a {
+            display: block;
+            padding: 8px 12px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.2s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .profile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        header {
+            position: relative;
+            padding: 15px;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 
-    try {
-        $conn = new mysqli($servername, $username, $password, $dbname);
-        $conn->set_charset("utf8mb4");
+<!-- ===== Top Header ===== -->
+<header>
+    <h1>VetGroom Hub</h1>
 
-        $email    = trim($_POST["email"] ?? "");
-        $rawPass  = $_POST["password"] ?? "";
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown">
+        <span class="profile-icon">👤</span>
+        <span class="profile-name"><?php echo htmlspecialchars($userName); ?></span>
+        <div class="dropdown-content">
 
-        if (empty($email) || empty($rawPass)) {
-            echo json_encode(["status" => "error", "message" => "Email and password are required."]);
-            exit;
+                <a href="profile.html">Profile</a>
+                <a href="signIn.php">Sign In</a>
+                <a href="registerGuest.html">Register</a>
+                <hr style="margin: 6px 0; border: none; border-top: 1px solid #ddd;">
+                <a href="signOut.php">Sign Out</a>
+        </div>
+    </div>
+</header>
+
+<!-- ===== Navigation Bar ===== -->
+<nav>
+    <a href="homepage.php">Home</a>
+    <a href="aboutUs.php">About</a>
+    <a href="contact.php">Contact</a>
+    <a href="emailVerification.html">Verification</a>
+</nav>
+
+<!-- ===== Main Content ===== -->
+<main>
+    <div class="container">
+    <h2>Sign In</h2>
+    <form id="signinForm">
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <input type="password" id="password" placeholder="Enter your password" required>
+
+        <!--Forgot Password Row -->
+        <div class="form-options">
+            </label>
+            <a href="forgetPassword.html" class="forgot-password">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="signin-btn" style="margin-top: 8px;">Sign In</button>
+        <p id="errorMessage" class="error"></p>
+    </form>
+
+    <!-- Register Button -->
+    <button class="register-btn" onclick="window.location.href='registerGuest.html'">Register</button>
+</div>
+</main>
+
+<script>
+    document.getElementById("signinForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = "";
+
+        // Email format validation
+        const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            errorMessage.textContent = "Please enter a valid email address.";
+            return;
         }
 
-        // Check if user exists
-        $stmt = $conn->prepare("SELECT id, name, email, password, verified FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($row = $result->fetch_assoc()) {
-            if (!password_verify($rawPass, $row["password"])) {
-                echo json_encode(["status" => "error", "message" => "Invalid password."]);
-                exit;
-            }
-
-            if ($row["verified"] == 0) {
-                echo json_encode(["status" => "error", "message" => "Please verify your email before signing in."]);
-                exit;
-            }
-
-            // ✅ Store session data (match homepage.php expectation)
-            $_SESSION["user_id"]   = $row["id"];
-            $_SESSION["user_name"] = $row["name"];   // changed key to "user_name"
-            $_SESSION["email"]     = $row["email"];
-            $_SESSION["logged_in"] = true;
-
-            echo json_encode(["status" => "success", "message" => "Login successful!"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "No account found with that email."]);
+        if (password === "") {
+            errorMessage.textContent = "Please enter your password.";
+            return;
         }
 
-        $stmt->close();
-        $conn->close();
+        try {
+            const response = await fetch("signInBackend.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ email, password })
+            });
 
-    } catch (mysqli_sql_exception $e) {
-        echo json_encode([
-            "status" => "error",
-            "message" => "Unexpected error: " . $e->getMessage()
-        ]);
-    }
-}
+            const result = await response.json();
+
+            if (result.status === "success") {
+                // ✅ Redirect to homepage (all users share the same page since no role)
+                window.location.href = "homepage.php";
+            } else {
+                errorMessage.textContent = result.message || "Login failed.";
+            }
+
+        } catch (error) {
+            errorMessage.textContent = "⚠️ Server error. Please try again later.";
+            console.error("Error:", error);
+        }
+    });
+</script>
+
+</body>
+</html>
+
+
