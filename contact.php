@@ -133,10 +133,10 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
   <!-- Navigation bar -->
   <nav>
     <a href="homepage.php">Homepage</a>
-    <a href="about.php">About</a>
+    <a href="aboutUs.php">About</a>
     <a href="contact.php"><strong>Contact</strong></a>
-    <a href="registerGuest.php">Register</a>
-    <a href="emailVerification.php">Verification</a>
+    <a href="registerGuest.html">Register</a>
+    <a href="emailVerification.html">Verification</a>
   </nav>
 
   <!-- Main content -->
