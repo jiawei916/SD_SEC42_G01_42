@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+// Check login session
+$isLoggedIn = isset($_SESSION['user_name']);
+$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
