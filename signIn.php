@@ -77,15 +77,16 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
     <!-- Profile Dropdown -->
     <div class="profile-dropdown">
-        <span class="profile-icon">👤</span>
-        <span class="profile-name"><?php echo htmlspecialchars($userName); ?></span>
+        <span class="profile-icon"><?php echo $isLoggedIn ? "👤" : "👤"; ?></span>
+        <span class="profile-name"><?php echo htmlspecialchars($userName); ?> ▼</span>
         <div class="dropdown-content">
-
+            <?php if ($isLoggedIn): ?>
                 <a href="profile.html">Profile</a>
-                <a href="signIn.php">Sign In</a>
-                <a href="registerGuest.html">Register</a>
-                <hr style="margin: 6px 0; border: none; border-top: 1px solid #ddd;">
                 <a href="signOut.php">Sign Out</a>
+            <?php else: ?>
+                <a href="signIn.html">Sign In</a>
+                <a href="registerGuest.html">Register</a>
+            <?php endif; ?>
         </div>
     </div>
 </header>
