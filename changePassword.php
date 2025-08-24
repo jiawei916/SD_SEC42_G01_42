@@ -1,6 +1,5 @@
 <?php
 header("Content-Type: application/json");
-session_start();
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -13,39 +12,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn = new mysqli($servername, $username, $password, $dbname);
         $conn->set_charset("utf8mb4");
 
-        // ✅ Ensure user is logged in
-        if (empty($_SESSION["email"])) {
-            echo json_encode(["status" => "error", "message" => "User not logged in."]);
+        // ✅ Get data from request
+        $token          = $_POST["token"] ?? "";
+        $newPassword    = $_POST["newPassword"] ?? "";
+        $confirmPassword= $_POST["confirmPassword"] ?? "";
+
+        if (empty($token) || empty($newPassword) || empty($confirmPassword)) {
+            echo json_encode(["status" => "error", "message" => "All fields are required."]);
             exit;
         }
 
-        $userEmail       = $_SESSION["email"];
-        $currentPassword = $_POST["currentPassword"] ?? "";
-        $newPassword     = $_POST["newPassword"] ?? "";
-
-        if (empty($currentPassword) || empty($newPassword)) {
-            echo json_encode(["status" => "error", "message" => "Both current and new passwords are required."]);
+        if ($newPassword !== $confirmPassword) {
+            echo json_encode(["status" => "error", "message" => "Passwords do not match."]);
             exit;
         }
 
-        // ✅ Fetch stored password hash
-        $stmt = $conn->prepare("SELECT password FROM users WHERE email = ?");
-        $stmt->bind_param("s", $userEmail);
+        // ✅ Find user by reset token
+        $stmt = $conn->prepare("SELECT email FROM users WHERE reset_token = ?");
+        $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($row = $result->fetch_assoc()) {
-            // Verify current password
-            if (!password_verify($currentPassword, $row["password"])) {
-                echo json_encode(["status" => "error", "message" => "Current password is incorrect."]);
-                exit;
-            }
+            $userEmail = $row["email"];
 
             // ✅ Hash new password
             $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-            // ✅ Update database
-            $update = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
+            // ✅ Update password & clear reset token
+            $update = $conn->prepare("UPDATE users SET password = ?, reset_token = NULL WHERE email = ?");
             $update->bind_param("ss", $newHashedPassword, $userEmail);
 
             if ($update->execute()) {
@@ -56,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $update->close();
         } else {
-            echo json_encode(["status" => "error", "message" => "User not found."]);
+            echo json_encode(["status" => "error", "message" => "Invalid or expired token."]);
         }
 
         $stmt->close();
