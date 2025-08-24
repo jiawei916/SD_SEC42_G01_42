@@ -117,7 +117,7 @@ input,
     <a href="homepage.php">Homepage</a>
     <a href="aboutUs.php">About</a>
     <a href="contact.php">Contact</a>
-    <a href="feedback.php"><strong>Feedback</strong></a>
+    <a href="feedback.php">Feedback</a>
     <a href="emailVerification.html">Verification</a>
   </nav>
 

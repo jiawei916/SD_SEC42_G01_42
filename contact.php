@@ -154,7 +154,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                             <div class="header-right-btn f-right d-none d-lg-block ml-30">
                                 <!-- Sign In Button Only -->
                                  <?php if (!$isLoggedIn): ?>
-                                    <a href="signIn.html" class="header-btn">Sign In</a>
+                                    <a href="signIn.php" class="header-btn">Sign In</a>
                                     <?php else: ?>
                                         <a href="signOut.php" class="header-btn">Sign Out</a>
                                         <?php endif; ?>

@@ -84,20 +84,21 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                 <a href="profile.html">Profile</a>
                 <a href="signOut.php">Sign Out</a>
             <?php else: ?>
-                <a href="signIn.html">Sign In</a>
+                <a href="signIn.php">Sign In</a>
                 <a href="registerGuest.html">Register</a>
             <?php endif; ?>
         </div>
     </div>
 </header>
 
-<!-- ===== Navigation Bar ===== -->
-<nav>
-    <a href="homepage.php">Home</a>
+  <!-- Navigation bar -->
+  <nav>
+    <a href="homepage.php">Homepage</a>
     <a href="aboutUs.php">About</a>
     <a href="contact.php">Contact</a>
+    <a href="feedback.php">Feedback</a>
     <a href="emailVerification.html">Verification</a>
-</nav>
+  </nav>
 
 <!-- ===== Main Content ===== -->
 <main>

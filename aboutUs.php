@@ -145,7 +145,7 @@
                                             <a href="profile.html">Profile</a>
                                             <a href="signOut.php">Sign Out</a>
                                         <?php else: ?>
-                                            <a href="signIn.html">Sign In</a>
+                                            <a href="signIn.php">Sign In</a>
                                             <a href="registerGuest.html">Register</a>
                                             <?php endif; ?>
                                         </div>
