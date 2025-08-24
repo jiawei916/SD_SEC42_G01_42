@@ -86,13 +86,6 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
             <?php endif; ?>
         </div>
     </div>
-                <a href="profile.html">Profile</a>
-                <a href="signIn.php">Sign In</a>
-                <a href="registerGuest.php">Register</a>
-                <hr style="margin: 6px 0; border: none; border-top: 1px solid #ddd;">
-                <a href="signOut.php">Sign Out</a>
-        </div>
-    </div>
 </header>
 
   <!-- Navigation bar -->
