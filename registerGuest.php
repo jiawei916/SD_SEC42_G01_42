@@ -115,7 +115,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
     <a href="aboutUs.php">About</a>
     <a href="contact.php">Contact</a>
     <a href="feedback.php">Feedback</a>
-    <a href="emailVerification.html">Verification</a>
+    <a href="emailVerification.php">Verification</a>
   </nav>
 
     <!-- Main registration content -->
