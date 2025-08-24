@@ -227,69 +227,55 @@
                 <div class="right-caption">
                     <!-- Section Tittle -->
                     <div class="section-tittle mb-50">
-                        <h2>We are committed to<br> better pet care</h2>
+                        <h2>About VetGroom Hub<br> Your pet's health is our priority</h2>
                     </div>
                     <div class="about-more">
-                        <p class="pera-top">At VetGroom Hub, we're passionate about animals and technology, working together to make pet care accessible and reliable.</p>
-                        <p class="mb-65 pera-bottom">Our team combines expertise in veterinary science, grooming, and technology to create a platform that serves both pet owners and care providers. We continuously improve our services based on feedback from our community.</p>
-                        <a href="services.html" class="btn">Our Services</a>
+                        <p class="pera-top">VetGroom Hub provides professional grooming and veterinary services with a focus on safety and comfort for every pet.</p>
+                        <p class="mb-65 pera-bottom">Our team includes certified veterinarians and experienced groomers. We offer appointment bookings, preventive care plans, and grooming packages suitable for dogs and cats of all sizes.</p>
+                        <a href="about.php" class="btn">Read More</a>
                     </div>
                 </div>
             </div>
         </div>
         <!-- About Area End-->
-        <!--? Team Start -->
-        <div class="team-area section-padding30">
-            <div class="container">
+        <!--? Gallery Area Start -->
+        <div class="gallery-area section-padding30">
+            <div class="container fix">
                 <div class="row justify-content-sm-center">
                     <div class="cl-xl-7 col-lg-8 col-md-10">
                         <!-- Section Tittle -->
                         <div class="section-tittle text-center mb-70">
-                            <span>Our Professional Team</span>
-                            <h2>Meet Our Experts</h2>
+                            <span>Our Recent Photos</span>
+                            <h2>Pets Photo Gallery</h2>
                         </div> 
                     </div>
                 </div>
                 <div class="row">
-                    <!-- single Team Member -->
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
-                        <div class="single-team mb-30">
-                            <div class="team-img">
-                                <img src="assets/img/gallery/team1.png" alt="Veterinarian">
-                            </div>
-                            <div class="team-caption">
-                                <span>Dr. Sarah Johnson</span>
-                                <h3><a href="#">Head Veterinarian</a></h3>
-                            </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery1.png);"></div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
-                        <div class="single-team mb-30">
-                            <div class="team-img">
-                                <img src="assets/img/gallery/team2.png" alt="Grooming Specialist">
-                            </div>
-                            <div class="team-caption">
-                                <span>Michael Roberts</span>
-                                <h3><a href="#">Grooming Specialist</a></h3>
-                            </div>
+                    <div class="col-lg-8 col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery2.png);"></div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
-                        <div class="single-team mb-30">
-                            <div class="team-img">
-                                <img src="assets/img/gallery/team3.png" alt="Animal Behaviorist">
-                            </div>
-                            <div class="team-caption">
-                                <span>Emily Chen</span>
-                                <h3><a href="#">Animal Behaviorist</a></h3>
-                            </div>
+                    <div class="col-lg-8 col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery3.png);"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4  col-md-6 col-sm-6">
+                        <div class="single-gallery mb-30">
+                            <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery4.png);"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Team End -->
-        <!--? Why Choose Us Start -->
+        <!-- Gallery Area End -->
+        <!--? Contact form Start -->
         <div class="contact-form-main pb-top">
             <div class="container">
                 <div class="row justify-content-md-end">
@@ -300,42 +286,114 @@
                                 <div class="row ">
                                     <div class="col-xl-12">
                                         <div class="section-tittle section-tittle2 mb-70">
-                                            <h2>Why Choose VetGroom Hub?</h2>
+                                            <h2>Book an appointment with VetGroom Hub</h2>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!--End Section Tittle  -->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <ul class="choose-list">
-                                        <li>✔ Easy-to-use booking system for all your pet care needs</li>
-                                        <li>✔ Verified and trusted professionals with background checks</li>
-                                        <li>✔ Personalized care plans tailored to your pet's specific needs</li>
-                                        <li>✔ Secure payment system and user-friendly platform</li>
-                                        <li>✔ 24/7 customer support for any questions or concerns</li>
-                                        <li>✔ Reminder system for appointments and vaccinations</li>
-                                    </ul>
-                                </div>
-                                <div class="col-lg-12 mt-40">
-                                    <div class="submit-info">
-                                        <a href="registerGuest.html" class="btn submit-btn2">Get Started Today</a>
+                            <form id="contact-form" action="contact.php" method="POST">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-box user-icon mb-30">
+                                            <input type="text" name="name" placeholder="Full name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-box email-icon mb-30">
+                                            <input type="text" name="phone" placeholder="Phone" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 mb-30">
+                                        <div class="select-itms">
+                                            <select name="service" id="select2">
+                                                <option value="grooming">Pet Grooming</option>
+                                                <option value="vet">Veterinary Consultation</option>
+                                                <option value="vaccination">Vaccination</option>
+                                                <option value="boarding">Pet Boarding</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-box subject-icon mb-30">
+                                            <input type="email" name="email" placeholder="Email" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-box message-icon mb-65">
+                                            <textarea name="message" id="message" placeholder="Tell us about your pet / request" required></textarea>
+                                        </div>
+                                        <div class="submit-info">
+                                            <button class="btn submit-btn2" type="submit">Send Request</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- shape-dog -->
-                            <div class="shape-dog">
-                                <img src="assets/img/gallery/shape1.png" alt="">
-                            </div>
+                                <!-- shape-dog -->
+                                <div class="shape-dog">
+                                    <img src="assets/img/gallery/shape1.png" alt="">
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- contact left Img-->
             <div class="from-left d-none d-lg-block">
-                <img src="assets/img/gallery/contact_form.png" alt="Happy dog">
+                <img src="assets/img/gallery/contact_form.png" alt="Contact VetGroom Hub">
             </div>
         </div>
+        <!-- Contact form End -->
+        <!--? Team Start -->
+        <div class="team-area section-padding30">
+            <div class="container">
+                <div class="row justify-content-sm-center">
+                    <div class="cl-xl-7 col-lg-8 col-md-10">
+                        <!-- Section Tittle -->
+                        <div class="section-tittle text-center mb-70">
+                            <span>Our Professional members </span>
+                            <h2>Our Team Members</h2>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- single Tem -->
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
+                        <div class="single-team mb-30">
+                            <div class="team-img">
+                                <img src="assets/img/gallery/team1.png" alt="">
+                            </div>
+                            <div class="team-caption">
+                                <span>Dr. Mike Janathon</span>
+                                <h3><a href="#">Veterinarian</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
+                        <div class="single-team mb-30">
+                            <div class="team-img">
+                                <img src="assets/img/gallery/team2.png" alt="">
+                            </div>
+                            <div class="team-caption">
+                                <span>Jane Smith</span>
+                                <h3><a href="#">Head Groomer</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-">
+                        <div class="single-team mb-30">
+                            <div class="team-img">
+                                <img src="assets/img/gallery/team3.png" alt="">
+                            </div>
+                            <div class="team-caption">
+                                <span>Pule W Smith</span>
+                                <h3><a href="#">Veterinary Nurse</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
         <!-- Why Choose Us End -->
         <!--? Testimonials Start -->
         <div class="home_blog-area section-padding30">
