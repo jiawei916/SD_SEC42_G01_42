@@ -411,16 +411,16 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                 </div>
             </div>
         </div>
-        <!-- Testimonial End -->
-        <!--? Blog start -->
+        <!-- Why Choose Us End -->
+        <!--? Testimonials Start -->
         <div class="home_blog-area section-padding30">
             <div class="container">
                 <div class="row justify-content-sm-center">
                     <div class="cl-xl-7 col-lg-8 col-md-10">
                         <!-- Section Tittle -->
                         <div class="section-tittle text-center mb-70">
-                            <span>Our recent news</span>
-                            <h2>From the VetGroom Hub Blog</h2>
+                            <span>What our clients say</span>
+                            <h2>Happy Pet Owners</h2>
                         </div> 
                     </div>
                 </div>
@@ -428,52 +428,52 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="single-blogs mb-30">
                             <div class="blog-img">
-                                <img src="assets/img/gallery/blog1.png" alt="">
+                                <img src="assets/img/gallery/blog1.png" alt="Happy dog">
                             </div>
                             <div class="blogs-cap">
                                 <div class="date-info">
-                                    <span>Pet care</span>
-                                    <p>Nov 30, 2020</p>
+                                    <span>Dog Owner</span>
+                                    <p>Jan 15, 2023</p>
                                 </div>
-                                <h4>How to Keep Your Pet Healthy This Season</h4>
-                                <a href="blog_details.php" class="read-more1">Read more</a>
+                                <h4>"Best grooming service my Golden Retriever has ever had!"</h4>
+                                <p class="testimonial-text">The team at VetGroom Hub is amazing. They're gentle, professional, and my dog actually gets excited for grooming appointments now!</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="single-blogs mb-30">
                             <div class="blog-img">
-                                <img src="assets/img/gallery/blog2.png" alt="">
+                                <img src="assets/img/gallery/blog2.png" alt="Happy cat">
                             </div>
                             <div class="blogs-cap">
                                 <div class="date-info">
-                                    <span>Grooming</span>
-                                    <p>Nov 30, 2020</p>
+                                    <span>Cat Owner</span>
+                                    <p>Mar 22, 2023</p>
                                 </div>
-                                <h4>Preparing Your Pet for Grooming</h4>
-                                <a href="blog_details.php" class="read-more1">Read more</a>
+                                <h4>"Finally found a vet that understands anxious cats"</h4>
+                                <p class="testimonial-text">My cat used to be terrified of vet visits until we found VetGroom Hub. Their patience and expertise made all the difference.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="single-blogs mb-30">
                             <div class="blog-img">
-                                <img src="assets/img/gallery/blog3.png" alt="">
+                                <img src="assets/img/gallery/blog3.png" alt="Multiple pets">
                             </div>
                             <div class="blogs-cap">
                                 <div class="date-info">
-                                    <span>Health</span>
-                                    <p>Nov 30, 2020</p>
+                                    <span>Multiple Pets</span>
+                                    <p>Nov 30, 2023</p>
                                 </div>
-                                <h4>Vaccination: What You Need to Know</h4>
-                                <a href="blog_details.php" class="read-more1">Read more</a>
+                                <h4>"Managing care for my three dogs has never been easier"</h4>
+                                <p class="testimonial-text">The scheduling system is a lifesaver! I can book all my dogs' appointments at once and get reminders for each one.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Blog End -->
+        <!-- Testimonials End -->
         <!--? contact-animal-owner Start -->
         <div class="contact-animal-owner section-bg" data-background="assets/img/gallery/section_bg04.png">
             <div class="container">
