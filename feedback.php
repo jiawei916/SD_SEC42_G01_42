@@ -105,8 +105,8 @@ input,
                 <a href="profile.html">Profile</a>
                 <a href="signOut.php">Sign Out</a>
             <?php else: ?>
-                <a href="signIn.html">Sign In</a>
-                <a href="registerGuest.html">Register</a>
+                <a href="signIn.php">Sign In</a>
+                <a href="registerGuest.php">Register</a>
             <?php endif; ?>
         </div>
     </div>
@@ -118,7 +118,7 @@ input,
     <a href="aboutUs.php">About</a>
     <a href="contact.php">Contact</a>
     <a href="feedback.php">Feedback</a>
-    <a href="emailVerification.html">Verification</a>
+    <a href="emailVerification.php">Verification</a>
   </nav>
 
   <!-- Main content -->
