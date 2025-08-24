@@ -201,16 +201,6 @@
         <div class="about-area fix">
             <!--Right Contents  -->
             <div class="about-img">
-                <div class="info-man text-center">
-                <div class="head-cap">
-                    <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="39px"></svg>
-                </div>
-                </div>
-                <div class="info-man info-man2 text-center">
-                <div class="head-cap">
-                        <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="39px"></svg>
-                </div>
-                </div>
             </div>
             <!-- left Contents -->
             <div class="about-details">
