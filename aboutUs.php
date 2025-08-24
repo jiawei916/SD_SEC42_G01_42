@@ -139,7 +139,7 @@
                                     </nav>
                                 </div>
                                 <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                    <a href="signIn.html" class="header-btn">Sign In</a>
+                                    <a href="signIn.php" class="header-btn">Sign In</a>
                                     <div class="dropdown-content">
                                         <?php if ($isLoggedIn): ?>
                                             <a href="profile.html">Profile</a>
