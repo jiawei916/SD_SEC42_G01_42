@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 
@@ -30,7 +31,6 @@ if (!$isLoggedIn) {
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
     <!-- CSS here -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="assets/css/slicknav.css">
@@ -44,98 +44,25 @@ if (!$isLoggedIn) {
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="forms/basic/style.css">
     <style>
-        /* Profile dropdown */
-        .profile-dropdown {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            background-color: #3aa9e4;
-            padding: 6px 12px;
-            border-radius: 6px;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
-            margin-left: 15px;
-        }
-
-        .profile-icon {
-            font-size: 16px;
-            margin-right: 8px;
-        }
-
-        .profile-name {
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 35px;
-            background: white;
-            min-width: 140px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            z-index: 1000;
-        }
-
-        .dropdown-content a {
-            display: block;
-            padding: 8px 12px;
-            font-size: 14px;
-            text-decoration: none;
-            color: #333;
-            transition: background 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .profile-dropdown:hover .dropdown-content {
-            display: block;
-        }
-        
-        .header-right-btn {
-            display: flex;
-            align-items: center;
-        }
-        
-        /* Active menu item */
-        #navigation li a[href="about.html"] {
-            color: #3aa9e4;
-            font-weight: bold;
-        }
-
-        .profile-dropdown {
-            display: none;
-        }
         body {
-  opacity: 0;
-  animation: fadeInAnimation ease 1s;
-  animation-fill-mode: forwards;
-}
+            opacity: 0;
+            animation: fadeInAnimation ease 1s;
+            animation-fill-mode: forwards;
+            }
 
-@keyframes fadeInAnimation {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
+            @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+              }
+            100% {
+              opacity: 1;
+              }
+            }
     </style>
 </head>
 
 <body style="background-image: url('assets/img/hero/hero2.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center;">
-    <?php
-    session_start();
-    // Check login session
-    $isLoggedIn = isset($_SESSION['user_name']);
-    $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
-    ?>
-    
+
     <header>
         <!--? Header Start -->
         <div class="header-area header-transparent">
