@@ -168,7 +168,6 @@ if (!$isLoggedIn) {
         emailError.textContent = "";
         passwordError.textContent = "";
 
-        // Email format validation
         const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
         if (!emailPattern.test(email)) {
             emailError.textContent = "Please enter a valid email address.";
@@ -189,9 +188,20 @@ if (!$isLoggedIn) {
             const result = await response.json();
 
             if (result.status === "success") {
-                alert("Sign-In Successful! Redirecting to homepage...");
+                // Determine the correct redirection URL based on user role
+                let redirectUrl;
+                if (result.user_role === 'admin') {
+                    redirectUrl = "viewDashboardAdmin.php";
+                } else if (result.user_role === 'staff') {
+                    redirectUrl = "viewDashboardStaff.php";
+                } else {
+                    // Default to homepage for customers and other roles
+                    redirectUrl = "homepage.php";
+                }
+
+                alert("Sign-In Successful! Redirecting to your dashboard...");
                 setTimeout(() => {
-                    window.location.href = "homepage.php";
+                    window.location.href = redirectUrl;
                 }, 1500);
             } else {
                 passwordError.textContent = result.message || "Login failed.";

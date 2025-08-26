@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check if user exists
-        $stmt = $conn->prepare("SELECT id, username, email, password, email_verified FROM users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, username, email, password, role, email_verified FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -43,8 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["user_name"] = $row["username"];
             $_SESSION["email"]     = $row["email"];
             $_SESSION["logged_in"] = true;
+            $_SESSION["user_role"] = $row["user_role"];
 
-            echo json_encode(["status" => "success", "message" => "Login successful!"]);
+            echo json_encode([
+                "status" => "success",
+                "message" => "Login successful!",
+                "user_role" => $row["user_role"]
+            ]);
         } else {
             echo json_encode(["status" => "error", "message" => "No account found with that email."]);
         }

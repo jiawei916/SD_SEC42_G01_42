@@ -72,7 +72,7 @@ if (!$isLoggedIn) {
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="homepage.php"><img src="assets/img/logo/logo1.png" alt="VetGroom Hub Logo"></a>
+                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -104,7 +104,7 @@ if (!$isLoggedIn) {
                 <p>Enter your credentials to access your account</p>
             </div>
             
-            <form class="login-form" id="signinForm" novalidate>
+            <form class="login-form" id="loginForm" novalidate>
                 <div class="form-group">
                     <div class="input-wrapper">
                         <input type="email" id="email" name="email" required autocomplete="email">
@@ -156,7 +156,7 @@ if (!$isLoggedIn) {
 
 <!-- ===== JS Section ===== -->
 <script>
-    document.getElementById("signinForm").addEventListener("submit", async function(event) {
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const email = document.getElementById("email").value.trim();
@@ -168,7 +168,6 @@ if (!$isLoggedIn) {
         emailError.textContent = "";
         passwordError.textContent = "";
 
-        // Email format validation
         const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
         if (!emailPattern.test(email)) {
             emailError.textContent = "Please enter a valid email address.";
@@ -189,9 +188,20 @@ if (!$isLoggedIn) {
             const result = await response.json();
 
             if (result.status === "success") {
-                successMessage.style.display = "block";
+                // Determine the correct redirection URL based on user role
+                let redirectUrl;
+                if (result.user_role === 'admin') {
+                    redirectUrl = "viewDashboardAdmin.php";
+                } else if (result.user_role === 'staff') {
+                    redirectUrl = "viewDashboardStaff.php";
+                } else {
+                    // Default to homepage for customers and other roles
+                    redirectUrl = "homepage.php";
+                }
+
+                alert("Sign-In Successful! Redirecting to your dashboard...");
                 setTimeout(() => {
-                    window.location.href = "homepage.php";
+                    window.location.href = redirectUrl;
                 }, 1500);
             } else {
                 passwordError.textContent = result.message || "Login failed.";
