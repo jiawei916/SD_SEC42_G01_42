@@ -32,7 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $token = bin2hex(random_bytes(16));
             $expires = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
-            // Store token in DB (make sure users table has reset_token + reset_expires)
             $update = $conn->prepare("UPDATE users SET verification_token = ?, reset_expires = ? WHERE id = ?");
             $update->bind_param("ssi", $token, $expires, $userId);
             $update->execute();

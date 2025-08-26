@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // ✅ Find user by reset token
-        $stmt = $conn->prepare("SELECT email FROM users WHERE reset_token = ?");
+        $stmt = $conn->prepare("SELECT email FROM users WHERE verification_token = ?");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
             // ✅ Update password & clear reset token
-            $update = $conn->prepare("UPDATE users SET password = ?, reset_token = NULL WHERE email = ?");
+            $update = $conn->prepare("UPDATE users SET password = ?, verification_token = NULL WHERE email = ?");
             $update->bind_param("ss", $newHashedPassword, $userEmail);
 
             if ($update->execute()) {
