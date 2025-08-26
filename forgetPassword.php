@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $expires = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
             // Store token in DB (make sure users table has reset_token + reset_expires)
-            $update = $conn->prepare("UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?");
+            $update = $conn->prepare("UPDATE users SET verification_token = ?, reset_expires = ? WHERE id = ?");
             $update->bind_param("ssi", $token, $expires, $userId);
             $update->execute();
 

@@ -441,7 +441,7 @@ if (!$isLoggedIn) {
         // Prepare data to send
         let formData = new FormData(this);
 
-        fetch("register.php", {
+        fetch("registerBackend.php", {
             method: "POST",
             body: formData
         })
