@@ -43,12 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["user_name"] = $row["username"];
             $_SESSION["email"]     = $row["email"];
             $_SESSION["logged_in"] = true;
-            $_SESSION["user_role"] = $row["user_role"];
+            $_SESSION["user_role"] = $row["role"];
 
             echo json_encode([
                 "status" => "success",
                 "message" => "Login successful!",
-                "user_role" => $row["user_role"]
+                "user_role" => $row["role"]
             ]);
         } else {
             echo json_encode(["status" => "error", "message" => "No account found with that email."]);
