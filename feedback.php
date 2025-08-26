@@ -4,6 +4,19 @@ session_start();
 // Check login session
 $isLoggedIn = isset($_SESSION['user_name']);
 $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+
+// Determine user role based on session or default to guest
+if (!$isLoggedIn) {
+    $userRole = 'guest';
+} else {
+    // Check if role is stored in session (you should set this during login)
+    if (isset($_SESSION['user_role'])) {
+        $userRole = $_SESSION['user_role'];
+    } else {
+        // Default role for logged-in users without a specific role
+        $userRole = 'customer';
+    }
+}
 ?>
 
 <!doctype html>
@@ -112,14 +125,17 @@ input,
     </div>
   </header>
 
-  <!-- Navigation bar -->
-  <nav>
-    <a href="homepage.php">Homepage</a>
-    <a href="aboutUs.php">About</a>
-    <a href="contact.php">Contact</a>
-    <a href="feedback.php">Feedback</a>
-    <a href="emailVerification.php">Verification</a>
-  </nav>
+<!-- Navigation bar -->
+<nav>
+  <a href="homepage.php">Homepage</a>
+  <a href="aboutUs.php">About</a>
+  <a href="contact.php">Contact</a>
+  <a href="feedback.php">Feedback</a>
+  <a href="emailVerification.php">Verification</a>
+  <?php if ($userRole === 'admin' || $userRole === 'staff'): ?>
+    <a href="viewFeedback.php" style="background-color: #2a7ca4; color: white;">View Feedback</a>
+  <?php endif; ?>
+</nav>
 
   <!-- Main content -->
   <main>
