@@ -104,7 +104,7 @@ if (!$isLoggedIn) {
                 <p>Enter your credentials to access your account</p>
             </div>
             
-            <form class="login-form" id="signinForm" novalidate>
+            <form class="login-form" id="loginForm" novalidate>
                 <div class="form-group">
                     <div class="input-wrapper">
                         <input type="email" id="email" name="email" required autocomplete="email">
@@ -156,7 +156,7 @@ if (!$isLoggedIn) {
 
 <!-- ===== JS Section ===== -->
 <script>
-    document.getElementById("signinForm").addEventListener("submit", async function(event) {
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const email = document.getElementById("email").value.trim();
@@ -189,7 +189,7 @@ if (!$isLoggedIn) {
             const result = await response.json();
 
             if (result.status === "success") {
-                successMessage.style.display = "block";
+                alert("Sign-In Successful! Redirecting to homepage...");
                 setTimeout(() => {
                     window.location.href = "homepage.php";
                 }, 1500);
