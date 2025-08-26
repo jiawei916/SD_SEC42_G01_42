@@ -123,7 +123,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                 <a href="signOut.php">Sign Out</a>
             <?php else: ?>
                 <a href="signIn.php">Sign In</a>
-                <a href="registerGuest.html">Register</a>
+                <a href="registerGuest.php">Register</a>
             <?php endif; ?>
         </div>
     </div>

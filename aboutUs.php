@@ -1,3 +1,9 @@
+<?php
+    session_start();
+    // Check login session
+    $isLoggedIn = isset($_SESSION['user_name']);
+    $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+    ?>
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
@@ -22,48 +28,37 @@
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* Profile dropdown */
-        .profile-dropdown {
+        /* Dropdown container */
+        .dropdown {
             position: relative;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            background-color: #3aa9e4;
-            padding: 6px 12px;
-            border-radius: 6px;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
-            margin-left: 15px;
+            display: inline-block;
         }
 
-        .profile-icon {
-            font-size: 16px;
-            margin-right: 8px;
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
         }
 
-        .profile-name {
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-        }
-
+        /* Dropdown box */
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            top: 35px;
-            background: white;
-            min-width: 140px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
-            border-radius: 5px;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
             z-index: 1000;
         }
 
+        /* Dropdown links */
         .dropdown-content a {
-            display: block;
-            padding: 8px 12px;
-            font-size: 14px;
-            text-decoration: none;
             color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
             transition: background 0.2s ease;
         }
 
@@ -71,23 +66,15 @@
             background-color: #f1f1f1;
         }
 
-        .profile-dropdown:hover .dropdown-content {
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
             display: block;
         }
-        
-        .header-right-btn {
-            display: flex;
-            align-items: center;
-        }
-        
+
         /* Active menu item */
         #navigation li a[href="about.html"] {
             color: #3aa9e4;
             font-weight: bold;
-        }
-
-        .profile-dropdown {
-            display: none;
         }
     </style>
 </head>
@@ -106,12 +93,7 @@
     </div>
     <!-- Preloader Start -->
     
-    <?php
-    session_start();
-    // Check login session
-    $isLoggedIn = isset($_SESSION['user_name']);
-    $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
-    ?>
+
     
     <header>
         <!--? Header Start -->
@@ -122,7 +104,7 @@
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="index.html"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
+                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -138,18 +120,22 @@
                                         </ul>
                                     </nav>
                                 </div>
-                                <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                    <a href="signIn.php" class="header-btn">Sign In</a>
-                                    <div class="dropdown-content">
-                                        <?php if ($isLoggedIn): ?>
-                                            <a href="profile.html">Profile</a>
-                                            <a href="signOut.php">Sign Out</a>
-                                        <?php else: ?>
-                                            <a href="signIn.php">Sign In</a>
-                                            <a href="registerGuest.html">Register</a>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
+<div class="header-right-btn f-right d-none d-lg-block ml-30">
+    <div class="dropdown">
+        <a href="#" class="header-btn">
+            <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
+        </a>
+        <div class="dropdown-content">
+            <?php if ($isLoggedIn): ?>
+                <a href="profile.html">Profile</a>
+                <a href="signOut.php">Sign Out</a>
+            <?php else: ?>
+                <a href="signIn.php">Sign In</a>
+                <a href="registerGuest.php">Register</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
                                 </div>
                             </div>   
                         <!-- Mobile Menu -->
@@ -448,7 +434,7 @@
                                 <p>Join thousands of happy pet owners who trust VetGroom Hub with their furry family members.</p>
                             </div>
                             <div class="contact_btn d-flex align-items-center justify-content-center">
-                                <a href="registerGuest.html" class="btn white-btn">Create Account</a>
+                                <a href="registerGuest.php" class="btn white-btn">Create Account</a>
                                 <p>Or<a href="contact.php"> Contact Us</a></p>
                             </div>
                         </div>
@@ -503,11 +489,11 @@
                             <div class="footer-tittle">
                                 <h4>Services</h4>
                                 <ul>
-                                    <li><a href="services.html">Pet Grooming</a></li>
-                                    <li><a href="services.html">Veterinary Care</a></li>
-                                    <li><a href="services.html">Pet Boarding</a></li>
-                                    <li><a href="services.html">Dental Care</a></li>
-                                    <li><a href="services.html">Emergency Services</a></li>
+                                    <li><a href="services.php#grooming">Pet Grooming</a></li>
+                                    <li><a href="services.php#vet">Veterinary Care</a></li>
+                                    <li><a href="services.php#vaccination">Vaccination</a></li>
+                                    <li><a href="services.php#boarding">Pet Boarding</a></li>
+                                    <li><a href="services.php#packages">Packages</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -517,9 +503,9 @@
                             <div class="footer-tittle">
                                 <h4>Get in Touch</h4>
                                 <ul>
-                                 <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                                 <li><a href="tel:+60123456789">+60 12-345 6789</a></li>
                                  <li><a href="mailto:info@vetgroomhub.com">info@vetgroomhub.com</a></li>
-                                 <li><a href="#">123 Pet Care Ave, Pet City</a></li>
+                                 <li><a href="#">Kuala Lumpur, Malaysia</a></li>
                              </ul>
                             </div>
                         </div>
