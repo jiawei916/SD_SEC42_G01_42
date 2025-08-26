@@ -29,73 +29,51 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
     <link rel="stylesheet" href="assets/css/style.css">
     
     <style>
-        /* Profile dropdown styling to match template */
-        .profile-dropdown {
+        /* Dropdown container */
+        .dropdown {
             position: relative;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            background-color: #3aa9e4;
-            padding: 8px 15px;
-            border-radius: 30px;
-            margin-left: 20px;
+            display: inline-block;
         }
 
-        .profile-icon {
-            font-size: 16px;
-            margin-right: 8px;
-            color: white;
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
         }
 
-        .profile-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: white;
-        }
-
+        /* Dropdown box */
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            top: 45px;
-            background: white;
-            min-width: 160px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.15);
-            border-radius: 5px;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
             z-index: 1000;
-            overflow: hidden;
         }
 
+        /* Dropdown links */
         .dropdown-content a {
-            display: block;
-            padding: 10px 15px;
-            font-size: 14px;
-            text-decoration: none;
             color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
             transition: background 0.2s ease;
-            border-bottom: 1px solid #f1f1f1;
-        }
-
-        .dropdown-content a:last-child {
-            border-bottom: none;
         }
 
         .dropdown-content a:hover {
-            background-color: #f9f9f9;
-            color: #3aa9e4;
+            background-color: #f1f1f1;
         }
 
-        .profile-dropdown:hover .dropdown-content {
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
             display: block;
         }
         
-        /* Adjust header to accommodate profile dropdown */
-        .menu-main {
-            align-items: center;
-        }
-        
         /* Navigation adjustments */
-        .main-menu nav ul li a[href="contact.html"] {
+        .main-menu nav ul li a[href="contact.php"] {
             color: #3aa9e4;
             font-weight: 600;
         }
@@ -132,10 +110,10 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="index.html"><img src="assets/img/logo/logo1.png" alt="VetGroom Hub"></a>
+                                <a href="homepage.php"><img src="assets/img/logo/logo1.png" alt="VetGroom Hub"></a>
                             </div>
                         </div>
-                        <div class="col-xl-8 col-lg-8 col-md-8">
+                        <div class="col-xl-10 col-lg-10 col-md-10">
                             <div class="menu-main d-flex align-items-center justify-content-end">
                                 <!-- Main-menu -->
                                 <div class="main-menu f-right d-none d-lg-block">
@@ -148,18 +126,24 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                         </ul>
                                     </nav>
                                 </div>
-                            </div>
-                        </div>                       
-                        <div class="col-xl-2 col-lg-2 col-md-2">
-                            <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                <!-- Sign In Button Only -->
-                                 <?php if (!$isLoggedIn): ?>
-                                    <a href="signIn.php" class="header-btn">Sign In</a>
-                                    <?php else: ?>
-                                        <a href="signOut.php" class="header-btn">Sign Out</a>
-                                        <?php endif; ?>
+                                <div class="header-right-btn f-right d-none d-lg-block ml-30">
+                                    <div class="dropdown">
+                                        <a href="#" class="header-btn">
+                                            <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
+                                        </a>
+                                        <div class="dropdown-content">
+                                            <?php if ($isLoggedIn): ?>
+                                                <a href="profile.html">Profile</a>
+                                                <a href="signOut.php">Sign Out</a>
+                                            <?php else: ?>
+                                                <a href="signIn.php">Sign In</a>
+                                                <a href="registerGuest.php">Register</a>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>
@@ -197,7 +181,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                             <div style="text-align: center; color: #666;">
                                 <i class="fas fa-map-marker-alt" style="font-size: 48px; margin-bottom: 15px;"></i>
                                 <h3>VetGroom Hub Location</h3>
-                                <p>123 Pet Care Street, Grooming City, PA 12345</p>
+                                <p>Kuala Lumpur, Malaysia</p>
                             </div>
                         </div>
                     </div>
@@ -240,21 +224,21 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                         <div class="media contact-info">
                             <span class="contact-info__icon"><i class="ti-home"></i></span>
                             <div class="media-body">
-                                <h3>Pet Care Street, PA.</h3>
-                                <p>123 Pet Care Street, Grooming City, PA 12345</p>
+                                <h3>Kuala Lumpur, Malaysia</h3>
+                                <p>Pet care center location</p>
                             </div>
                         </div>
                         <div class="media contact-info">
                             <span class="contact-info__icon"><i class="ti-tablet"></i></span>
                             <div class="media-body">
-                                <h3>+1 (555) 123-4567</h3>
+                                <h3>+60 12-345 6789</h3>
                                 <p>Mon to Fri 9am to 6pm</p>
                             </div>
                         </div>
                         <div class="media contact-info">
                             <span class="contact-info__icon"><i class="ti-email"></i></span>
                             <div class="media-body">
-                                <h3>support@vetgroomhub.fake</h3>
+                                <h3>info@vetgroomhub.com</h3>
                                 <p>Send us your query anytime!</p>
                             </div>
                         </div>
@@ -275,18 +259,18 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                          <div class="single-footer-caption mb-30">
                               <!-- logo -->
                              <div class="footer-logo mb-25">
-                                 <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
+                                 <a href="homepage.php"><img src="assets/img/logo/logo2_footer.png" alt="VetGroom Hub"></a>
                              </div>
                              <div class="footer-tittle">
                                  <div class="footer-pera">
-                                     <p>At VetGroom Hub, we provide exceptional veterinary and grooming services to keep your pets healthy and happy.</p>
+                                     <p>Professional grooming and veterinary services for your beloved pets.</p>
                                 </div>
                              </div>
                              <!-- social -->
                              <div class="footer-social">
                                  <a href="#"><i class="fab fa-facebook-square"></i></a>
                                  <a href="#"><i class="fab fa-twitter-square"></i></a>
-                                 <a href="#"><i class="fab fa-instagram"></i></a>
+                                 <a href="#"><i class="fab fa-linkedin"></i></a>
                                  <a href="#"><i class="fab fa-pinterest-square"></i></a>
                              </div>
                          </div>
@@ -310,11 +294,11 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                             <div class="footer-tittle">
                                 <h4>Services</h4>
                                 <ul>
-                                    <li><a href="services.php">Veterinary Checkups</a></li>
-                                    <li><a href="services.php">Pet Grooming</a></li>
-                                    <li><a href="services.php">Vaccinations</a></li>
-                                    <li><a href="services.php">Dental Care</a></li>
-                                    <li><a href="services.php">Emergency Care</a></li>
+                                    <li><a href="services.php#grooming">Pet Grooming</a></li>
+                                    <li><a href="services.php#vet">Veterinary Care</a></li>
+                                    <li><a href="services.php#vaccination">Vaccination</a></li>
+                                    <li><a href="services.php#boarding">Pet Boarding</a></li>
+                                    <li><a href="services.php#packages">Packages</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -324,9 +308,9 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                             <div class="footer-tittle">
                                 <h4>Get in Touch</h4>
                                 <ul>
-                                 <li><a href="tel:+15551234567">+1 (555) 123-4567</a></li>
-                                 <li><a href="mailto:support@vetgroomhub.fake">support@vetgroomhub.fake</a></li>
-                                 <li><a href="#">123 Pet Care Street, Grooming City, PA 12345</a></li>
+                                 <li><a href="tel:+60123456789">+60 12-345 6789</a></li>
+                                 <li><a href="mailto:info@vetgroomhub.com">info@vetgroomhub.com</a></li>
+                                 <li><a href="#">Kuala Lumpur, Malaysia</a></li>
                              </ul>
                             </div>
                         </div>
@@ -341,7 +325,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                      <div class="row d-flex align-items-center">
                          <div class="col-xl-12 ">
                              <div class="footer-copy-right text-center">
-                                 <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | VetGroom Hub</p>
+                                 <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> VetGroom Hub. All rights reserved.</p>
                              </div>
                          </div>
                      </div>
