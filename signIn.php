@@ -72,7 +72,7 @@ if (!$isLoggedIn) {
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="index.html"><img src="assets/img/logo/logo1.png" alt="VetGroom Hub Logo"></a>
+                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
