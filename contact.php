@@ -116,7 +116,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
             <div class="preloader-inner position-relative">
                 <div class="preloader-circle"></div>
                 <div class="preloader-img pere-text">
-                    <img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo">
+                    <img src="assets/img/logo/logo2.png" alt="VetGroom Hub Logo">
                 </div>
             </div>
         </div>
@@ -132,7 +132,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="index.html"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                                <a href="index.html"><img src="assets/img/logo/logo1.png" alt="VetGroom Hub"></a>
                             </div>
                         </div>
                         <div class="col-xl-8 col-lg-8 col-md-8">
@@ -275,7 +275,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                          <div class="single-footer-caption mb-30">
                               <!-- logo -->
                              <div class="footer-logo mb-25">
-                                 <a href="homepage.php"><img src="assets/img/logo/logo2_footer.png" alt="VetGroom Hub"></a>
+                                 <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
                              </div>
                              <div class="footer-tittle">
                                  <div class="footer-pera">
