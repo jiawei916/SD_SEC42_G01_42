@@ -194,16 +194,28 @@ if (!$isLoggedIn) {
             color: white;
         }
         
+        /* Dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Use existing .header-btn styling */
+.dropdown > .header-btn {
+    display: inline-block;
+    text-align: center;
+}
+        /* Dropdown box */
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            top: 40px;
-            background: white;
-            min-width: 140px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            z-index: 1;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            z-index: 1000;
         }
         
         .dropdown-content a {
@@ -219,6 +231,12 @@ if (!$isLoggedIn) {
             background-color: #f1f1f1;
         }
         
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
         .profile-dropdown:hover .dropdown-content {
             display: block;
         }
