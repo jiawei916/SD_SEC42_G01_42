@@ -20,142 +20,391 @@ if (!$isLoggedIn) {
 ?>
 
 <!doctype html>
-<html lang="en">
+<html class="no-js" lang="zxx">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Feedback - VetGroom Hub</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Input Fields & Textarea (Unified Style) */
-input,
-.feedback-box textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    font-family: inherit;
-    box-sizing: border-box;
-    background-color: #fff;
-    line-height: 1.4;
-}
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>VetGroom Hub | Contact Us</title>
+    <meta name="description" content="Contact VetGroom Hub for all your pet grooming and veterinary needs">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
-/* Specific Textarea Adjustments */
-.feedback-box textarea {
-    height: 150px;      /* Taller than inputs */
-    resize: vertical;   /* Allow manual vertical resize */
-    margin-bottom: 10px;
-}
-        /* Profile dropdown (same as About Us page) */
-        .profile-dropdown {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            background-color: #3aa9e4;
-            padding: 6px 10px;
-            border-radius: 6px;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+   <!-- CSS here -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/css/slicknav.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/nice-select.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
         }
-        .profile-icon {
-            font-size: 26px;
-            margin-right: 8px;
+
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
         }
-        .profile-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-        }
+
+        /* Dropdown box */
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            top: 40px;
-            background: white;
-            min-width: 140px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            z-index: 1;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            z-index: 1000;
         }
+
+        /* Dropdown links */
         .dropdown-content a {
-            display: block;
-            padding: 8px 12px;
-            font-size: 14px;
-            text-decoration: none;
             color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
             transition: background 0.2s ease;
         }
+
         .dropdown-content a:hover {
             background-color: #f1f1f1;
         }
-        .profile-dropdown:hover .dropdown-content {
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
             display: block;
         }
-        header {
-            position: relative;
-            padding: 15px;
-            color: white;
-            text-align: center;
+        
+        /* Navigation adjustments */
+        .main-menu nav ul li a[href="contact.php"] {
+            color: #3aa9e4;
+            font-weight: 600;
         }
-  </style>
+        
+        /* Update footer content to match VetGroom Hub */
+        .footer-tittle h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        button{
+          color: #333;
+        }
+        .emoji-feedback {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .emoji-btn {
+          font-size: 22px;
+          padding: 12px 30px 12px 30px;
+          border: 1px solid #ddd;
+          border-radius: 12px;
+          background-color: #f9f9f9;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: left;
+        }
+
+        .emoji-btn:hover {
+          background-color: #e5e5e5ff;
+          border-color: #dadadaff;
+          transform: scale(1.05);
+        }
+        
+        .emoji-btn.selected {
+          background-color: none;
+          box-shadow: rgba(26, 255, 53, 1) 0 0 6px;
+        }
+
+    </style>
 </head>
 <body>
-    
-  <!-- Site title -->
-  <header>
-    <h1>VetGroom Hub</h1>
-
-    <!-- Profile Dropdown -->
-    <div class="profile-dropdown">
-        <span class="profile-icon"><?php echo $isLoggedIn ? "👤" : "👤"; ?></span>
-        <span class="profile-name"><?php echo htmlspecialchars($userName); ?> ▼</span>
-        <div class="dropdown-content">
-            <?php if ($isLoggedIn): ?>
-                <a href="profile.html">Profile</a>
-                <a href="signOut.php">Sign Out</a>
-            <?php else: ?>
-                <a href="signIn.php">Sign In</a>
-                <a href="registerGuest.php">Register</a>
-            <?php endif; ?>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="assets/img/logo/logo2.png" alt="VetGroom Hub Logo">
+                </div>
+            </div>
         </div>
     </div>
-  </header>
+  <!-- Site title -->
+  <header>
+        <!--? Header Start -->
+        <div class="header-area header-transparent">
+            <div class="main-header header-sticky">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <!-- Logo -->
+                        <div class="col-xl-2 col-lg-2 col-md-1">
+                            <div class="logo">
+                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-10 col-lg-10 col-md-10">
+                            <div class="menu-main d-flex align-items-center justify-content-end">
+                                <!-- Main-menu -->
+                                <div class="main-menu f-right d-none d-lg-block">
+                                    <nav> 
+                                        <ul id="navigation">
+                                            <li><a href="homepage.php">Home</a></li>
+                                            <li><a href="aboutUs.php">About</a></li>
+                                            <li><a href="feedback.php">Feedback</a></li>
+                                            <li><a href="contact.php">Contact</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="header-right-btn f-right d-none d-lg-block ml-30">
+                                    <div class="dropdown">
+                                        <a href="#" class="header-btn">
+                                            <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
+                                        </a>
+                                        <div class="dropdown-content">
+                                            <?php if ($isLoggedIn): ?>
+                                                <a href="profile.html">Profile</a>
+                                                <a href="signOut.php">Sign Out</a>
+                                            <?php else: ?>
+                                                <a href="signIn.php">Sign In</a>
+                                                <a href="registerGuest.php">Register</a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mobile Menu -->
+                        <div class="col-12">
+                            <div class="mobile_menu d-block d-lg-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+    </header>
 
-<!-- Navigation bar -->
-<nav>
-  <a href="homepage.php">Homepage</a>
-  <a href="aboutUs.php">About</a>
-  <a href="contact.php">Contact</a>
-  <a href="feedback.php">Feedback</a>
-  <a href="emailVerification.php">Verification</a>
-  <?php if ($userRole === 'admin' || $userRole === 'staff'): ?>
-    <a href="viewFeedback.php" style="background-color: #2a7ca4; color: white;">View Feedback</a>
-  <?php endif; ?>
-</nav>
-
-  <!-- Main content -->
-  <main>
-    <div class="feedback-box">
-      <h2>We Value Your Feedback</h2>
-      <p>Your thoughts help us improve our services.</p>
-      
-      <form action="submitFeedback.php" method="POST">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" placeholder="Your Name" required>
-
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="your@email.com" required>
-
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="Write your feedback here..." required></textarea>
-
-        <button type="submit">Submit Feedback</button>
-      </form>
+ <main>
+         <!-- Hero Area Start -->
+         <div class="slider-area2 slider-height2 d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="hero-cap text-center pt-50">
+                            <h2>We Value Your Feedback</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero Area End -->
+        
+        <!-- ================ contact section start ================= -->
+        <section class="contact-section">
+            <div class="container">
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="contact-title">Your thoughts help us improve our services.</h2>
+                    </div>
+                    <div class="col-lg-8">
+                        <form class="form-contact contact_form" action="submitFeedback.php" method="post" id="contactForm" novalidate="novalidate">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="name" id="name" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'" placeholder="Enter your name" value="<?php echo $isLoggedIn ? htmlspecialchars($userName) : ''; ?>" <?php echo $isLoggedIn ? 'readonly' : ''; ?>>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="email" id="email" type="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'" placeholder="Email" value="<?php echo $isLoggedIn && isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>" <?php echo $isLoggedIn && isset($_SESSION['user_email']) ? 'readonly' : ''; ?>>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="subject" id="subject" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'" placeholder="Enter Subject">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control w-100" name="message" id="message" cols="30" rows="9" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder="Enter Message"><?php echo isset($_SESSION['user_name']) ? "Hello, I would like to inquire about..." : ""; ?></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <button type="submit" class="button button-contactForm boxed-btn">Submit Feedback</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-3 offset-lg-1">
+                      <div class="emoji-feedback">
+                        <input type="hidden" name="feedback" id="feedbackInput">
+                        <button type="button" class="emoji-btn" data-value="Terrible">😡 Terrible</button>
+                        <button type="button" class="emoji-btn" data-value="Bad">🙁 Bad</button>
+                        <button type="button" class="emoji-btn" data-value="Okay">😐 Okay</button>
+                        <button type="button" class="emoji-btn" data-value="Good">😊 Good</button>
+                        <button type="button" class="emoji-btn" data-value="Satisfied">😍 Satisfied</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ================ contact section end ================= -->
+    </main>
+    <footer>
+        <!-- Footer Start-->
+        <div class="footer-area footer-padding">
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
+                       <div class="single-footer-caption mb-50">
+                         <div class="single-footer-caption mb-30">
+                              <!-- logo -->
+                             <div class="footer-logo mb-25">
+                                 <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
+                             </div>
+                             <div class="footer-tittle">
+                                 <div class="footer-pera">
+                                     <p>Professional grooming and veterinary services for your beloved pets.</p>
+                                </div>
+                             </div>
+                             <!-- social -->
+                             <div class="footer-social">
+                                 <a href="#"><i class="fab fa-facebook-square"></i></a>
+                                 <a href="#"><i class="fab fa-twitter-square"></i></a>
+                                 <a href="#"><i class="fab fa-linkedin"></i></a>
+                                 <a href="#"><i class="fab fa-pinterest-square"></i></a>
+                             </div>
+                         </div>
+                       </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-4 col-sm-5">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Company</h4>
+                                <ul>
+                                    <li><a href="homepage.php">Home</a></li>
+                                    <li><a href="aboutUs.php">About</a></li>
+                                    <li><a href="feedback.php">Feedback</a></li>
+                                    <li><a href="contact.php">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Services</h4>
+                                <ul>
+                                    <li><a href="services.php#grooming">Pet Grooming</a></li>
+                                    <li><a href="services.php#vet">Veterinary Care</a></li>
+                                    <li><a href="services.php#vaccination">Vaccination</a></li>
+                                    <li><a href="services.php#boarding">Pet Boarding</a></li>
+                                    <li><a href="services.php#packages">Packages</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Get in Touch</h4>
+                                <ul>
+                                 <li><a href="tel:+60123456789">+60 12-345 6789</a></li>
+                                 <li><a href="mailto:info@vetgroomhub.com">info@vetgroomhub.com</a></li>
+                                 <li><a href="#">Kuala Lumpur, Malaysia</a></li>
+                             </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer-bottom area -->
+        <div class="footer-bottom-area">
+            <div class="container">
+                <div class="footer-border">
+                     <div class="row d-flex align-items-center">
+                         <div class="col-xl-12 ">
+                             <div class="footer-copy-right text-center">
+                                 <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> VetGroom Hub. All rights reserved.</p>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End-->
+    </footer>
+    
+    <!-- Scroll Up -->
+    <div id="back-top" >
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
     </div>
-  </main>
+
+    <!-- JS here -->
+    <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="./assets/js/jquery.slicknav.min.js"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="./assets/js/owl.carousel.min.js"></script>
+    <script src="./assets/js/slick.min.js"></script>
+    <!-- One Page, Animated-HeadLin -->
+    <script src="./assets/js/wow.min.js"></script>
+    <script src="./assets/js/animated.headline.js"></script>
+    
+    <!-- Nice-select, sticky -->
+    <script src="./assets/js/jquery.nice-select.min.js"></script>
+    <script src="./assets/js/jquery.sticky.js"></script>
+    <script src="./assets/js/jquery.magnific-popup.js"></script>
+
+    <!-- contact js -->
+    <script src="./assets/js/contact.js"></script>
+    <script src="./assets/js/jquery.form.js"></script>
+    <script src="./assets/js/jquery.validate.min.js"></script>
+    <script src="./assets/js/mail-script.js"></script>
+    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+    
+    <!-- Jquery Plugins, main Jquery -->	
+    <script src="./assets/js/plugins.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script>
+    // Feedback button input
+    document.addEventListener("DOMContentLoaded", function () {
+      const buttons = document.querySelectorAll(".emoji-btn");
+      const feedbackInput = document.getElementById("feedbackInput");
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          // remove 'selected' class from all
+          buttons.forEach(btn => btn.classList.remove("selected"));
+
+          // add 'selected' class to clicked one
+          button.classList.add("selected");
+
+          // save value to hidden input
+          feedbackInput.value = button.getAttribute("data-value");
+        });
+      });
+    });
+    </script>
 </body>
 </html>
