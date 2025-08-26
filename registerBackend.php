@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $servername = "localhost";
     $username   = "root";
     $password   = "";
-    $dbname     = "vetGroomList";
+    $dbname     = "vetGroomhub";
 
     try {
         $conn = new mysqli($servername, $username, $password, $dbname);
