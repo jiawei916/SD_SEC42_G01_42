@@ -17,38 +17,6 @@ if (!$isLoggedIn) {
         $userRole = 'customer';
     }
 }
-
-// Process form submission
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $servername = "localhost";
-    $username   = "root";
-    $password   = "";
-    $dbname     = "vetgroomlist";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    if ($conn->connect_error) {
-        die("<script>alert('Database connection failed: " . $conn->connect_error . "'); window.location.href='feedback.php';</script>");
-    }
-
-    $name     = $_POST['name'];
-    $email    = $_POST['email'];
-    $subject  = $_POST['subject'];
-    $rating   = isset($_POST['feedback']) ? $_POST['feedback'] : '';
-    $message  = $_POST['message'];
-
-    $stmt = $conn->prepare("INSERT INTO feedback (name, email, subject, rating, message) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $name, $email, $subject, $rating, $message);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Thank you! Your feedback has been submitted.'); window.location.href='feedback.php';</script>";
-    } else {
-        echo "<script>alert('Error submitting feedback: " . $stmt->error . "'); window.location.href='feedback.php';</script>";
-    }
-
-    $stmt->close();
-    $conn->close();
-    exit;
-}
 ?>
 
 <!doctype html>
@@ -56,8 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>VetGroom Hub | Feedback</title>
-    <meta name="description" content="Provide feedback for VetGroom Hub services">
+    <title>VetGroom Hub | Contact Us</title>
+    <meta name="description" content="Contact VetGroom Hub for all your pet grooming and veterinary needs">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
@@ -118,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
         
         /* Navigation adjustments */
-        .main-menu nav ul li a[href="feedback.php"] {
+        .main-menu nav ul li a[href="contact.php"] {
             color: #3aa9e4;
             font-weight: 600;
         }
@@ -253,30 +221,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <h2 class="contact-title">Your thoughts help us improve our services.</h2>
                     </div>
                     <div class="col-lg-8">
-                        <form class="form-contact contact_form" action="feedback.php" method="post" id="contactForm">
+                        <form class="form-contact contact_form" action="submitFeedback.php" method="post" id="contactForm" novalidate="novalidate">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input class="form-control valid" name="name" id="name" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'" placeholder="Enter your name" value="<?php echo $isLoggedIn ? htmlspecialchars($userName) : ''; ?>" <?php echo $isLoggedIn ? 'readonly' : ''; ?> required>
+                                        <input class="form-control valid" name="name" id="name" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'" placeholder="Enter your name" value="<?php echo $isLoggedIn ? htmlspecialchars($userName) : ''; ?>" <?php echo $isLoggedIn ? 'readonly' : ''; ?>>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input class="form-control valid" name="email" id="email" type="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'" placeholder="Email" value="<?php echo $isLoggedIn && isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>" <?php echo $isLoggedIn && isset($_SESSION['user_email']) ? 'readonly' : ''; ?> required>
+                                        <input class="form-control valid" name="email" id="email" type="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'" placeholder="Email" value="<?php echo $isLoggedIn && isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>" <?php echo $isLoggedIn && isset($_SESSION['user_email']) ? 'readonly' : ''; ?>>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <input class="form-control" name="subject" id="subject" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'" placeholder="Enter Subject" required>
+                                        <input class="form-control" name="subject" id="subject" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'" placeholder="Enter Subject">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <textarea class="form-control w-100" name="message" id="message" cols="30" rows="9" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder="Enter Message" required><?php echo isset($_SESSION['user_name']) ? "Hello, I would like to provide feedback about..." : ""; ?></textarea>
+                                        <textarea class="form-control w-100" name="message" id="message" cols="30" rows="9" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder="Enter Message"><?php echo isset($_SESSION['user_name']) ? "Hello, I would like to inquire about..." : ""; ?></textarea>
                                     </div>
                                 </div>
-                                <!-- Hidden input for feedback rating -->
-                                <input type="hidden" name="feedback" id="feedbackInput" value="">
                             </div>
                             <div class="form-group mt-3">
                                 <button type="submit" class="button button-contactForm boxed-btn">Submit Feedback</button>
@@ -285,6 +251,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
                     <div class="col-lg-3 offset-lg-1">
                       <div class="emoji-feedback">
+                        <input type="hidden" name="feedback" id="feedbackInput">
                         <button type="button" class="emoji-btn" data-value="Terrible">😡 Terrible</button>
                         <button type="button" class="emoji-btn" data-value="Bad">🙁 Bad</button>
                         <button type="button" class="emoji-btn" data-value="Okay">😐 Okay</button>
@@ -427,23 +394,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
       buttons.forEach(button => {
         button.addEventListener("click", () => {
-          // Remove 'selected' class from all buttons
+          // remove 'selected' class from all
           buttons.forEach(btn => btn.classList.remove("selected"));
-          
-          // Add 'selected' class to clicked button
+
+          // add 'selected' class to clicked one
           button.classList.add("selected");
-          
-          // Save value to hidden input
+
+          // save value to hidden input
           feedbackInput.value = button.getAttribute("data-value");
         });
-      });
-      
-      // Form validation to ensure a rating is selected
-      document.getElementById("contactForm").addEventListener("submit", function(e) {
-        if (!feedbackInput.value) {
-          e.preventDefault();
-          alert("Please select a rating by clicking one of the emoji buttons.");
-        }
       });
     });
     </script>
