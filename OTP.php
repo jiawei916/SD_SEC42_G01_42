@@ -333,6 +333,9 @@ if (!isset($_SESSION['otp'])) {
                     <p>Enter the 6-digit code sent to your email</p>
                 </div>
                 
+                <div class="otp-instructions">
+                    <p>For demo purposes, your OTP is: <strong><?php echo $_SESSION['otp'] ?? 'Not generated'; ?></strong></p>
+                </div>
                 
                 <form id="otpForm">
                     <div class="form-group">
