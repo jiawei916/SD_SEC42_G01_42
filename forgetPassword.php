@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // ✅ Return redirect URL in JSON instead of header()
             echo json_encode([
                 "status" => "success",
-                "redirect" => "changePassword.html?token=" . urlencode($token)
+                "redirect" => "Otp.php?token=" . urlencode($token)
             ]);
         } else {
             echo json_encode(["status" => "error", "message" => "No account found with that email."]);

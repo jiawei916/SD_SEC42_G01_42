@@ -18,40 +18,6 @@ if (!$isLoggedIn) {
     }
 }
 
-// Handle OTP verification
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    header("Content-Type: application/json");
-    
-    $enteredOtp = trim($_POST["otp"] ?? "");
-    $storedOtp = $_SESSION['otp'] ?? null;
-    $otpExpiry = $_SESSION['otp_expiry'] ?? null;
-
-    if (empty($enteredOtp)) {
-        echo json_encode(["status" => "error", "message" => "OTP is required."]);
-        exit;
-    }
-
-    if ($storedOtp && $otpExpiry && time() < $otpExpiry) {
-        if ($enteredOtp === $storedOtp) {
-            // OTP verified successfully
-            unset($_SESSION['otp']);
-            unset($_SESSION['otp_expiry']);
-            $_SESSION['otp_verified'] = true;
-            
-            echo json_encode([
-                "status" => "success", 
-                "message" => "OTP verified successfully!",
-                "redirect" => "homepage.php" // Redirect to appropriate page
-            ]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Invalid OTP code."]);
-        }
-    } else {
-        echo json_encode(["status" => "error", "message" => "OTP has expired. Please request a new one."]);
-    }
-    exit;
-}
-
 // Generate OTP if not already set (for demo purposes)
 if (!isset($_SESSION['otp'])) {
     $_SESSION['otp'] = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -174,16 +140,6 @@ if (!isset($_SESSION['otp'])) {
         .input-wrapper input:focus {
             border-color: #3aa9e4;
             outline: none;
-        }
-        
-        .input-wrapper label {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            color: #999;
-            pointer-events: none;
-            transition: 0.3s;
-            font-size: 16px;
         }
         
         .otp-btn {
@@ -330,58 +286,6 @@ if (!isset($_SESSION['otp'])) {
         .profile-dropdown:hover .dropdown-content {
             display: block;
         }
-        
-        /* Header adjustments */
-        .header-area {
-            position: relative;
-        }
-        
-        .main-header {
-            padding: 10px 0;
-        }
-        
-        .menu-main {
-            gap: 30px;
-        }
-        
-        .profile-dropdown {
-            position: relative;
-            top: 0;
-            right: 0;
-            margin-left: auto;
-        }
-        
-        .main-menu {
-            margin-right: 20px;
-        }
-        
-        .main-menu ul {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-        }
-        
-        .main-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        .main-menu a:hover {
-            color: #f8f9fa;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .container-fluid {
-            padding: 0 20px;
-        }
     </style>
 </head>
 
@@ -429,12 +333,8 @@ if (!isset($_SESSION['otp'])) {
                     <p>Enter the 6-digit code sent to your email</p>
                 </div>
                 
-                <div class="otp-instructions">
-                    <p>For demo purposes, your OTP is: <strong><?php echo $_SESSION['otp'] ?? 'Not generated'; ?></strong></p>
-                    <p>This code will expire in <span id="countdown" class="countdown">5:00</span></p>
-                </div>
                 
-                <form id="otpForm" method="POST">
+                <form id="otpForm">
                     <div class="form-group">
                         <div class="input-wrapper">
                             <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code" required maxlength="6" pattern="[0-9]{6}">
@@ -458,7 +358,7 @@ if (!isset($_SESSION['otp'])) {
     </main>
 
 <script>
-document.getElementById("otpForm").addEventListener("submit", async function(event) {
+document.getElementById("otpForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
     const otp = document.getElementById("otp").value.trim();
@@ -479,40 +379,26 @@ document.getElementById("otpForm").addEventListener("submit", async function(eve
     btnText.style.opacity = '0.5';
     btnLoader.style.display = 'block';
 
-    try {
-        const formData = new FormData(this);
-        const response = await fetch("otpVerification.php", {
-            method: "POST",
-            body: formData
-        });
-
-        const result = await response.json();
-
+    // Simulate server verification (no actual database connection)
+    setTimeout(() => {
         // Reset loading animation
         btnText.style.opacity = '1';
         btnLoader.style.display = 'none';
 
-        if (result.status === "success") {
-            message.textContent = result.message;
+        // Check if OTP matches the one stored in session
+        if (otp === "<?php echo $_SESSION['otp'] ?? ''; ?>") {
+            message.textContent = "✅ OTP verified successfully!";
             message.className = "success";
             
-            // Redirect after success
+            // Redirect to change password page after success
             setTimeout(() => {
-                window.location.href = result.redirect;
+                window.location.href = "changePassword.html?token=demo_token_12345";
             }, 2000);
         } else {
-            message.textContent = result.message;
+            message.textContent = "❌ Invalid OTP code. Please try again.";
             message.className = "error";
         }
-    } catch (error) {
-        // Reset loading animation
-        btnText.style.opacity = '1';
-        btnLoader.style.display = 'none';
-        
-        message.textContent = "⚠️ Server error. Please try again later.";
-        message.className = "error";
-        console.error("Error:", error);
-    }
+    }, 1500);
 });
 
 // Countdown timer for OTP expiry
@@ -563,24 +449,20 @@ document.getElementById("resendOtp").addEventListener("click", function(e) {
         }
     }, 1000);
     
-    // Simulate OTP resend (in real application, this would call your backend)
-    fetch("resendOtp.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "action=resend"
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            // Update the demo OTP display
-            document.querySelector('.otp-instructions p strong').textContent = data.new_otp;
-            // Restart main countdown
-            startCountdown(5, 0, 'countdown');
-        }
-    })
-    .catch(error => {
-        console.error("Error resending OTP:", error);
-    });
+    // Generate a new OTP (in a real application, this would be sent via email/SMS)
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Update the session OTP (in a real app, this would be done via AJAX to the server)
+    // For demo purposes, we'll just update the displayed OTP
+    document.querySelector('.otp-instructions p strong').textContent = newOtp;
+    
+    // Restart main countdown
+    startCountdown(5, 0, 'countdown');
+    
+    // Show message
+    const message = document.getElementById('message');
+    message.textContent = "✅ New OTP has been generated!";
+    message.className = "success";
 });
 
 // Auto-focus OTP input and auto-tab between digits
