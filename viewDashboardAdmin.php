@@ -349,7 +349,7 @@ if (!$isLoggedIn) {
                 </div>
                 <div class="card">
                     <h2>35</h2>
-                    <p>Feedbacks</p>
+                    <p><a href="viewFeedBack.php">Feedbacks</a></p>
                 </div>
             </div>
 
