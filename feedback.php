@@ -30,101 +30,168 @@ if (!$isLoggedIn) {
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
   <style>
-
-
-/* Dropdown container */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Use existing .header-btn styling */
-.dropdown > .header-btn {
-    display: inline-block;
-    text-align: center;
-}
-
-/* Dropdown box */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: #fff;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    border-radius: 6px;
-    z-index: 1000;
-}
-
-/* Dropdown links */
-.dropdown-content a {
-    color: #333;
-    padding: 10px 14px;
-    text-decoration: none;
-    display: block;
-    transition: background 0.2s ease;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-    /* Feedback box (slightly orange, centered, no card border) */
-    main {
-        display: flex;
-        justify-content: center;
-        padding: 40px 20px;
+    body {
+        opacity: 0;
+        animation: fadeInAnimation ease 1s;
+        animation-fill-mode: forwards;
+        background-image: url('assets/img/hero/hero2.png'); 
+        background-repeat: no-repeat; 
+        background-attachment: fixed; 
+        background-size: cover; 
+        background-position: center;
     }
-    .feedback-box {
-        background: rgba(255, 252, 247, 1)ff; /* light orange */
-        padding: 30px;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 600px;
+
+    @keyframes fadeInAnimation {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    
+    /* Dropdown container */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Use existing .header-btn styling */
+    .dropdown > .header-btn {
+        display: inline-block;
         text-align: center;
     }
-    .feedback-box h2 {
-        margin-bottom: 10px;
-        color: #333;
+
+    /* Dropdown box */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: #fff;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        border-radius: 6px;
+        z-index: 1000;
     }
-    .feedback-box p {
-        margin-bottom: 20px;
-        color: #555;
+
+    /* Dropdown links */
+    .dropdown-content a {
+        color: #333;
+        padding: 10px 14px;
+        text-decoration: none;
+        display: block;
+        transition: background 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    
+    /* Feedback container styling */
+    .feedback-container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 100px auto;
+    }
+    
+    .feedback-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin: 20px 0;
+    }
+    
+    .feedback-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .feedback-header h2 {
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .feedback-header p {
+        color: #666;
+        font-size: 16px;
     }
 
     /* Inputs & Textarea */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+    
     input, textarea {
         width: 100%;
-        padding: 10px;
-        margin-top: 8px;
-        border: 1px solid #ccc;
+        padding: 12px;
+        border: 1px solid #ddd;
         border-radius: 6px;
         font-size: 14px;
         font-family: inherit;
         box-sizing: border-box;
+        transition: border-color 0.3s;
     }
+    
+    input:focus, textarea:focus {
+        border-color: #3aa9e4;
+        outline: none;
+    }
+    
     textarea {
         height: 150px;
         resize: vertical;
     }
 
-    button {
+    .submit-btn {
         margin-top: 15px;
-        padding: 10px 20px;
-        background: #ff9933;
+        padding: 12px 25px;
+        background: #dc3545;
         color: white;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
-        font-weight: bold;
+        font-weight: 600;
+        font-size: 16px;
+        transition: background 0.3s;
+        width: 100%;
     }
-    button:hover {
-        background: #e68a00;
+    
+    .submit-btn:hover {
+        background: #ff707f;
+    }
+    
+    /* Back button */
+    .back-btn {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .back-btn a {
+        display: inline-block;
+        background: #f8f9fa;
+        color: #333;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: background 0.3s;
+        font-weight: 600;
+    }
+
+    .back-btn a:hover {
+        background: #e9ecef;
     }
   </style>
 </head>
@@ -197,23 +264,36 @@ if (!$isLoggedIn) {
     </header>
 
     <!-- Main Content -->
-    <main>
-        <div class="feedback-box">
-            <h2>We Value Your Feedback</h2>
-            <p>Your thoughts help us improve our services.</p>
+    <main class="feedback-container">
+        <div class="feedback-card">
+            <div class="feedback-header">
+                <h2>We Value Your Feedback</h2>
+                <p>Your thoughts help us improve our services.</p>
+            </div>
 
             <form action="submitFeedback.php" method="POST">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Your Name" required>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                </div>
 
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                </div>
 
-                <label for="message">Message</label>
-                <textarea id="message" name="message" placeholder="Write your feedback here..." required></textarea>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="Write your feedback here..." required></textarea>
+                </div>
 
-                <button type="submit">Submit Feedback</button>
+                <button type="submit" class="submit-btn">Submit Feedback</button>
             </form>
+            
+            <!-- Back Button -->
+            <div class="back-btn">
+                <a href="homepage.php">⬅ Back to Homepage</a>
+            </div>
         </div>
     </main>
 
