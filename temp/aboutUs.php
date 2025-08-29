@@ -1,24 +1,23 @@
 <?php
-session_start();
-
-// Check login session
-$isLoggedIn = isset($_SESSION['user_name']);
-$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
-
-if (!$isLoggedIn) {
+    session_start();
+    // Check login session
+    $isLoggedIn = isset($_SESSION['user_name']);
+    $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+    if (!$isLoggedIn) {
     $userRole = 'guest';
 } else {
     $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'customer';
 }
 $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 ?>
+
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="zxx">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>VetGroom Hub — Home</title>
-    <meta name="description" content="VetGroom Hub - Pet grooming and veterinary care services">
+    <title>About Us - VetGroom Hub</title>
+    <meta name="description" content="Learn about VetGroom Hub, your trusted partner in pet care and grooming services.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="site.webmanifest">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
@@ -35,51 +34,57 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
     <link rel="stylesheet" href="assets/css/slick.css">
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
+        }
+
+        /* Dropdown box */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Active menu item */
+        #navigation li a[href="about.html"] {
+            color: #3aa9e4;
+            font-weight: bold;
+        }
+    </style>
 </head>
-<style>
-/* Dropdown container */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Use existing .header-btn styling */
-.dropdown > .header-btn {
-    display: inline-block;
-    text-align: center;
-}
-
-/* Dropdown box */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: #fff;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    border-radius: 6px;
-    z-index: 1000;
-}
-
-/* Dropdown links */
-.dropdown-content a {
-    color: #333;
-    padding: 10px 14px;
-    text-decoration: none;
-    display: block;
-    transition: background 0.2s ease;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-</style>
 
 <body>
     <!-- Preloader Start -->
@@ -88,14 +93,17 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
             <div class="preloader-inner position-relative">
                 <div class="preloader-circle"></div>
                 <div class="preloader-img pere-text">
-                    <img src="assets/img/logo/logo2.png" alt="VetGroom Hub">
+                    <img src="assets/img/logo/logo2.png" alt="VetGroom Hub Logo">
                 </div>
             </div>
         </div>
     </div>
-    <!-- Preloader End -->
+    <!-- Preloader Start -->
+    
+
+    
     <header>
-        <!-- Header Start -->
+        <!--? Header Start -->
         <div class="header-area header-transparent">
             <div class="main-header header-sticky">
                 <div class="container-fluid">
@@ -103,7 +111,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -145,8 +153,8 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
         </div>
     </div>
 </div>
-                            </div>
-                        </div>   
+                                </div>
+                            </div>   
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>
@@ -158,107 +166,40 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
         <!-- Header End -->
     </header>
     <main> 
-        <!-- Slider Area Start-->
-        <div class="slider-area">
-            <div class="slider-active dot-style">
-                <!-- Slider Single -->
-                <div class="single-slider d-flex align-items-center slider-height">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-xl-7 col-lg-8 col-md-10 ">
-                                <!-- Video icon -->
-                                <div class="video-icon">
-                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=up68UAfH0d0" data-animation="bounceIn" data-delay=".4s">
-                                        <i class="fas fa-play"></i>
-                                    </a>
-                                </div>
-                                <div class="hero__caption">
-                                    <span data-animation="fadeInUp" data-delay=".3s">Professional pet care in one place</span>
-                                    <h1 data-animation="fadeInUp" data-delay=".3s">VetGroom Hub — We Care for Your Pets</h1>
-                                    <p data-animation="fadeInUp" data-delay=".6s">Full grooming, veterinary services and convenient appointment bookings for dogs and cats.</p>
-                                    <a href="index.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>   
-                <!-- Slider Single (duplicate slide retained from template for visual continuity) -->
-                <div class="single-slider d-flex align-items-center slider-height">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-xl-7 col-lg-8 col-md-10 ">
-                                <div class="video-icon">
-                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU" data-animation="bounceIn" data-delay=".4s">
-                                        <i class="fas fa-play"></i>
-                                    </a>
-                                </div>
-                                <div class="hero__caption">
-                                    <span data-animation="fadeInUp" data-delay=".3s">Safe — Gentle — Professional</span>
-                                    <h1 data-animation="fadeInUp" data-delay=".3s">Trusted grooming & veterinary care</h1>
-                                    <p data-animation="fadeInUp" data-delay=".6s">Experienced groomers and qualified veterinarians working together for your pet's health and comfort.</p>
-                                    <a href="services.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Our Services<i class="ti-arrow-right"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>   
-            </div>
-            <!-- slider Social -->
-            <div class="button-text d-none d-md-block">
-            <span>Scroll</span>
-            </div>
-        </div>
-        <!-- Slider Area End -->
-        <!--? Our Services Start -->
-        <div class="our-services section-padding30">
+        <!-- Hero Area Start -->
+        <div class="slider-area2 slider-height2 d-flex align-items-center">
             <div class="container">
-                <div class="row justify-content-sm-center">
-                    <div class="cl-xl-7 col-lg-8 col-md-10">
-                        <!-- Section Tittle -->
-                        <div class="section-tittle text-center mb-70">
-                            <span>Our Professional Services</span>
-                            <h2>Best Pet Care Services</h2>
-                        </div> 
-                    </div>
-                </div>
                 <div class="row">
-                    <div class=" col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-services text-center mb-30">
-                            <div class="services-ion">
-                                <span class="flaticon-animal-kingdom"></span>
-                            </div>
-                            <div class="services-cap">
-                                <h5><a href="services.php#grooming">Pet Grooming</a></h5>
-                                <p>Full grooming packages: bath, haircut, nail trim and ear cleaning tailored to your pet.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-services text-center mb-30">
-                            <div class="services-ion">
-                                <span class="flaticon-animals"></span>
-                            </div>
-                            <div class="services-cap">
-                                <h5><a href="services.php#vet">Veterinary Care</a></h5>
-                                <p>Consultations, minor procedures and on-site diagnostics provided by our licensed vets.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-services text-center mb-30">
-                            <div class="services-ion">
-                                <span class="flaticon-animals-1"></span>
-                            </div>
-                            <div class="services-cap">
-                                <h5><a href="services.php#vaccination">Vaccinations</a></h5>
-                                <p>Core vaccinations and preventive care plans to keep your pet healthy year-round.</p>
-                            </div>
+                    <div class="col-xl-12">
+                        <div class="hero-cap text-center pt-50">
+                            <h2>About VetGroom Hub</h2>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Our Services End -->
+        <!-- Hero Area End -->
+        <!-- About Details Start -->
+        <div class="about-details section-padding30">
+            <div class="container">
+                <div class="row">
+                    <div class="offset-xl-1 col-lg-8">
+                        <div class="about-details-cap mb-50">
+                            <h4>Our Mission</h4>
+                            <p>At VetGroom Hub, our mission is to create a seamless platform that connects pet owners with professional groomers and veterinary services. We believe every pet deserves the best care, and we're committed to making pet care more accessible, reliable, and stress-free.</p>
+                            <p>We understand that your pets are family, and they deserve the highest quality care. That's why we've built a hub where owners can book appointments, track grooming schedules, and receive reminders — all in one convenient place.</p>
+                        </div>
+
+                        <div class="about-details-cap mb-50">
+                            <h4>Our Vision</h4>
+                            <p>Our vision is to become the leading platform for pet care services, recognized for our commitment to quality, convenience, and the well-being of animals. We aim to build a community where pet owners and care providers can connect seamlessly.</p>
+                            <p>We envision a future where every pet receives regular, professional care, and where pet owners never have to worry about finding trusted professionals for their furry family members.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About Details End -->
         <!--? About Area Start-->
         <div class="about-area fix">
             <!--Right Contents  -->
@@ -436,35 +377,6 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
             </div>
         </div>
         <!-- Team End -->
-        <!--? Testimonial Start -->
-        <div class="testimonial-area testimonial-padding section-bg" data-background="assets/img/gallery/section_bg03.png">
-            <div class="container">
-                <!-- Testimonial contents -->
-                <div class="row d-flex justify-content-center">
-                    <div class="col-xl-8 col-lg-8 col-md-10">
-                        <div class="h1-testimonial-active dot-style">
-                            <!-- Single Testimonial -->
-                            <div class="single-testimonial text-center">
-                                <div class="testimonial-caption ">
-                                    <!-- founder -->
-                                    <div class="testimonial-founder">
-                                        <div class="founder-img mb-40">
-                                            <img src="assets/img/gallery/testi-logo.png" alt="">
-                                            <span>Margaret Lawson</span>
-                                            <p>Pet Owner</p>
-                                        </div>
-                                    </div>
-                                    <div class="testimonial-top-cap">
-                                        <p>“VetGroom Hub took great care of my dog — friendly staff and a clean facility.”</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Additional testimonials retained from template for layout -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Why Choose Us End -->
         <!--? Testimonials Start -->
         <div class="home_blog-area section-padding30">
@@ -535,12 +447,12 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                     <div class="col-lg-8">
                         <div class="contact_text text-center">
                             <div class="section_title text-center">
-                                <h3>Need urgent advice? Call us!</h3>
-                                <p>Our team is available to answer booking and care questions during business hours.</p>
+                                <h3>Ready to give your pet the best care?</h3>
+                                <p>Join thousands of happy pet owners who trust VetGroom Hub with their furry family members.</p>
                             </div>
                             <div class="contact_btn d-flex align-items-center justify-content-center">
-                                <a href="contact.php" class="btn white-btn">Contact Us</a>
-                                <p>Or <a href="tel:+60123456789"> +60 12-345 6789</a></p>
+                                <a href="registerGuest.php" class="btn white-btn">Create Account</a>
+                                <p>Or<a href="contact.php"> Contact Us</a></p>
                             </div>
                         </div>
                     </div>
@@ -559,18 +471,18 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                          <div class="single-footer-caption mb-30">
                               <!-- logo -->
                              <div class="footer-logo mb-25">
-                                 <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
+                                 <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub Logo"></a>
                              </div>
                              <div class="footer-tittle">
                                  <div class="footer-pera">
-                                     <p>Professional grooming and veterinary services for your beloved pets.</p>
+                                     <p>Your trusted partner in pet care and grooming services, connecting pet owners with professional care providers.</p>
                                 </div>
                              </div>
                              <!-- social -->
                              <div class="footer-social">
                                  <a href="#"><i class="fab fa-facebook-square"></i></a>
                                  <a href="#"><i class="fab fa-twitter-square"></i></a>
-                                 <a href="#"><i class="fab fa-linkedin"></i></a>
+                                 <a href="#"><i class="fab fa-instagram"></i></a>
                                  <a href="#"><i class="fab fa-pinterest-square"></i></a>
                              </div>
                          </div>
@@ -625,7 +537,9 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                      <div class="row d-flex align-items-center">
                          <div class="col-xl-12 ">
                              <div class="footer-copy-right text-center">
-                                 <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> VetGroom Hub. All rights reserved.</p>
+                                 <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | VetGroom Hub
+  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
                              </div>
                          </div>
                      </div>
@@ -641,37 +555,36 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
     <!-- JS here -->
     
-    <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
-    <!-- Jquery, Popper, Bootstrap -->
-    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="./assets/js/popper.min.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
-    <!-- Jquery Mobile Menu -->
-    <script src="./assets/js/jquery.slicknav.min.js"></script>
+        <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+		<!-- Jquery, Popper, Bootstrap -->
+		<script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+        <script src="./assets/js/popper.min.js"></script>
+        <script src="./assets/js/bootstrap.min.js"></script>
+	    <!-- Jquery Mobile Menu -->
+        <script src="./assets/js/jquery.slicknav.min.js"></script>
 
-    <!-- Jquery Slick , Owl-Carousel Plugins -->
-    <script src="./assets/js/owl.carousel.min.js"></script>
-    <script src="./assets/js/slick.min.js"></script>
-    <!-- One Page, Animated-HeadLin -->
-    <script src="./assets/js/wow.min.js"></script>
-    <script src="./assets/js/animated.headline.js"></script>
-    <script src="./assets/js/jquery.magnific-popup.js"></script>
+		<!-- Jquery Slick , Owl-Carousel Plugins -->
+        <script src="./assets/js/owl.carousel.min.js"></script>
+        <script src="./assets/js/slick.min.js"></script>
+		<!-- One Page, Animated-HeadLin -->
+        <script src="./assets/js/wow.min.js"></script>
+		<script src="./assets/js/animated.headline.js"></script>
+        <script src="./assets/js/jquery.magnific-popup.js"></script>
 
-    <!-- Nice-select, sticky -->
-    <script src="./assets/js/jquery.nice-select.min.js"></script>
-    <script src="./assets/js/jquery.sticky.js"></script>
-    
-    <!-- contact js -->
-    <script src="./assets/js/contact.js"></script>
-    <script src="./assets/js/jquery.form.js"></script>
-    <script src="./assets/js/jquery.validate.min.js"></script>
-    <script src="./assets/js/mail-script.js"></script>
-    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
-    
-    <!-- Jquery Plugins, main Jquery -->    
-    <script src="./assets/js/plugins.js"></script>
-    <script src="./assets/js/main.js"></script>
+		<!-- Nice-select, sticky -->
+        <script src="./assets/js/jquery.nice-select.min.js"></script>
+		<script src="./assets/js/jquery.sticky.js"></script>
+        
+        <!-- contact js -->
+        <script src="./assets/js/contact.js"></script>
+        <script src="./assets/js/jquery.form.js"></script>
+        <script src="./assets/js/jquery.validate.min.js"></script>
+        <script src="./assets/js/mail-script.js"></script>
+        <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+        
+		<!-- Jquery Plugins, main Jquery -->	
+        <script src="./assets/js/plugins.js"></script>
+        <script src="./assets/js/main.js"></script>
         
     </body>
 </html>
-

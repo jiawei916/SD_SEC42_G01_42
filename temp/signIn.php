@@ -58,6 +58,48 @@ if (!$isLoggedIn) {
               opacity: 1;
               }
             }
+            /* Dropdown container */
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+
+            /* Use existing .header-btn styling */
+            .dropdown > .header-btn {
+                display: inline-block;
+                text-align: center;
+            }
+
+            /* Dropdown box */
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 100%;
+                background: #fff;
+                width: 100%;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                border-radius: 6px;
+                z-index: 1000;
+            }
+
+            /* Dropdown links */
+            .dropdown-content a {
+                color: #333;
+                padding: 10px 14px;
+                text-decoration: none;
+                display: block;
+                transition: background 0.2s ease;
+            }
+
+            .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+            /* Show dropdown on hover */
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
     </style>
 </head>
 
@@ -107,7 +149,7 @@ if (!$isLoggedIn) {
             <form class="login-form" id="loginForm" novalidate>
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <input type="email" id="email" name="email" autocomplete="email">
                         <label for="email">Email Address</label>
                     </div>
                     <span class="error-message" id="emailError"></span>

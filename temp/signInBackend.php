@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check if user exists
-        $stmt = $conn->prepare("SELECT id, username, email, password, role, email_verified FROM users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, name, email, password, role, email FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -33,22 +33,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit;
             }
 
-            if ($row["email_verified"] == 0) {
+            if ($row["email"] == 0) {
                 echo json_encode(["status" => "error", "message" => "Please verify your email before signing in."]);
                 exit;
             }
 
             // Store session data (match homepage.php expectation)
             $_SESSION["user_id"]   = $row["id"];
-            $_SESSION["user_name"] = $row["username"];
+            $_SESSION["user_name"] = $row["name"];
             $_SESSION["email"]     = $row["email"];
             $_SESSION["logged_in"] = true;
-            $_SESSION["user_role"] = $row["user_role"];
+            $_SESSION["user_role"] = $row["role"];
 
             echo json_encode([
                 "status" => "success",
                 "message" => "Login successful!",
-                "user_role" => $row["user_role"]
+                "user_role" => $row["role"]
             ]);
         } else {
             echo json_encode(["status" => "error", "message" => "No account found with that email."]);
