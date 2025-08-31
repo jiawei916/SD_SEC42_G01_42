@@ -1,13 +1,44 @@
-USE THESE
+UPDATED
 
-guest@example.com
-  password: guest123
-  role: guest
+ADMIN------------------------
+  name: Chenchen
+  email: fattylao2000@gmail.com
+  pw: password
 
-staff@example.com
-  password: staff123
-  role: staff
+  name: Admin
+  email: admin@gmail.com
+  pw: password
 
-admin@example.com
-  password: admin123
-  role: admin
+STAFF------------------------
+  name: Vincent
+  email: vincent@gmail.com
+  pw: 12345678
+
+CUSTOMER------------------------
+  name: chen
+  email: tan@gmail.com
+  pw: 12345
+
+  name: Maria Nearl
+  email: rhodesisland@gmail.com
+  pw: 12345678
+  
+  name: Haru Urara
+  email: bestestprize@gmail.com
+  pw: 12345678
+  
+  name: tantan
+  email: newemail@gmail.com
+  pw: 12345678
+  
+  name: Tan Qi Heng
+  email: tanqiheng68@gmail.com
+  pw: password
+  
+  name: new account
+  email: nilof59552@amcret.com
+  pw: password
+  
+  name: Asyikin
+  email: nurasyikinmuhamad24@gmail.com
+  pw: password
