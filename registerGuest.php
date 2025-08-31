@@ -108,7 +108,7 @@ if (!$isLoggedIn) {
         }
         
         .input-wrapper input:focus {
-            border-color: #3aa9e4;
+            border-color: #dc3545;
             outline: none;
         }
         
@@ -129,7 +129,7 @@ if (!$isLoggedIn) {
             font-size: 12px;
             background: white;
             padding: 0 5px;
-            color: #3aa9e4;
+            color: #dc3545;
         }
         
         .password-wrapper {
@@ -245,7 +245,7 @@ if (!$isLoggedIn) {
             display: flex;
             align-items: center;
             cursor: pointer;
-            background-color: #3aa9e4;
+            background-color: #dc3545;
             padding: 6px 10px;
             border-radius: 6px;
             box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
