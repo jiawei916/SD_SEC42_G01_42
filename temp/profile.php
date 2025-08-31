@@ -8,8 +8,8 @@ if (!isset($_SESSION['user_name'])) {
 }
 
 $userName  = $_SESSION['user_name'];
-$userEmail = isset($_SESSION['user_email']) ? $_SESSION['user_email'] : "Not provided";
-$userRole  = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : "customer";
+$userEmail = isset($_SESSION['email']) ? $_SESSION['email'] : "Not provided";
+$userRole  = isset($_SESSION['role']) ? $_SESSION['role'] : "customer";
 $isLoggedIn = true;
 ?>
 <!doctype html>
@@ -166,26 +166,31 @@ $isLoggedIn = true;
 
                     <hr>
 
-                    <?php if ($userRole == 'admin'): ?>
-                        <h4>Admin Tools</h4>
-                        <ul>
-                            <li><a href="viewDashboardAdmin.php">Admin Dashboard</a></li>
-                            <li><a href="viewFeedBack.php">View Feedback</a></li>
-                        </ul>
-                    <?php elseif ($userRole == 'staff'): ?>
-                        <h4>Staff Tools</h4>
-                        <ul>
-                            <li><a href="viewDashboardStaff.php">Staff Dashboard</a></li>
-                            <li><a href="viewFeedBack.php">View Feedback</a></li>
-                        </ul>
-                    <?php else: ?>
-                        <h4>Customer Options</h4>
-                        <ul>
-                            <li><a href="services.php">View Services</a></li>
-                            <li><a href="feedback.php">Submit Feedback</a></li>
-                            <li><a href="index.php">Book Appointment</a></li>
-                        </ul>
-                    <?php endif; ?>
+<?php if ($userRole == 'admin'): ?>
+    <h4>Admin Tools</h4>
+    <div class="d-grid gap-2">
+        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
+        <a href="viewDashboardAdmin.php" class="btn btn-primary">Admin Dashboard</a>
+        <a href="viewFeedBack.php" class="btn btn-info">View Feedback</a>
+    </div>
+
+<?php elseif ($userRole == 'staff'): ?>
+    <h4>Staff Tools</h4>
+    <div class="d-grid gap-2">
+        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
+        <a href="viewDashboardStaff.php" class="btn btn-primary">Staff Dashboard</a>
+        <a href="viewFeedBack.php" class="btn btn-info">View Feedback</a>
+    </div>
+
+<?php else: ?>
+    <h4>Customer Options</h4>
+    <div class="d-grid gap-2">
+        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
+        <a href="services.php" class="btn btn-success">View Services</a>
+        <a href="feedback.php" class="btn btn-info">Submit Feedback</a>
+        <a href="index.php" class="btn btn-primary">Book Appointment</a>
+    </div>
+<?php endif; ?>
 
                     <div class="text-center mt-4">
                         <a href="signOut.php" class="btn btn-danger">Sign Out</a>

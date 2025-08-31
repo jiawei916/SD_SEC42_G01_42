@@ -44,9 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $expires = date("Y-m-d H:i:s", strtotime("+15 minutes"));
 
             // Store token + OTP in DB
-            $update = $conn->prepare("UPDATE users SET otp = ?, otp_expires = ? WHERE id = ?");
-            $update->bind_param("ssssi", $otp, $expires, $userId);
-            $update->execute();
+$update = $conn->prepare("UPDATE users SET otp = ?, otp_expires = ? WHERE id = ?");
+$update->bind_param("ssi", $otp, $expires, $userId);
+$update->execute();
+
 
             // Send OTP via PHPMailer
             $mail = new PHPMailer(true);
