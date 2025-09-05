@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_name'])) {
 
 $userName  = $_SESSION['user_name'];
 $userEmail = isset($_SESSION['email']) ? $_SESSION['email'] : "Not provided";
-$userRole  = isset($_SESSION['role']) ? $_SESSION['role'] : "customer";
+$userRole  = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : "customer";
 $isLoggedIn = true;
 ?>
 <!doctype html>
