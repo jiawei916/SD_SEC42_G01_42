@@ -16,13 +16,18 @@ $isLoggedIn = true;
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Profile - VetGroom Hub</title>
+    <meta name="description" content="Your user profile at VetGroom Hub">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
-    <!-- CSS -->
+    <!-- CSS here -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="assets/css/slicknav.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
     <link rel="stylesheet" href="assets/css/animate.min.css">
     <link rel="stylesheet" href="assets/css/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
@@ -30,72 +35,173 @@ $isLoggedIn = true;
     <link rel="stylesheet" href="assets/css/slick.css">
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
-
+    
     <style>
+        body {
+            opacity: 0;
+            animation: fadeInAnimation ease 1s;
+            animation-fill-mode: forwards;
+            background-image: url('assets/img/hero/hero2.png'); 
+            background-repeat: no-repeat; 
+            background-attachment: fixed; 
+            background-size: cover; 
+            background-position: center;
+        }
+
+        @keyframes fadeInAnimation {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
+        }
+
+        /* Dropdown box */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        /* Profile section styles - UPDATED to match the image */
         .profile-section {
-            background: #fff3e6; /* light orange background */
-            padding: 60px 30px;
+            background: #fff; /* White background */
+            padding: 40px;
             border-radius: 12px;
-            border: 1px solid #f5c48c;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             margin-top: 50px;
         }
+        
         .profile-section h2 {
-            color: #d35400;
+            color: #333;
             font-weight: 700;
             margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
         }
-        .profile-section ul {
-            list-style: none;
+        
+        .profile-info {
+            margin-bottom: 25px;
+        }
+        
+        .profile-info label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .profile-info .form-control {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            margin-bottom: 15px;
+        }
+        
+        .profile-info .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        
+        .email-confirmation {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-resend {
+            background: none;
+            border: none;
+            color: #4a90e2;
+            text-decoration: underline;
+            cursor: pointer;
             padding: 0;
+            font-size: 14px;
         }
-        .profile-section ul li {
-            margin: 8px 0;
+        
+        .btn-resend:hover {
+            color: #357abd;
         }
-        /* Dropdown container */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Use existing .header-btn styling */
-.dropdown > .header-btn {
-    display: inline-block;
-    text-align: center;
-}
-
-/* Dropdown box */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: #fff;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    border-radius: 6px;
-    z-index: 1000;
-}
-
-/* Dropdown links */
-.dropdown-content a {
-    color: #333;
-    padding: 10px 14px;
-    text-decoration: none;
-    display: block;
-    transition: background 0.2s ease;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+        
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-save {
+            background-color: #4a90e2;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn-save:hover {
+            background-color: #357abd;
+        }
+        
+        .btn-cancel {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
     </style>
 </head>
 <body>
+
     <!-- ✅ Header Start -->
     <header>
         <div class="header-area header-transparent">
@@ -158,39 +264,51 @@ $isLoggedIn = true;
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="profile-section">
-                    <h2 class="text-center">User Profile</h2>
+                    <h2>Account settings</h2>
 
-                    <p><strong>Username:</strong> <?php echo htmlspecialchars($userName); ?></p>
-                    <p><strong>Email:</strong> <?php echo htmlspecialchars($userEmail); ?></p>
-                    <p><strong>Role:</strong> <?php echo ucfirst(htmlspecialchars($userRole)); ?></p>
+<form id="profileForm">
+    <div class="profile-info">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" value="<?php echo htmlspecialchars($userName); ?>" readonly>
+        
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($userName); ?>">
+        
+        <label for="email">E-mail</label>
+        <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($userEmail); ?>">
+    </div>
 
+    <div class="action-buttons">
+        <button type="submit" class="btn-save">Save changes</button>
+        <button type="button" class="btn-cancel">Cancel</button>
+    </div>
+</form>
                     <hr>
 
-<?php if ($userRole == 'admin'): ?>
-    <h4>Admin Tools</h4>
-    <div class="d-grid gap-2">
-        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
-        <a href="viewDashboardAdmin.php" class="btn btn-primary">Admin Dashboard</a>
-        <a href="viewFeedBack.php" class="btn btn-info">View Feedback</a>
-    </div>
+                    <h4 class="section-title">Account Options</h4>
 
-<?php elseif ($userRole == 'staff'): ?>
-    <h4>Staff Tools</h4>
-    <div class="d-grid gap-2">
-        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
-        <a href="viewDashboardStaff.php" class="btn btn-primary">Staff Dashboard</a>
-        <a href="viewFeedBack.php" class="btn btn-info">View Feedback</a>
-    </div>
+                    <?php if ($userRole == 'admin'): ?>
+                    <div class="d-grid gap-2">
+                        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
+                        <a href="viewDashboardAdmin.php" class="btn btn-primary">Admin Dashboard</a>
+                        <a href="viewFeedBack.php" class="btn btn-info">View Feedback</a>
+                    </div>
 
-<?php else: ?>
-    <h4>Customer Options</h4>
-    <div class="d-grid gap-2">
-        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
-        <a href="services.php" class="btn btn-success">View Services</a>
-        <a href="feedback.php" class="btn btn-info">Submit Feedback</a>
-        <a href="index.php" class="btn btn-primary">Book Appointment</a>
-    </div>
-<?php endif; ?>
+                    <?php elseif ($userRole == 'staff'): ?>
+                    <div class="d-grid gap-2">
+                        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
+                        <a href="viewDashboardStaff.php" class="btn btn-primary">Staff Dashboard</a>
+                        <a href="viewFeedBack.php" class="btn btn-info">View Feedback</a>
+                    </div>
+
+                    <?php else: ?>
+                    <div class="d-grid gap-2">
+                        <a href="changePassword.html?user_id=<?php echo $_SESSION['user_id']; ?>" class="btn btn-warning">Change Password</a>
+                        <a href="services.php" class="btn btn-success">View Services</a>
+                        <a href="feedback.php" class="btn btn-info">Submit Feedback</a>
+                        <a href="index.php" class="btn btn-primary">Book Appointment</a>
+                    </div>
+                    <?php endif; ?>
 
                     <div class="text-center mt-4">
                         <a href="signOut.php" class="btn btn-danger">Sign Out</a>
@@ -243,4 +361,29 @@ $isLoggedIn = true;
     <script src="./assets/js/slick.min.js"></script>
     <script src="./assets/js/main.js"></script>
 </body>
+<script>
+document.getElementById("profileForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch("profileUpdate.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+            alert("✅ Profile updated successfully!");
+            window.location.reload(); // reload page to reflect changes
+        } else {
+            alert("⚠️ " + result.message);
+        }
+    } catch (err) {
+        alert("Server error: " + err);
+    }
+});
+</script>
 </html>
