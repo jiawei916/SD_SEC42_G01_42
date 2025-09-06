@@ -1,9 +1,17 @@
 <?php
-    session_start();
-    // Check login session
-    $isLoggedIn = isset($_SESSION['user_name']);
-    $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
-    ?>
+session_start();
+
+// Check login session
+$isLoggedIn = isset($_SESSION['user_name']);
+$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+
+if (!$isLoggedIn) {
+    $userRole = 'guest';
+} else {
+    $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'customer';
+}
+$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
