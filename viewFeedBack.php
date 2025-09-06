@@ -221,7 +221,7 @@ $conn->close();
   <li class="active"><a href="feedback.php">Feedback</a></li>
   <a href="emailVerification.php">Verification</a>
   <?php if ($userRole === 'admin' || $userRole === 'staff'): ?>
-    <a href="viewFeedback.php" style="background-color: #2a7ca4; color: white;">View Feedback</a>
+    <a href="viewFeedback.php">View Feedback</a>
   <?php endif; ?>
 </nav>
 
