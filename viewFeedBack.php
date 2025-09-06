@@ -217,7 +217,8 @@ $conn->close();
   <a href="homepage.php">Homepage</a>
   <a href="aboutUs.php">About</a>
   <a href="contact.php">Contact</a>
-  <a href="feedback.php">Feedback</a>
+  <li class="active"><a href="viewService.php">Services</a></li>
+  <li class="active"><a href="feedback.php">Feedback</a></li>
   <a href="emailVerification.php">Verification</a>
   <?php if ($userRole === 'admin' || $userRole === 'staff'): ?>
     <a href="viewFeedback.php" style="background-color: #2a7ca4; color: white;">View Feedback</a>

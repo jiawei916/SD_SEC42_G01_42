@@ -194,25 +194,18 @@ if (!$isLoggedIn) {
             color: white;
         }
         
-        /* Dropdown box */
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            top: 100%;
-            background: #fff;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            border-radius: 6px;
-            z-index: 1000;
+            top: 40px;
+            background: white;
+            min-width: 140px;
+            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 1;
         }
         
-
-        /* Show dropdown on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-                
         .dropdown-content a {
             display: block;
             padding: 8px 12px;
@@ -225,12 +218,7 @@ if (!$isLoggedIn) {
         .dropdown-content a:hover {
             background-color: #f1f1f1;
         }
-
-        /* Use existing .header-btn styling */
-        .dropdown > .header-btn {
-            display: inline-block;
-            text-align: center;
-        }
+        
         .profile-dropdown:hover .dropdown-content {
             display: block;
         }
@@ -340,12 +328,18 @@ if (!$isLoggedIn) {
                                         <ul id="navigation">
                                             <li><a href="homepage.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
-                                            <li><a href="feedback.php">Feedback</a></li>
+                                            <li class="active"><a href="viewService.php">Services</a></li>
+                                            <li class="active"><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
+                                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
+                                                <li><a href="viewFeedBack.php">View Feedback</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </nav>
-                                </div><div class="header-right-btn f-right d-none d-lg-block ml-30">
-    <div class="dropdown">
+                                </div>
+                                
+                                <div class="header-right-btn f-right d-none d-lg-block ml-30">
+                                  <div class="dropdown">
         <a href="#" class="header-btn">
             <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
         </a>
@@ -399,7 +393,7 @@ if (!$isLoggedIn) {
                 </div>
                 <div class="card">
                     <h2 id="totalFeedback">8</h2>
-                    <p><a href="viewFeedBack.php">Feedbacks</a>Total Feedback</p>
+                    <p>Total Feedback</p>
                 </div>
             </div>
 
