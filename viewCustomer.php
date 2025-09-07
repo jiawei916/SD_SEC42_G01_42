@@ -158,6 +158,48 @@ $conn->close();
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
+                /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
+        }
+
+        /* Dropdown box */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
         
         /* Dashboard container styling */
         .dashboard-container {
@@ -457,9 +499,15 @@ $conn->close();
                                         </a>
                                         <div class="dropdown-content">
                                             <a href="profile.php">Profile</a>
-                                            <a href="viewDashboardAdmin.php">Dashboard</a>
-                                            <a href="viewFeedBack.php">View Feedback</a>
-                                            <a href="viewCustomers.php">View Customers</a>
+                                            <?php if ($userRole == 'admin'): ?>
+                                                <a href="viewDashboardAdmin.php">Dashboard</a>
+                                                <a href="viewFeedBack.php">View Feedback</a>
+                                                <a href="viewCustomer.php">View Feedback</a>
+                                            <?php elseif ($userRole == 'staff'): ?>
+                                                <a href="viewDashboardStaff.php">Dashboard</a>
+                                                <a href="viewFeedBack.php">View Feedback</a>
+                                                <a href="viewCustomer.php">View Feedback</a>
+                                            <?php endif; ?>
                                             <a href="signOut.php">Sign Out</a>
                                         </div>
                                     </div>
