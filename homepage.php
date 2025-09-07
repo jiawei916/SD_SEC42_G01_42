@@ -133,7 +133,8 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                 <a href="profile.html">Profile</a>
                 <a href="viewDashboardAdmin.php">Dashboard</a>
                 <a href="viewFeedBack.php">View Feedback</a>
-                <a href="signOut.php">Sign Out</a>                
+                <a href="viewCustomer.php">View Customer</a>
+                <a href="signOut.php">Sign Out</a>              
             <?php elseif ($userRole == 'staff'): ?>
                 <a href="profile.html">Profile</a>
                 <a href="viewDashboardStaff.php">Dashboard</a>

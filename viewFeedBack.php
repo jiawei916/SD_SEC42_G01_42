@@ -197,18 +197,31 @@ $conn->close();
   <h1>VetGroom Hub</h1>
 
   <!-- Profile Dropdown -->
-  <div class="profile-dropdown">
-      <span class="profile-icon"><?php echo $isLoggedIn ? "👤" : "👤"; ?></span>
-      <span class="profile-name"><?php echo htmlspecialchars($userName); ?> ▼</span>
-      <div class="dropdown-content">
-          <?php if ($isLoggedIn): ?>
-              <a href="profile.html">Profile</a>
-              <a href="signOut.php">Sign Out</a>
-          <?php else: ?>
-              <a href="signIn.php">Sign In</a>
-              <a href="registerGuest.php">Register</a>
-          <?php endif; ?>
-      </div>
+<div class="header-right-btn f-right d-none d-lg-block ml-30">
+    <div class="dropdown">
+        <a href="#" class="header-btn">
+            <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
+        </a>
+        <div class="dropdown-content">
+            <?php if ($isLoggedIn): ?>
+                <a href="profile.html">Profile</a>
+                <a href="signOut.php">Sign Out</a>
+            <?php elseif ($userRole == 'admin'): ?>
+                <a href="profile.html">Profile</a>
+                <a href="viewDashboardAdmin.php">Dashboard</a>
+                <a href="viewFeedBack.php">View Feedback</a>
+                <a href="viewCustomer.php">View Customer</a>
+                <a href="signOut.php">Sign Out</a>                
+            <?php elseif ($userRole == 'staff'): ?>
+                <a href="profile.html">Profile</a>
+                <a href="viewDashboardStaff.php">Dashboard</a>
+                <a href="viewFeedBack.php">View Feedback</a>
+                <a href="signOut.php">Sign Out</a> 
+            <?php else: ?>
+                <a href="signIn.php">Sign In</a>
+                <a href="registerGuest.php">Register</a>
+            <?php endif ?>
+        </div>
   </div>
 </header>
 

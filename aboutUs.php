@@ -137,15 +137,18 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
         <a href="#" class="header-btn">
             <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
         </a>
-        <div class="dropdown-content">
-            <?php if ($isLoggedIn): ?>
-                <a href="profile.html">Profile</a>
-                <a href="signOut.php">Sign Out</a>
-            <?php else: ?>
-                <a href="signIn.php">Sign In</a>
-                <a href="registerGuest.php">Register</a>
-            <?php endif; ?>
-        </div>
+                                        <div class="dropdown-content">
+                                            <a href="profile.php">Profile</a>
+                                            <?php if ($userRole == 'admin'): ?>
+                                                <a href="viewDashboardAdmin.php">Dashboard</a>
+                                                <a href="viewFeedBack.php">View Feedback</a>
+                                                <a href="viewCustomer.php">View Customer</a>
+                                            <?php elseif ($userRole == 'staff'): ?>
+                                                <a href="viewDashboardStaff.php">Dashboard</a>
+                                                <a href="viewFeedBack.php">View Feedback</a>
+                                            <?php endif; ?>
+                                            <a href="signOut.php">Sign Out</a>
+                                        </div>
     </div>
 </div>
                                 </div>

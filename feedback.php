@@ -239,6 +239,7 @@ if (!$isLoggedIn) {
                                                 <a href="profile.php">Profile</a>
                                                 <a href="viewDashboardAdmin.php">Dashboard</a>
                                                 <a href="viewFeedBack.php">View Feedback</a>
+                                                <a href="viewCustomer.php">View Customer</a>
                                                 <a href="signOut.php">Sign Out</a>
                                             <?php elseif ($userRole == 'staff'): ?>
                                                 <a href="profile.php">Profile</a>

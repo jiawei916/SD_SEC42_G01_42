@@ -360,6 +360,7 @@ $conn->close();
                                             <?php if ($userRole == 'admin'): ?>
                                                 <a href="viewDashboardAdmin.php">Dashboard</a>
                                                 <a href="viewFeedBack.php">View Feedback</a>
+                                                <a href="viewCustomer.php">View Customer</a>
                                             <?php elseif ($userRole == 'staff'): ?>
                                                 <a href="viewDashboardStaff.php">Dashboard</a>
                                                 <a href="viewFeedBack.php">View Feedback</a>
