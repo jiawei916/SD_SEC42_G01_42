@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// Check if admin is logged in
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] != 'admin') {
+// Check if user is logged in and has appropriate role
+if (!isset($_SESSION['user_role']) || ($_SESSION['user_role'] != 'admin' && $_SESSION['user_role'] != 'staff')) {
     header("Location: signIn.php");
     exit();
 }
@@ -62,6 +62,107 @@ if ($tableCheck->num_rows == 0) {
         $stmt->execute();
     }
     $stmt->close();
+}
+
+// Handle update customer
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_customer']) && $userRole == 'admin') {
+    $customerId = $_POST['customer_id'];
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    
+    $updateSql = "UPDATE users SET name = ?, email = ? WHERE id = ?";
+    $stmt = $conn->prepare($updateSql);
+    $stmt->bind_param("ssi", $name, $email, $customerId);
+    
+    if ($stmt->execute()) {
+        $_SESSION['message'] = "Customer updated successfully!";
+        $_SESSION['message_type'] = "success";
+    } else {
+        $_SESSION['message'] = "Error updating customer: " . $conn->error;
+        $_SESSION['message_type'] = "error";
+    }
+    $stmt->close();
+    
+    header("Location: viewCustomer.php?customer_id=" . $customerId);
+    exit();
+}
+
+// Handle update pet
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_pet']) && $userRole == 'admin') {
+    $petId = $_POST['pet_id'];
+    $name = $_POST['pet_name'];
+    $species = $_POST['species'];
+    $breed = $_POST['breed'];
+    $age = $_POST['age'];
+    $weight = $_POST['weight'];
+    $medical_notes = $_POST['medical_notes'];
+    
+    $updateSql = "UPDATE pets SET name = ?, species = ?, breed = ?, age = ?, weight = ?, medical_notes = ? WHERE id = ?";
+    $stmt = $conn->prepare($updateSql);
+    $stmt->bind_param("sssidssi", $name, $species, $breed, $age, $weight, $medical_notes, $petId);
+    
+    if ($stmt->execute()) {
+        $_SESSION['message'] = "Pet updated successfully!";
+        $_SESSION['message_type'] = "success";
+    } else {
+        $_SESSION['message'] = "Error updating pet: " . $conn->error;
+        $_SESSION['message_type'] = "error";
+    }
+    $stmt->close();
+    
+    header("Location: viewCustomer.php?customer_id=" . $_POST['customer_id']);
+    exit();
+}
+
+// Handle delete customer
+if (isset($_GET['delete_customer']) && $userRole == 'admin') {
+    $customerId = $_GET['delete_customer'];
+    
+    // First delete associated pets
+    $deletePetsSql = "DELETE FROM pets WHERE user_id = ?";
+    $stmt = $conn->prepare($deletePetsSql);
+    $stmt->bind_param("i", $customerId);
+    $stmt->execute();
+    $stmt->close();
+    
+    // Then delete the customer
+    $deleteCustomerSql = "DELETE FROM users WHERE id = ?";
+    $stmt = $conn->prepare($deleteCustomerSql);
+    $stmt->bind_param("i", $customerId);
+    
+    if ($stmt->execute()) {
+        $_SESSION['message'] = "Customer deleted successfully!";
+        $_SESSION['message_type'] = "success";
+    } else {
+        $_SESSION['message'] = "Error deleting customer: " . $conn->error;
+        $_SESSION['message_type'] = "error";
+    }
+    $stmt->close();
+    
+    header("Location: viewCustomer.php");
+    exit();
+}
+
+// Handle delete pet
+if (isset($_GET['delete_pet']) && $userRole == 'admin') {
+    $petId = $_GET['delete_pet'];
+    $customerId = $_GET['customer_id'];
+    
+    $deleteSql = "DELETE FROM pets WHERE id = ?";
+    $stmt = $conn->prepare($deleteSql);
+    $stmt->bind_param("i", $petId);
+    
+    if ($stmt->execute()) {
+        $_SESSION['message'] = "Pet deleted successfully!";
+        $_SESSION['message_type'] = "success";
+    } else {
+        $_SESSION['message'] = "Error deleting pet: " . $conn->error;
+        $_SESSION['message_type'] = "error";
+    }
+    $stmt->close();
+    
+    header("Location: viewCustomer.php?customer_id=" . $customerId);
+    exit();
 }
 
 // Handle search
@@ -158,7 +259,8 @@ $conn->close();
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
-                /* Dropdown container */
+        
+        /* Dropdown container */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -399,6 +501,112 @@ $conn->close();
             color: #856404;
         }
         
+        /* Form styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn-primary {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #357abd;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .message {
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .edit-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .edit-toggle {
+            background: none;
+            border: none;
+            color: #4a90e2;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .edit-toggle:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 768px) {
             .customer-info {
                 grid-template-columns: 1fr;
@@ -414,6 +622,10 @@ $conn->close();
             
             .customer-table th, .customer-table td {
                 padding: 8px 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
             }
         }
         
@@ -507,7 +719,7 @@ $conn->close();
                                             <?php elseif ($userRole == 'staff'): ?>
                                                 <a href="viewDashboardStaff.php">Dashboard</a>
                                                 <a href="viewFeedBack.php">View Feedback</a>
-                                                <a href="viewCustomer.php">View Feedback</a>
+                                                <a href="viewCustomer.php">View Customer</a>
                                             <?php endif; ?>
                                             <a href="signOut.php">Sign Out</a>
                                         </div>
@@ -534,22 +746,61 @@ $conn->close();
                 <p>View and manage all registered customers</p>
             </div>
 
+            <!-- Display messages -->
+            <?php if (isset($_SESSION['message'])): ?>
+                <div class="message message-<?php echo $_SESSION['message_type']; ?>">
+                    <?php 
+                    echo $_SESSION['message']; 
+                    unset($_SESSION['message']);
+                    unset($_SESSION['message_type']);
+                    ?>
+                </div>
+            <?php endif; ?>
+
             <!-- Search Section -->
-            <form method="GET" action="viewCustomers.php" class="search-container">
+            <form method="GET" action="viewCustomer.php" class="search-container">
                 <input type="text" class="search-input" placeholder="Search customers by name or email..." name="search" value="<?php echo htmlspecialchars($search); ?>">
                 <button class="search-btn" type="submit">Search</button>
                 <?php if (!empty($search)): ?>
-                    <a href="viewCustomers.php" class="btn btn-secondary">Clear</a>
+                    <a href="viewCustomer.php" class="btn btn-secondary">Clear</a>
                 <?php endif; ?>
             </form>
 
             <?php if ($selectedCustomer): ?>
                 <!-- Back button -->
-                <button class="back-btn" onclick="window.history.back()">← Back to Customer List</button>
+                <button class="back-btn" onclick="window.location.href='viewCustomer.php'">← Back to Customer List</button>
 
                 <!-- Customer Details -->
                 <div class="customer-details">
-                    <h3>Customer Details</h3>
+                    <h3>Customer Details 
+                        <?php if ($userRole == 'admin'): ?>
+                            <button class="edit-toggle" onclick="toggleEditForm('customer')">✏️ Edit</button>
+                        <?php endif; ?>
+                    </h3>
+                    
+                    <!-- Customer Edit Form (Admin only) -->
+                    <?php if ($userRole == 'admin'): ?>
+                    <form id="customer-edit-form" class="edit-form" method="POST" action="viewCustomer.php" style="display: none;">
+                        <input type="hidden" name="customer_id" value="<?php echo $selectedCustomer['id']; ?>">
+                        <input type="hidden" name="update_customer" value="1">
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="name">Full Name</label>
+                            <input type="text" class="form-input" id="name" name="name" value="<?php echo htmlspecialchars($selectedCustomer['name']); ?>" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" class="form-input" id="email" name="email" value="<?php echo htmlspecialchars($selectedCustomer['email']); ?>" required>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                            <button type="button" class="btn-danger" onclick="toggleEditForm('customer')">Cancel</button>
+                        </div>
+                    </form>
+                    <?php endif; ?>
+                    
                     <div class="customer-info">
                         <div class="info-item">
                             <div class="info-label">Customer ID</div>
@@ -581,6 +832,17 @@ $conn->close();
                         </div>
                     </div>
 
+                    <!-- Admin actions -->
+                    <?php if ($userRole == 'admin'): ?>
+                    <div class="action-buttons">
+                        <a href="viewCustomer.php?delete_customer=<?php echo $selectedCustomer['id']; ?>" 
+                           class="btn-danger" 
+                           onclick="return confirm('Are you sure you want to delete this customer? This action cannot be undone.')">
+                            Delete Customer
+                        </a>
+                    </div>
+                    <?php endif; ?>
+
                     <!-- Pets Information -->
                     <div class="pets-section">
                         <h3>Pet Information</h3>
@@ -588,13 +850,73 @@ $conn->close();
                             <div class="pets-grid">
                                 <?php foreach ($customerPets as $pet): ?>
                                     <div class="pet-card">
-                                        <h4 class="pet-name"><?php echo htmlspecialchars($pet['name']); ?></h4>
+                                        <h4 class="pet-name"><?php echo htmlspecialchars($pet['name']); ?>
+                                            <?php if ($userRole == 'admin'): ?>
+                                                <button class="edit-toggle" onclick="togglePetEditForm(<?php echo $pet['id']; ?>)">✏️ Edit</button>
+                                            <?php endif; ?>
+                                        </h4>
+                                        
+                                        <!-- Pet Edit Form (Admin only) -->
+                                        <?php if ($userRole == 'admin'): ?>
+                                        <form id="pet-edit-form-<?php echo $pet['id']; ?>" class="edit-form" method="POST" action="viewCustomer.php" style="display: none;">
+                                            <input type="hidden" name="pet_id" value="<?php echo $pet['id']; ?>">
+                                            <input type="hidden" name="customer_id" value="<?php echo $selectedCustomer['id']; ?>">
+                                            <input type="hidden" name="update_pet" value="1">
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label" for="pet_name_<?php echo $pet['id']; ?>">Pet Name</label>
+                                                <input type="text" class="form-input" id="pet_name_<?php echo $pet['id']; ?>" name="pet_name" value="<?php echo htmlspecialchars($pet['name']); ?>" required>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label" for="species_<?php echo $pet['id']; ?>">Species</label>
+                                                <input type="text" class="form-input" id="species_<?php echo $pet['id']; ?>" name="species" value="<?php echo htmlspecialchars($pet['species']); ?>" required>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label" for="breed_<?php echo $pet['id']; ?>">Breed</label>
+                                                <input type="text" class="form-input" id="breed_<?php echo $pet['id']; ?>" name="breed" value="<?php echo htmlspecialchars($pet['breed'] ?? ''); ?>">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label" for="age_<?php echo $pet['id']; ?>">Age</label>
+                                                <input type="number" class="form-input" id="age_<?php echo $pet['id']; ?>" name="age" value="<?php echo $pet['age']; ?>">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label" for="weight_<?php echo $pet['id']; ?>">Weight (kg)</label>
+                                                <input type="number" step="0.1" class="form-input" id="weight_<?php echo $pet['id']; ?>" name="weight" value="<?php echo $pet['weight']; ?>">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label" for="medical_notes_<?php echo $pet['id']; ?>">Medical Notes</label>
+                                                <textarea class="form-textarea" id="medical_notes_<?php echo $pet['id']; ?>" name="medical_notes"><?php echo htmlspecialchars($pet['medical_notes'] ?? ''); ?></textarea>
+                                            </div>
+                                            
+                                            <div class="action-buttons">
+                                                <button type="submit" class="btn-primary">Save Changes</button>
+                                                <button type="button" class="btn-danger" onclick="togglePetEditForm(<?php echo $pet['id']; ?>)">Cancel</button>
+                                            </div>
+                                        </form>
+                                        <?php endif; ?>
+                                        
                                         <div class="pet-details"><strong>Species:</strong> <?php echo htmlspecialchars($pet['species']); ?></div>
                                         <div class="pet-details"><strong>Breed:</strong> <?php echo htmlspecialchars($pet['breed'] ?? 'Not specified'); ?></div>
                                         <div class="pet-details"><strong>Age:</strong> <?php echo $pet['age']; ?> years</div>
                                         <div class="pet-details"><strong>Weight:</strong> <?php echo $pet['weight']; ?> kg</div>
                                         <?php if (!empty($pet['medical_notes'])): ?>
                                             <div class="pet-details"><strong>Medical Notes:</strong> <?php echo htmlspecialchars($pet['medical_notes']); ?></div>
+                                        <?php endif; ?>
+                                        
+                                        <!-- Admin actions for pet -->
+                                        <?php if ($userRole == 'admin'): ?>
+                                        <div class="action-buttons">
+                                            <a href="viewCustomer.php?delete_pet=<?php echo $pet['id']; ?>&customer_id=<?php echo $selectedCustomer['id']; ?>" 
+                                               class="btn-danger" 
+                                               onclick="return confirm('Are you sure you want to delete this pet? This action cannot be undone.')">
+                                                Delete Pet
+                                            </a>
+                                        </div>
                                         <?php endif; ?>
                                     </div>
                                 <?php endforeach; ?>
@@ -632,7 +954,14 @@ $conn->close();
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="viewCustomers.php?customer_id=<?php echo $customer['id']; ?>" class="view-btn">View Details</a>
+                                            <a href="viewCustomer.php?customer_id=<?php echo $customer['id']; ?>" class="view-btn">View Details</a>
+                                            <?php if ($userRole == 'admin'): ?>
+                                                <a href="viewCustomer.php?delete_customer=<?php echo $customer['id']; ?>" 
+                                                   class="btn-danger" 
+                                                   onclick="return confirm('Are you sure you want to delete this customer? This action cannot be undone.')">
+                                                    Delete
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -646,46 +975,54 @@ $conn->close();
         </div>
     </main>
 
-    <!-- ✅ Footer -->
-    <footer>
-        <div class="footer-area footer-padding">
-            <div class="container">
-                <div class="row d-flex justify-content-between">
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-footer-caption mb-50">
-                            <div class="footer-logo mb-25">
-                                <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
-                            </div>
-                            <div class="footer-tittle">
-                                <p>Professional grooming and veterinary services for your beloved pets.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom-area">
-            <div class="container">
-                <div class="footer-border">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-xl-12">
-                            <div class="footer-copy-right text-center">
-                                <p>&copy; <?php echo date("Y"); ?> VetGroom Hub. All Rights Reserved.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JS -->
-    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="./assets/js/popper.min.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
-    <script src="./assets/js/jquery.slicknav.min.js"></script>
-    <script src="./assets/js/owl.carousel.min.js"></script>
-    <script src="./assets/js/slick.min.js"></script>
-    <script src="./assets/js/main.js"></script>
+    <!-- JS here -->
+    <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.slicknav.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <script src="assets/js/slick.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.js"></script>
+    <script src="assets/js/jquery.nice-select.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/waypoints.min.js"></script>
+    <script src="assets/js/contact.js"></script>
+    <script src="assets/js/jquery.form.js"></script>
+    <script src="assets/js/jquery.validate.min.js"></script>
+    <script src="assets/js/mail-script.js"></script>
+    <script src="assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="assets/js/plugins.js"></script>
+    <script src="assets/js/main.js"></script>
+    
+    <script>
+        // Toggle edit forms
+        function toggleEditForm(type) {
+            const form = document.getElementById(`${type}-edit-form`);
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+        
+        function togglePetEditForm(petId) {
+            const form = document.getElementById(`pet-edit-form-${petId}`);
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+        
+        // Auto-hide messages after 5 seconds
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(message => {
+                message.style.display = 'none';
+            });
+        }, 5000);
+    </script>
 </body>
 </html>
