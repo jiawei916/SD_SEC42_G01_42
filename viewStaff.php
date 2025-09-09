@@ -452,9 +452,11 @@ $conn->close();
                                                     <a href="viewDashboardAdmin.php">Dashboard</a>
                                                     <a href="viewFeedBack.php">View Feedback</a>
                                                     <a href="viewCustomer.php">View Customer</a>
+                                                    <a href="viewStaff.php">View Staff</a>
                                                 <?php elseif ($userRole == 'staff'): ?>
                                                     <a href="viewDashboardStaff.php">Dashboard</a>
                                                     <a href="viewFeedBack.php">View Feedback</a>
+                                                    <a href="viewCustomer.php">View Customer</a>
                                                 <?php endif; ?>
                                                 <a href="signOut.php">Sign Out</a>
                                             <?php else: ?>

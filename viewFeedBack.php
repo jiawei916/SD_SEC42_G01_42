@@ -217,6 +217,7 @@ $conn->close();
                 <a href="profile.html">Profile</a>
                 <a href="viewDashboardStaff.php">Dashboard</a>
                 <a href="viewFeedBack.php">View Feedback</a>
+                <a href="viewCustomer.php">View Customer</a>
                 <a href="signOut.php">Sign Out</a> 
             <?php else: ?>
                 <a href="signIn.php">Sign In</a>
