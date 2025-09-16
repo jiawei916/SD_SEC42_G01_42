@@ -200,7 +200,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                     <span data-animation="fadeInUp" data-delay=".3s">Safe — Gentle — Professional</span>
                                     <h1 data-animation="fadeInUp" data-delay=".3s">Trusted grooming & veterinary care</h1>
                                     <p data-animation="fadeInUp" data-delay=".6s">Experienced groomers and qualified veterinarians working together for your pet's health and comfort.</p>
-                                    <a href="viewServices.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Our Services<i class="ti-arrow-right"></i> </a>
+                                    <a href="viewService.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Our Services<i class="ti-arrow-right"></i> </a>
                                 </div>
                             </div>
                         </div>
@@ -278,7 +278,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                     <div class="about-more">
                         <p class="pera-top">VetGroom Hub provides professional grooming and veterinary services with a focus on safety and comfort for every pet.</p>
                         <p class="mb-65 pera-bottom">Our team includes certified veterinarians and experienced groomers. We offer appointment bookings, preventive care plans, and grooming packages suitable for dogs and cats of all sizes.</p>
-                        <a href="about.php" class="btn">Read More</a>
+                        <a href="aboutUs.php" class="btn">Read More</a>
                     </div>
                 </div>
             </div>
