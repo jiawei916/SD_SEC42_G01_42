@@ -25,40 +25,104 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle search and filter
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-$roleFilter = isset($_GET['role']) ? $_GET['role'] : '';
+// Handle delete staff request
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    
+    // Prevent admin from deleting themselves
+    if ($delete_id != $_SESSION['user_id']) {
+        $delete_sql = "DELETE FROM users WHERE id = ? AND role IN ('staff', 'admin')";
+        $stmt = $conn->prepare($delete_sql);
+        $stmt->bind_param("i", $delete_id);
+        
+        if ($stmt->execute()) {
+            $success_message = "Staff member deleted successfully!";
+        } else {
+            $error_message = "Error deleting staff member: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        $error_message = "You cannot delete your own account!";
+    }
+}
+
+// Handle add staff form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_staff'])) {
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $role = $_POST['role'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    
+    // Check if email already exists
+    $check_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $check_email->bind_param("s", $email);
+    $check_email->execute();
+    $check_email->store_result();
+    
+    if ($check_email->num_rows > 0) {
+        $error_message = "Email already exists!";
+    } else {
+        $insert_sql = "INSERT INTO users (name, email, password, role, verified, created_at) VALUES (?, ?, ?, ?, 1, NOW())";
+        $stmt = $conn->prepare($insert_sql);
+        $stmt->bind_param("ssss", $name, $email, $password, $role);
+        
+        if ($stmt->execute()) {
+            $success_message = "Staff member added successfully!";
+        } else {
+            $error_message = "Error adding staff member: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+    $check_email->close();
+}
+
+// Handle edit staff form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_staff'])) {
+    $edit_id = $_POST['edit_id'];
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $role = $_POST['role'];
+    
+    // Check if email already exists (excluding current user)
+    $check_email = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+    $check_email->bind_param("si", $email, $edit_id);
+    $check_email->execute();
+    $check_email->store_result();
+    
+    if ($check_email->num_rows > 0) {
+        $error_message = "Email already exists!";
+    } else {
+        $update_sql = "UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?";
+        $stmt = $conn->prepare($update_sql);
+        $stmt->bind_param("sssi", $name, $email, $role, $edit_id);
+        
+        if ($stmt->execute()) {
+            $success_message = "Staff member updated successfully!";
+        } else {
+            $error_message = "Error updating staff member: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+    $check_email->close();
+}
 
 // Fetch all staff members (staff and admin roles)
-$sql = "SELECT id, name, role, email, verified, created_at FROM users WHERE role IN ('staff', 'admin')";
-$params = [];
-$types = "";
-
-if (!empty($search)) {
-    $sql .= " AND (name LIKE ? OR email LIKE ?)";
-    $searchTerm = "%$search%";
-    $params[] = $searchTerm;
-    $params[] = $searchTerm;
-    $types .= "ss";
-}
-
-if (!empty($roleFilter)) {
-    $sql .= " AND role = ?";
-    $params[] = $roleFilter;
-    $types .= "s";
-}
-
-$sql .= " ORDER BY role, name";
-
-$stmt = $conn->prepare($sql);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
-
-$stmt->execute();
-$result = $stmt->get_result();
+$sql = "SELECT id, name, role, email, verified, created_at FROM users WHERE role IN ('staff', 'admin') ORDER BY role, name";
+$result = $conn->query($sql);
 $staffMembers = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+
+// Get staff member for editing if requested
+$editStaff = null;
+if (isset($_GET['edit_id'])) {
+    $edit_id = $_GET['edit_id'];
+    $edit_sql = "SELECT id, name, email, role FROM users WHERE id = ?";
+    $stmt = $conn->prepare($edit_sql);
+    $stmt->bind_param("i", $edit_id);
+    $stmt->execute();
+    $edit_result = $stmt->get_result();
+    $editStaff = $edit_result->fetch_assoc();
+    $stmt->close();
+}
 
 $conn->close();
 ?>
@@ -131,34 +195,26 @@ $conn->close();
             font-weight: 700;
         }
         
-        /* Search and filter styling */
-        .filter-section {
+        /* Form styling */
+        .staff-form {
             background: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         
-        .filter-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: end;
+        .form-group {
+            margin-bottom: 15px;
         }
         
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .filter-label {
+        .form-label {
             display: block;
             font-weight: 600;
             margin-bottom: 5px;
             color: #333;
         }
         
-        .search-input, .filter-select {
+        .form-input {
             width: 100%;
             padding: 10px 15px;
             border: 1px solid #ddd;
@@ -166,43 +222,10 @@ $conn->close();
             font-size: 16px;
         }
         
-        .filter-buttons {
+        .form-buttons {
             display: flex;
             gap: 10px;
-        }
-        
-        .search-btn {
-            padding: 10px 20px;
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        
-        .search-btn:hover {
-            background-color: #357abd;
-        }
-        
-        .clear-btn {
-            padding: 10px 15px;
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .clear-btn:hover {
-            background-color: #5a6268;
-            color: white;
+            margin-top: 20px;
         }
         
         /* Staff list styling */
@@ -226,11 +249,6 @@ $conn->close();
             background-color: #f8f9fa;
             font-weight: 600;
             color: #333;
-            cursor: pointer;
-        }
-        
-        .staff-table th:hover {
-            background-color: #e9ecef;
         }
         
         .staff-table tr:hover {
@@ -238,7 +256,6 @@ $conn->close();
         }
         
         .action-btn {
-            background-color: #4a90e2;
             color: white;
             border: none;
             padding: 6px 12px;
@@ -248,26 +265,32 @@ $conn->close();
             transition: background-color 0.3s;
             text-decoration: none;
             display: inline-block;
+            margin-right: 5px;
         }
         
         .action-btn:hover {
-            background-color: #357abd;
+            opacity: 0.9;
         }
         
         .btn-edit {
             background-color: #28a745;
         }
         
-        .btn-edit:hover {
-            background-color: #218838;
-        }
-        
-        .btn-deactivate {
+        .btn-delete {
             background-color: #dc3545;
         }
         
-        .btn-deactivate:hover {
-            background-color: #c82333;
+        .btn-add {
+            background-color: #4a90e2;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-cancel {
+            background-color: #6c757d;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
         }
         
         /* Status badges */
@@ -335,15 +358,26 @@ $conn->close();
             font-weight: 500;
         }
         
+        /* Message alerts */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
         @media (max-width: 768px) {
-            .filter-row {
-                flex-direction: column;
-            }
-            
-            .filter-group {
-                min-width: 100%;
-            }
-            
             .staff-table {
                 font-size: 14px;
             }
@@ -354,6 +388,10 @@ $conn->close();
             
             .stats-cards {
                 grid-template-columns: 1fr;
+            }
+            
+            .form-buttons {
+                flex-direction: column;
             }
         }
         
@@ -413,7 +451,7 @@ $conn->close();
 </head>
 <body>
 
-    <!-- ✅ Header Start -->
+    <!-- Header Start -->
     <header>
         <div class="header-area header-transparent">
             <div class="main-header header-sticky">
@@ -477,15 +515,24 @@ $conn->close();
             </div>
         </div>
     </header>
-    <!-- ✅ Header End -->
+    <!-- Header End -->
 
-    <!-- ✅ Staff Management Section -->
+    <!-- Staff Management Section -->
     <main class="dashboard-container">
         <div class="dashboard-card">
             <div class="dashboard-header">
                 <h2>Staff Management</h2>
-                <p>View and manage all staff members and administrators</p>
+                <p>Manage all staff members and administrators</p>
             </div>
+
+            <!-- Display messages -->
+            <?php if (isset($success_message)): ?>
+                <div class="alert alert-success"><?php echo $success_message; ?></div>
+            <?php endif; ?>
+            
+            <?php if (isset($error_message)): ?>
+                <div class="alert alert-error"><?php echo $error_message; ?></div>
+            <?php endif; ?>
 
             <!-- Stats Cards -->
             <?php
@@ -519,30 +566,54 @@ $conn->close();
                 </div>
             </div>
 
-            <!-- Search and Filter Section -->
-            <div class="filter-section">
-                <form method="GET" action="viewStaff.php">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label class="filter-label">Search by Name or Email</label>
-                            <input type="text" class="search-input" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Enter name or email...">
-                        </div>
+            <!-- Add/Edit Staff Form -->
+            <div class="staff-form">
+                <h3><?php echo isset($editStaff) ? 'Edit Staff Member' : 'Add New Staff Member'; ?></h3>
+                <form method="POST" action="viewStaff.php">
+                    <?php if (isset($editStaff)): ?>
+                        <input type="hidden" name="edit_id" value="<?php echo $editStaff['id']; ?>">
+                        <input type="hidden" name="edit_staff" value="1">
+                    <?php else: ?>
+                        <input type="hidden" name="add_staff" value="1">
+                    <?php endif; ?>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" name="name" 
+                               value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['name']) : ''; ?>" 
+                               required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" name="email" 
+                               value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['email']) : ''; ?>" 
+                               required>
+                    </div>
+                    
+                    <?php if (!isset($editStaff)): ?>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" name="password" required>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <select class="form-input" name="role" required>
+                            <option value="staff" <?php echo (isset($editStaff) && $editStaff['role'] == 'staff') ? 'selected' : ''; ?>>Staff</option>
+                            <option value="admin" <?php echo (isset($editStaff) && $editStaff['role'] == 'admin') ? 'selected' : ''; ?>>Administrator</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" class="action-btn btn-add">
+                            <?php echo isset($editStaff) ? 'Update Staff' : 'Add Staff'; ?>
+                        </button>
                         
-                        <div class="filter-group">
-                            <label class="filter-label">Filter by Role</label>
-                            <select class="filter-select" name="role">
-                                <option value="">All Roles</option>
-                                <option value="admin" <?php echo $roleFilter == 'admin' ? 'selected' : ''; ?>>Administrator</option>
-                                <option value="staff" <?php echo $roleFilter == 'staff' ? 'selected' : ''; ?>>Staff</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-buttons">
-                            <button type="submit" class="search-btn">Apply Filters</button>
-                            <?php if (!empty($search) || !empty($roleFilter)): ?>
-                                <a href="viewStaff.php" class="clear-btn">Clear Filters</a>
-                            <?php endif; ?>
-                        </div>
+                        <?php if (isset($editStaff)): ?>
+                            <a href="viewStaff.php" class="btn-cancel">Cancel</a>
+                        <?php endif; ?>
                     </div>
                 </form>
             </div>
@@ -582,8 +653,10 @@ $conn->close();
                                     </td>
                                     <td><?php echo date('M j, Y', strtotime($staff['created_at'])); ?></td>
                                     <td>
-                                        <a href="editStaff.php?id=<?php echo $staff['id']; ?>" class="action-btn btn-edit">Edit</a>
-                                        <button class="action-btn btn-deactivate">Deactivate</button>
+                                        <a href="viewStaff.php?edit_id=<?php echo $staff['id']; ?>" class="action-btn btn-edit">Edit</a>
+                                        <a href="viewStaff.php?delete_id=<?php echo $staff['id']; ?>" 
+                                           class="action-btn btn-delete" 
+                                           onclick="return confirm('Are you sure you want to delete this staff member?')">Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -592,14 +665,14 @@ $conn->close();
                 <?php else: ?>
                     <div class="no-staff">
                         <h3>No staff members found</h3>
-                        <p>Try adjusting your search or filter criteria.</p>
+                        <p>Click "Add Staff" to add your first staff member.</p>
                     </div>
                 <?php endif; ?>
             </div>
         </div>
     </main>
 
-    <!-- ✅ Footer -->
+    <!-- Footer -->
     <footer>
         <div class="footer-area footer-padding">
             <div class="container">
@@ -640,24 +713,5 @@ $conn->close();
     <script src="./assets/js/owl.carousel.min.js"></script>
     <script src="./assets/js/slick.min.js"></script>
     <script src="./assets/js/main.js"></script>
-    
-    <script>
-        // Simple table sorting functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
-            
-            const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
-                v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
-            )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
-            
-            document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
-                const table = th.closest('table');
-                const tbody = table.querySelector('tbody');
-                Array.from(tbody.querySelectorAll('tr'))
-                    .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
-                    .forEach(tr => tbody.appendChild(tr));
-            })));
-        });
-    </script>
 </body>
 </html>
