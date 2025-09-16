@@ -1,3 +1,5 @@
+[file name]: contact.php
+[file content begin]
 <?php
 session_start();
 
@@ -90,6 +92,21 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
             color: #fff;
             margin-bottom: 20px;
             font-size: 18px;
+        }
+        
+        /* Map image styling */
+        .map-image {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .map-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -188,16 +205,9 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
         <section class="contact-section">
             <div class="container">
                 <div class="d-none d-sm-block mb-5 pb-4">
-                    <!-- Google Map (simplified version) -->
-                    <div id="map" style="height: 480px; position: relative; overflow: hidden;">
-                        <!-- Map placeholder - you can implement actual Google Maps API here -->
-                        <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223); display: flex; justify-content: center; align-items: center;">
-                            <div style="text-align: center; color: #666;">
-                                <i class="fas fa-map-marker-alt" style="font-size: 48px; margin-bottom: 15px;"></i>
-                                <h3>VetGroom Hub Location</h3>
-                                <p>Kuala Lumpur, Malaysia</p>
-                            </div>
-                        </div>
+                    <!-- Map image -->
+                    <div class="map-container">
+                        <img src="assets/img/contactUs/mAP_page_1_1.png" alt="VetGroom Hub Location Map" class="map-image">
                     </div>
                 </div>
                 
@@ -388,3 +398,4 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
 </body>
 </html>
+[file content end]
