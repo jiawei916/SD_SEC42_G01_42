@@ -180,7 +180,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                     <span data-animation="fadeInUp" data-delay=".3s">Professional pet care in one place</span>
                                     <h1 data-animation="fadeInUp" data-delay=".3s">VetGroom Hub — We Care for Your Pets</h1>
                                     <p data-animation="fadeInUp" data-delay=".6s">Full grooming, veterinary services and convenient appointment bookings for dogs and cats.</p>
-                                    <a href="index.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
+                                    <a href="viewService.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
                                 </div>
                             </div>
                         </div>
@@ -200,7 +200,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                     <span data-animation="fadeInUp" data-delay=".3s">Safe — Gentle — Professional</span>
                                     <h1 data-animation="fadeInUp" data-delay=".3s">Trusted grooming & veterinary care</h1>
                                     <p data-animation="fadeInUp" data-delay=".6s">Experienced groomers and qualified veterinarians working together for your pet's health and comfort.</p>
-                                    <a href="services.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Our Services<i class="ti-arrow-right"></i> </a>
+                                    <a href="viewServices.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Our Services<i class="ti-arrow-right"></i> </a>
                                 </div>
                             </div>
                         </div>
