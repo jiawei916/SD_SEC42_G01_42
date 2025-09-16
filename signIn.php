@@ -125,12 +125,8 @@ if (!$isLoggedIn) {
                                         <ul id="navigation">
                                             <li><a href="homepage.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
-                                            <li class="active"><a href="viewService.php">Services</a></li>
-                                            <li class="active"><a href="feedback.php">Feedback</a></li>
+                                            <li><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
-                                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                                <li><a href="viewFeedBack.php">View Feedback</a></li>
-                                            <?php endif; ?>
                                         </ul>
                                     </nav>
                                 </div>
@@ -153,7 +149,7 @@ if (!$isLoggedIn) {
             <form class="login-form" id="loginForm" novalidate>
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <input type="email" id="email" name="email" autocomplete="email">
                         <label for="email">Email Address</label>
                     </div>
                     <span class="error-message" id="emailError"></span>
@@ -215,12 +211,15 @@ if (!$isLoggedIn) {
         passwordError.textContent = "";
 
         const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
-        if (!emailPattern.test(email)) {
-            emailError.textContent = "Please enter a valid email address.";
-            return;
-        }
-        if (password === "") {
-            passwordError.textContent = "Please enter your password.";
+    if (!email) {
+        document.getElementById("emailError").textContent = "Email is required.";
+        hasError = true;
+    } else if (!emailPattern.test(email)) {
+        document.getElementById("emailError").textContent = "Please enter a valid email.";
+        hasError = true;
+    }
+        if (!password) {
+            passwordError.textContent = "Password is required.";
             return;
         }
 
