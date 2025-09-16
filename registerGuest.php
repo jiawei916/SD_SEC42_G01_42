@@ -108,7 +108,7 @@ if (!$isLoggedIn) {
         }
         
         .input-wrapper input:focus {
-            border-color: #dc3545;
+            border-color: #3aa9e4;
             outline: none;
         }
         
@@ -129,7 +129,7 @@ if (!$isLoggedIn) {
             font-size: 12px;
             background: white;
             padding: 0 5px;
-            color: #dc3545;
+            color: #3aa9e4;
         }
         
         .password-wrapper {
@@ -245,7 +245,7 @@ if (!$isLoggedIn) {
             display: flex;
             align-items: center;
             cursor: pointer;
-            background-color: #dc3545;
+            background-color: #3aa9e4;
             padding: 6px 10px;
             border-radius: 6px;
             box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
@@ -321,12 +321,8 @@ if (!$isLoggedIn) {
                                         <ul id="navigation">
                                             <li><a href="homepage.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
-                                            <li class="active"><a href="viewService.php">Services</a></li>
-                                            <li class="active"><a href="feedback.php">Feedback</a></li>
+                                            <li><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
-                                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                                <li><a href="viewFeedBack.php">View Feedback</a></li>
-                                            <?php endif; ?>
                                         </ul>
                                     </nav>
                                 </div>
@@ -340,157 +336,132 @@ if (!$isLoggedIn) {
     </header>
 
     <!-- Main registration content -->
-    <main>
-        <div class="registration-container">
-            <div class="registration-card">
-                <div class="registration-header">
-                    <h2>Create Account</h2>
-                    <p>Register to access all our services</p>
-                </div>
-                
-                <form id="registerForm" method="POST">
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <input type="text" id="name" name="name" placeholder=" " required>
-                            <label for="name">Full Name</label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <input type="email" id="email" name="email" placeholder=" " required>
-                            <label for="email">Email Address</label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-wrapper password-wrapper">
-                            <input type="password" id="password" name="password" placeholder=" " required>
-                            <label for="password">Password</label>
-                            <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
-                                <span class="eye-icon" id="eyeIcon"></span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-wrapper password-wrapper">
-                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder=" " required>
-                            <label for="confirmPassword">Confirm Password</label>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="registration-btn">
-                        <span class="btn-text">Register</span>
-                        <span class="btn-loader"></span>
-                    </button>
-                    
-                    <div id="message"></div>
-                </form>
-                
-                <div class="login-link">
-                    <p>Already have an account? <a href="signIn.php">Sign In</a></p>
-                </div>
-            </div>
+<main>
+<div class="registration-container">
+    <div class="registration-card">
+        <div class="registration-header">
+            <h2>Create Account</h2>
+            <p>Register to access all our services</p>
         </div>
-    </main>
+        <form id="registerForm" method="POST" novalidate>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="text" id="name" name="name" placeholder=" " required>
+                    <label for="name">Full Name</label>
+                </div>
+                <span class="error-message" id="nameError"></span>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="email" id="email" name="email" placeholder=" " required>
+                    <label for="email">Email Address</label>
+                </div>
+                <span class="error-message" id="emailError"></span>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="password" name="password" placeholder=" " required>
+                    <label for="password">Password</label>
+                    <button type="button" class="password-toggle" id="passwordToggle">
+                        <span class="eye-icon" id="eyeIcon"></span>
+                    </button>
+                </div>
+                <span class="error-message" id="passwordError"></span>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder=" " required>
+                    <label for="confirmPassword">Confirm Password</label>
+                </div>
+                <span class="error-message" id="confirmPasswordError"></span>
+            </div>
+            <button type="submit" class="registration-btn">
+                <span class="btn-text">Register</span>
+                <span class="btn-loader"></span>
+            </button>
+            <div id="message"></div>
+        </form>
+        <div class="login-link">
+            <p>Already have an account? <a href="signIn.php">Sign In</a></p>
+        </div>
+    </div>
+</div>
+</main>
 
-    <!-- JavaScript for form handling -->
-    <script>
-    document.getElementById("registerForm").addEventListener("submit", function(event) {
-        event.preventDefault();
+<script>
+document.getElementById("registerForm").addEventListener("submit", function(event){
+    event.preventDefault();
 
-        let name = document.getElementById("name").value.trim();
-        let email = document.getElementById("email").value.trim();
-        let password = document.getElementById("password").value.trim();
-        let confirmPassword = document.getElementById("confirmPassword").value.trim();
-        let message = document.getElementById("message");
+    // Clear all error spans
+    document.querySelectorAll('.error-message').forEach(span => span.textContent = "");
 
-        message.textContent = "";
-        message.className = "";
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-        // Email format validation
-        let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+    let hasError = false;
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
 
-        if (name === "" || email === "" || password === "" || confirmPassword === "") {
-            message.textContent = "All fields are required.";
-            message.className = "error";
-            return;
-        }
+    if (!name) {
+        document.getElementById("nameError").textContent = "Full name is required.";
+        hasError = true;
+    }
+    if (!email) {
+        document.getElementById("emailError").textContent = "Email is required.";
+        hasError = true;
+    } else if (!emailPattern.test(email)) {
+        document.getElementById("emailError").textContent = "Please enter a valid email.";
+        hasError = true;
+    }
+    if (!password) {
+        document.getElementById("passwordError").textContent = "Password is required.";
+        hasError = true;
+    } else if (password.length < 5) {
+        document.getElementById("passwordError").textContent = "Password must be at least 5 characters.";
+        hasError = true;
+    }
+    if (!confirmPassword) {
+        document.getElementById("confirmPasswordError").textContent = "Please confirm your password.";
+        hasError = true;
+    } else if (password !== confirmPassword) {
+        document.getElementById("confirmPasswordError").textContent = "Passwords do not match.";
+        hasError = true;
+    }
 
-        if (!emailPattern.test(email)) {
-            message.textContent = "Please enter a valid email address.";
-            message.className = "error";
-            return;
-        }
+    if (hasError) return; // stop if validation failed
 
-        if (password.length < 5) {
-            message.textContent = "Password must be at least 5 characters.";
-            message.className = "error";
-            return;
-        }
+    // Show loader
+    const btnText = document.querySelector('.btn-text');
+    const btnLoader = document.querySelector('.btn-loader');
+    btnText.style.opacity='0.5'; btnLoader.style.display='block';
 
-        if (password !== confirmPassword) {
-            message.textContent = "Passwords do not match.";
-            message.className = "error";
-            return;
-        }
+    // AJAX POST
+    const formData = new FormData(this);
+    fetch("registerBackend.php", { method: "POST", body: formData })
+    .then(res => res.json())
+    .then(data => {
+        btnText.style.opacity='1'; btnLoader.style.display='none';
 
-        // Show loading animation
-        const btnText = document.querySelector('.btn-text');
-        const btnLoader = document.querySelector('.btn-loader');
-        btnText.style.opacity = '0.5';
-        btnLoader.style.display = 'block';
-
-        // Prepare data to send
-        let formData = new FormData(this);
-
-        fetch("registerBackend.php", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json()) 
-        .then(data => {
-            // Reset loading animation
-            btnText.style.opacity = '1';
-            btnLoader.style.display = 'none';
-            
-            // ✅ Always expect JSON with {status, message}
-            message.textContent = data.message;
-
-            if (data.status === "success") {
-                message.className = "success";
-                this.reset();
-            } else if (data.status === "warning") {
-                message.className = "warning";
-            } else {
-                message.className = "error";
+        if (data.status === "success" || data.status === "warning") {
+            this.reset();
+            setTimeout(()=>{ if(data.redirect) window.location.href = data.redirect; }, 1000);
+        } else if (data.status === "error") {
+            // If backend sends field-specific errors, you can map them here
+            if (data.errors) {
+                for (let field in data.errors) {
+                    const errorSpan = document.getElementById(field + "Error");
+                    if (errorSpan) errorSpan.textContent = data.errors[field];
+                }
             }
-        })
-        .catch(error => {
-            // Reset loading animation
-            btnText.style.opacity = '1';
-            btnLoader.style.display = 'none';
-            
-            message.textContent = "⚠️ Network error: " + error;
-            message.className = "error";
-        });
-    });
-    
-    // Password visibility toggle
-    document.getElementById("passwordToggle").addEventListener("click", function() {
-        const passwordInput = document.getElementById("password");
-        const eyeIcon = document.getElementById("eyeIcon");
-        
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            eyeIcon.textContent = "🔒";
-        } else {
-            passwordInput.type = "password";
-            eyeIcon.textContent = "👁️";
         }
+    })
+    .catch(err => {
+        btnText.style.opacity='1'; btnLoader.style.display='none';
+        alert("⚠️ Network error: " + err); // keep as alert since not tied to one field
     });
-    </script>
+});
 
+</script>
 </body>
 </html>
