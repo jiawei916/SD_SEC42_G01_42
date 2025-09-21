@@ -220,7 +220,7 @@ $conn->close();
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-top: 50px;
+            margin-top: 100px;
             margin-bottom: 50px;
         }
         
