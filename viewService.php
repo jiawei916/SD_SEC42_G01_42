@@ -7,6 +7,10 @@ $userEmail = isset($_SESSION['email']) ? $_SESSION['email'] : null;
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $isLoggedIn = isset($_SESSION['user_name']);
 
+// Display success/error messages
+$successMessage = isset($_GET['success']) ? $_GET['success'] : '';
+$errorMessage = isset($_GET['error']) ? $_GET['error'] : '';
+
 // Database connection
 $servername = "localhost";
 $username = "root";
@@ -339,6 +343,61 @@ $conn->close();
             color: white;
         }
         
+        /* Edit service button styling */
+        .btn-edit-service {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-edit-service:hover {
+            background-color: #e0a800;
+            color: #212529;
+        }
+        
+        /* Alert styling */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+        }
+        
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .close {
+            float: right;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #000;
+            text-shadow: 0 1px 0 #fff;
+            opacity: .5;
+            background: transparent;
+            border: 0;
+        }
+        
+        .close:hover {
+            opacity: .75;
+        }
+        
         @media (max-width: 768px) {
             .service-card {
                 margin-bottom: 20px;
@@ -358,7 +417,7 @@ $conn->close();
                 width: 100%;
             }
             
-            .search-btn, .clear-btn {
+            .search-btn, .clear-btn, .btn-edit-service {
                 width: 100%;
             }
         }
@@ -369,11 +428,11 @@ $conn->close();
         }
         
         .main-header {
-            padding: 10px 0;
+            padding: 20px 0;
         }
         
         .menu-main {
-            gap: 30px; /* Add space between navigation and profile dropdown */
+            gap: 0px; /* Add space between navigation and profile dropdown */
         }
         
         /* Profile dropdown positioning adjustments */
@@ -384,46 +443,6 @@ $conn->close();
             margin-left: auto; /* Push to the far right */
         }
         
-        /* Navigation menu adjustments */
-        .main-menu {
-            margin-right: 20px; /* Add space between menu and profile */
-        }
-        
-        .main-menu ul {
-            display: flex;
-            gap: 25px; /* Increase spacing between menu items */
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-        }
-        
-        .main-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        .main-menu a:hover {
-            color: #f8f9fa;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Ensure header container has proper spacing */
-        .container-fluid {
-            padding: 0 20px;
-        }
-        
-        /* Adjust dashboard container margin to account for fixed header */
-        .services-section {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 80px auto; /* Reduced from 100px to account for header */
-        }
     </style>
 </head>
 <body>
@@ -451,9 +470,6 @@ $conn->close();
                                             <li class="active"><a href="viewService.php">Services</a></li>
                                             <li class="active"><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
-                                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                                <li><a href="viewFeedBack.php">View Feedback</a></li>
-                                            <?php endif; ?>
                                         </ul>
                                     </nav>
                                 </div>
@@ -463,25 +479,30 @@ $conn->close();
                                         <a href="#" class="header-btn">
                                             <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
                                         </a>
-                                        <div class="dropdown-content">
-                                            <?php if ($isLoggedIn): ?>
-                                                <a href="profile.php">Profile</a>
-                                                <?php if ($userRole == 'admin'): ?>
-                                                    <a href="viewDashboardAdmin.php">Dashboard</a>
-                                                    <a href="viewFeedBack.php">View Feedback</a>
-                                                    <a href="viewCustomer.php">View Customer</a>
-                                                    <a href="viewStaff.php">View Staff</a>
-                                                <?php elseif ($userRole == 'staff'): ?>
-                                                    <a href="viewDashboardStaff.php">Dashboard</a>
-                                                    <a href="viewFeedBack.php">View Feedback</a>
-                                                    <a href="viewCustomer.php">View Customer</a>
-                                                <?php endif; ?>
-                                                <a href="signOut.php">Sign Out</a>
-                                            <?php else: ?>
-                                                <a href="signIn.php">Sign In</a>
-                                                <a href="registerGuest.php">Register</a>
-                                            <?php endif; ?>
-                                        </div>
+<div class="dropdown-content">
+    <?php if (isset($_SESSION['user_role'])): ?>
+        <a href="profile.php">Profile</a>
+    <?php endif; ?>
+<?php if ($_SESSION['user_role'] == 'customer'): ?>
+    <a href="bookAppointment.php">Book Appointment</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+    <a href="viewDashboardAdmin.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewStaff.php">View Staff</a>
+<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+    <a href="viewDashboardStaff.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+<?php endif; ?>
+<?php if (isset($_SESSION['user_role'])): ?>
+    <a href="signOut.php">Sign Out</a>
+<?php else: ?>
+    <a href="signIn.php">Sign In</a>
+    <a href="registerGuest.php">Register</a>
+<?php endif; ?>
+</div>
                                     </div>
                                 </div>
                             </div>
@@ -503,19 +524,41 @@ $conn->close();
             <div class="col-12">
                 <h2>Our Services</h2>
                 
+                <!-- Success/Error Messages -->
+                <?php if (!empty($successMessage)): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php echo htmlspecialchars($successMessage); ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <?php endif; ?>
+                
+                <?php if (!empty($errorMessage)): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo htmlspecialchars($errorMessage); ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <?php endif; ?>
+                
                 <!-- Search and Filter Section -->
                 <div class="search-filter-section">
                     <div class="row">
                         <div class="col-md-8">
-                            <form method="GET" action="services.php" class="search-container">
+                            <form method="GET" action="viewService.php" class="search-container">
                                 <input type="text" class="search-input" placeholder="Search services by name..." name="search" value="<?php echo htmlspecialchars($search); ?>">
                                 <button class="search-btn" type="submit">Search</button>
                                 <?php if (!empty($search)): ?>
-                                    <a href="services.php" class="clear-btn">Clear</a>
+                                    <a href="viewService.php" class="clear-btn">Clear</a>
                                 <?php endif; ?>
                             </form>
                         </div>
                         <div class="col-md-4 text-right">
+                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
+                                <a href="editService.php" class="btn-edit-service">Edit Services</a>
+                            <?php endif; ?>
                             <?php if ($userRole == 'admin'): ?>
                                 <a href="addService.php" class="btn btn-success">Add New Service</a>
                             <?php endif; ?>
@@ -547,13 +590,15 @@ $conn->close();
                                             <a href="signIn.php" class="btn-book">Login to Book</a>
                                         <?php endif; ?>
                                         
-                                        <?php if ($userRole == 'admin'): ?>
+                                        <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
                                             <div class="admin-controls">
                                                 <small class="text-muted d-block mb-2">Admin Controls:</small>
                                                 <a href="editService.php?id=<?php echo $service['id']; ?>" class="btn btn-admin">Edit</a>
                                                 <a href="toggleService.php?id=<?php echo $service['id']; ?>&action=<?php echo $service['is_active'] ? 'deactivate' : 'activate'; ?>" class="btn btn-admin btn-deactivate">
                                                     <?php echo $service['is_active'] ? 'Deactivate' : 'Activate'; ?>
                                                 </a>
+                                                <!-- Add delete button with confirmation -->
+                                                <button class="btn btn-admin btn-danger" onclick="confirmDelete(<?php echo $service['id']; ?>, '<?php echo htmlspecialchars($service['name']); ?>')">Delete</button>
                                             </div>
                                         <?php endif; ?>
                                     </div>
@@ -618,5 +663,21 @@ $conn->close();
     <script src="./assets/js/owl.carousel.min.js"></script>
     <script src="./assets/js/slick.min.js"></script>
     <script src="./assets/js/main.js"></script>
+    
+    <script>
+    // Delete confirmation function
+    function confirmDelete(id, name) {
+        if (confirm("Are you sure you want to delete the service: " + name + "?\nThis action cannot be undone.")) {
+            window.location.href = "deleteService.php?id=" + id;
+        }
+    }
+    
+    // Dismiss alert when close button is clicked
+    $(document).ready(function() {
+        $('.alert .close').on('click', function() {
+            $(this).closest('.alert').alert('close');
+        });
+    });
+    </script>
 </body>
 </html>

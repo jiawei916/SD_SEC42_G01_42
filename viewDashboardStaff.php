@@ -194,18 +194,25 @@ if (!$isLoggedIn) {
             color: white;
         }
         
+        /* Dropdown box */
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            top: 40px;
-            background: white;
-            min-width: 140px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            z-index: 1;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            z-index: 1000;
         }
         
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+                
         .dropdown-content a {
             display: block;
             padding: 8px 12px;
@@ -218,7 +225,12 @@ if (!$isLoggedIn) {
         .dropdown-content a:hover {
             background-color: #f1f1f1;
         }
-        
+
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
+        }
         .profile-dropdown:hover .dropdown-content {
             display: block;
         }
@@ -331,40 +343,37 @@ if (!$isLoggedIn) {
                                             <li class="active"><a href="viewService.php">Services</a></li>
                                             <li class="active"><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
-                                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                                <li><a href="viewFeedBack.php">View Feedback</a></li>
-                                            <?php endif; ?>
                                         </ul>
                                     </nav>
-                                </div>
-                                
-                                <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                  <div class="dropdown">
+                                </div><div class="header-right-btn f-right d-none d-lg-block ml-30">
+    <div class="dropdown">
         <a href="#" class="header-btn">
             <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
         </a>
-        <div class="dropdown-content">
-            <?php if ($isLoggedIn): ?>
-                <a href="profile.html">Profile</a>
-                <a href="signOut.php">Sign Out</a>
-            <?php elseif ($userRole == 'admin'): ?>
-                <a href="profile.html">Profile</a>
-                <a href="viewDashboardAdmin.php">Dashboard</a>
-                <a href="viewFeedBack.php">View Feedback</a>
-                <a href="viewCustomer.php">View Customer</a>
-                <a href="viewStaff.php">View Staff</a>
-                <a href="signOut.php">Sign Out</a>              
-            <?php elseif ($userRole == 'staff'): ?>
-                <a href="profile.html">Profile</a>
-                <a href="viewDashboardStaff.php">Dashboard</a>
-                <a href="viewFeedBack.php">View Feedback</a>
-                <a href="viewCustomer.php">View Customer</a>
-                <a href="signOut.php">Sign Out</a> 
-            <?php else: ?>
-                <a href="signIn.php">Sign In</a>
-                <a href="registerGuest.php">Register</a>
-            <?php endif ?>
-        </div>
+<div class="dropdown-content">
+    <?php if (isset($_SESSION['user_role'])): ?>
+        <a href="profile.php">Profile</a>
+    <?php endif; ?>
+<?php if ($_SESSION['user_role'] == 'customer'): ?>
+    <a href="bookAppointment.php">Book Appointment</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+    <a href="viewDashboardAdmin.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewStaff.php">View Staff</a>
+<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+    <a href="viewDashboardStaff.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+<?php endif; ?>
+<?php if (isset($_SESSION['user_role'])): ?>
+    <a href="signOut.php">Sign Out</a>
+<?php else: ?>
+    <a href="signIn.php">Sign In</a>
+    <a href="registerGuest.php">Register</a>
+<?php endif; ?>
+</div>
     </div>
 </div>
                             </div>   
@@ -403,7 +412,7 @@ if (!$isLoggedIn) {
             <!-- Quick Access Buttons -->
             <div class="nav-buttons">
                 <button class="nav-btn" onclick="location.href='appointments.html'">Manage Appointments</button>
-                <button class="nav-btn" onclick="location.href='services.html'">Manage Services</button>
+                <button class="nav-btn" onclick="location.href='viewService.php'">Manage Services</button>
                 <button class="nav-btn" onclick="location.href='viewFeedBack.php'">View Feedback</button>
             </div>
 

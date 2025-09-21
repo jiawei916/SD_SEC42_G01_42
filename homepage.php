@@ -125,28 +125,30 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
         <a href="#" class="header-btn">
             <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
         </a>
-        <div class="dropdown-content">
-            <?php if ($isLoggedIn): ?>
-                <a href="profile.html">Profile</a>
-                <a href="signOut.php">Sign Out</a>
-            <?php elseif ($userRole == 'admin'): ?>
-                <a href="profile.html">Profile</a>
-                <a href="viewDashboardAdmin.php">Dashboard</a>
-                <a href="viewFeedBack.php">View Feedback</a>
-                <a href="viewCustomer.php">View Customer</a>
-                <a href="viewStaff.php">View Staff</a>
-                <a href="signOut.php">Sign Out</a>              
-            <?php elseif ($userRole == 'staff'): ?>
-                <a href="profile.html">Profile</a>
-                <a href="viewDashboardStaff.php">Dashboard</a>
-                <a href="viewFeedBack.php">View Feedback</a>
-                <a href="viewCustomer.php">View Customer</a>
-                <a href="signOut.php">Sign Out</a> 
-            <?php else: ?>
-                <a href="signIn.php">Sign In</a>
-                <a href="registerGuest.php">Register</a>
-            <?php endif ?>
-        </div>
+<div class="dropdown-content">
+    <?php if (isset($_SESSION['user_role'])): ?>
+        <a href="profile.php">Profile</a>
+    <?php endif; ?>
+<?php if ($_SESSION['user_role'] == 'customer'): ?>
+    <a href="bookAppointment.php">Book Appointment</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+    <a href="viewDashboardAdmin.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewStaff.php">View Staff</a>
+<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+    <a href="viewDashboardStaff.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+<?php endif; ?>
+<?php if (isset($_SESSION['user_role'])): ?>
+    <a href="signOut.php">Sign Out</a>
+<?php else: ?>
+    <a href="signIn.php">Sign In</a>
+    <a href="registerGuest.php">Register</a>
+<?php endif; ?>
+</div>
     </div>
 </div>
                             </div>
@@ -180,7 +182,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                     <span data-animation="fadeInUp" data-delay=".3s">Professional pet care in one place</span>
                                     <h1 data-animation="fadeInUp" data-delay=".3s">VetGroom Hub — We Care for Your Pets</h1>
                                     <p data-animation="fadeInUp" data-delay=".6s">Full grooming, veterinary services and convenient appointment bookings for dogs and cats.</p>
-                                    <a href="viewService.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
+                                    <a href="index.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
                                 </div>
                             </div>
                         </div>
@@ -232,7 +234,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                 <span class="flaticon-animal-kingdom"></span>
                             </div>
                             <div class="services-cap">
-                                <h5><a href="services.php#grooming">Pet Grooming</a></h5>
+                                <h5><a href="viewService.php#grooming">Pet Grooming</a></h5>
                                 <p>Full grooming packages: bath, haircut, nail trim and ear cleaning tailored to your pet.</p>
                             </div>
                         </div>
@@ -243,7 +245,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                 <span class="flaticon-animals"></span>
                             </div>
                             <div class="services-cap">
-                                <h5><a href="services.php#vet">Veterinary Care</a></h5>
+                                <h5><a href="viewService.php#vet">Veterinary Care</a></h5>
                                 <p>Consultations, minor procedures and on-site diagnostics provided by our licensed vets.</p>
                             </div>
                         </div>
@@ -254,7 +256,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                 <span class="flaticon-animals-1"></span>
                             </div>
                             <div class="services-cap">
-                                <h5><a href="services.php#vaccination">Vaccinations</a></h5>
+                                <h5><a href="viewService.php#vaccination">Vaccinations</a></h5>
                                 <p>Core vaccinations and preventive care plans to keep your pet healthy year-round.</p>
                             </div>
                         </div>
@@ -278,7 +280,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                     <div class="about-more">
                         <p class="pera-top">VetGroom Hub provides professional grooming and veterinary services with a focus on safety and comfort for every pet.</p>
                         <p class="mb-65 pera-bottom">Our team includes certified veterinarians and experienced groomers. We offer appointment bookings, preventive care plans, and grooming packages suitable for dogs and cats of all sizes.</p>
-                        <a href="aboutUs.php" class="btn">Read More</a>
+                        <a href="about.php" class="btn">Read More</a>
                     </div>
                 </div>
             </div>
@@ -598,11 +600,11 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                             <div class="footer-tittle">
                                 <h4>Services</h4>
                                 <ul>
-                                    <li><a href="services.php#grooming">Pet Grooming</a></li>
-                                    <li><a href="services.php#vet">Veterinary Care</a></li>
-                                    <li><a href="services.php#vaccination">Vaccination</a></li>
-                                    <li><a href="services.php#boarding">Pet Boarding</a></li>
-                                    <li><a href="services.php#packages">Packages</a></li>
+                                    <li><a href="viewService.php#grooming">Pet Grooming</a></li>
+                                    <li><a href="viewService.php#vet">Veterinary Care</a></li>
+                                    <li><a href="viewService.php#vaccination">Vaccination</a></li>
+                                    <li><a href="viewService.php#boarding">Pet Boarding</a></li>
+                                    <li><a href="viewService.php#packages">Packages</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -678,4 +680,3 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
         
     </body>
 </html>
-

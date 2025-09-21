@@ -157,28 +157,30 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                         <a href="#" class="header-btn">
                                             <?php echo $isLoggedIn ? "Welcome, " . htmlspecialchars($userName) : "Welcome, Guest"; ?> ▼
                                         </a>
-                                        <div class="dropdown-content">
-                                            <?php if ($userRole == 'customer'): ?>
-                                                <a href="profile.php">Profile</a>
-                                                <a href="signOut.php">Sign Out</a>
-                                            <?php elseif ($userRole == 'admin'): ?>
-                                                <a href="profile.php">Profile</a>
-                                                <a href="viewDashboardAdmin.php">Dashboard</a>
-                                                <a href="viewFeedBack.php">View Feedback</a>
-                                                <a href="viewCustomer.php">View Customer</a>
-                                                <a href="viewStaff.php">View Staff</a>
-                                                <a href="signOut.php">Sign Out</a>
-                                            <?php elseif ($userRole == 'staff'): ?>
-                                                <a href="profile.php">Profile</a>
-                                                <a href="viewDashboardStaff.php">Dashboard</a>
-                                                <a href="viewFeedBack.php">View Feedback</a>
-                                                <a href="viewCustomer.php">View Customer</a>
-                                                <a href="signOut.php">Sign Out</a>
-                                            <?php else: ?>
-                                                <a href="signIn.php">Sign In</a>
-                                                <a href="registerGuest.php">Register</a>
-                                            <?php endif; ?>
-                                        </div>
+<div class="dropdown-content">
+    <?php if (isset($_SESSION['user_role'])): ?>
+        <a href="profile.php">Profile</a>
+    <?php endif; ?>
+<?php if ($_SESSION['user_role'] == 'customer'): ?>
+    <a href="bookAppointment.php">Book Appointment</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+    <a href="viewDashboardAdmin.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewStaff.php">View Staff</a>
+<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+    <a href="viewDashboardStaff.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+<?php endif; ?>
+<?php if (isset($_SESSION['user_role'])): ?>
+    <a href="signOut.php">Sign Out</a>
+<?php else: ?>
+    <a href="signIn.php">Sign In</a>
+    <a href="registerGuest.php">Register</a>
+<?php endif; ?>
+</div>
                                     </div>
                                 </div>
                             </div>
@@ -213,9 +215,16 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
         <section class="contact-section">
             <div class="container">
                 <div class="d-none d-sm-block mb-5 pb-4">
-                    <!-- Map image -->
-                    <div class="map-container">
-                        <img src="assets/img/contactUs/mAP_page_1_1.png" alt="VetGroom Hub Location Map" class="map-image">
+                    <!-- Google Map (simplified version) -->
+                    <div id="map" style="height: 480px; position: relative; overflow: hidden;">
+                        <!-- Map placeholder - you can implement actual Google Maps API here -->
+                        <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223); display: flex; justify-content: center; align-items: center;">
+                            <div style="text-align: center; color: #666;">
+                                <i class="fas fa-map-marker-alt" style="font-size: 48px; margin-bottom: 15px;"></i>
+                                <h3>VetGroom Hub Location</h3>
+                                <p>Kuala Lumpur, Malaysia</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -326,11 +335,11 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                             <div class="footer-tittle">
                                 <h4>Services</h4>
                                 <ul>
-                                    <li><a href="services.php#grooming">Pet Grooming</a></li>
-                                    <li><a href="services.php#vet">Veterinary Care</a></li>
-                                    <li><a href="services.php#vaccination">Vaccination</a></li>
-                                    <li><a href="services.php#boarding">Pet Boarding</a></li>
-                                    <li><a href="services.php#packages">Packages</a></li>
+                                    <li><a href="viewService.php#grooming">Pet Grooming</a></li>
+                                    <li><a href="viewService.php#vet">Veterinary Care</a></li>
+                                    <li><a href="viewService.php#vaccination">Vaccination</a></li>
+                                    <li><a href="viewService.php#boarding">Pet Boarding</a></li>
+                                    <li><a href="viewService.php#packages">Packages</a></li>
                                 </ul>
                             </div>
                         </div>
