@@ -556,11 +556,8 @@ $conn->close();
                             </form>
                         </div>
                         <div class="col-md-4 text-right">
-                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                <a href="editService.php" class="btn-edit-service">Edit Services</a>
-                            <?php endif; ?>
                             <?php if ($userRole == 'admin'): ?>
-                                <a href="addService.php" class="btn btn-success">Add New Service</a>
+                                <a href="editService.php" class="btn btn-success">Add New Service</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -611,7 +608,7 @@ $conn->close();
                                 <h3>No services found</h3>
                                 <p>Try adjusting your search criteria or check back later.</p>
                                 <?php if ($userRole == 'admin'): ?>
-                                    <a href="addService.php" class="btn btn-primary">Add New Service</a>
+                                    <a href="editService.php" class="btn btn-primary">Add New Service</a>
                                 <?php endif; ?>
                             </div>
                         </div>
