@@ -99,7 +99,7 @@ if (isset($_GET['customer_id'])) {
     $customerId = $_GET['customer_id'];
     
     // Get customer details
-    $stmt = $conn->prepare("SELECT id, name, email, role, verified, created_at FROM users WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, name, email, role, verified FROM users WHERE id = ?");
     $stmt->bind_param("i", $customerId);
     $stmt->execute();
     $selectedCustomer = $stmt->get_result()->fetch_assoc();
@@ -426,33 +426,6 @@ $conn->close();
             padding: 10px 0;
         }
         
-        .menu-main {
-            gap: 30px;
-        }
-        
-        .main-menu {
-            margin-right: 20px;
-        }
-        
-        .main-menu ul {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-        }
-        
-        .main-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
         .main-menu a:hover {
             color: #f8f9fa;
             background-color: rgba(255, 255, 255, 0.1);
@@ -545,11 +518,11 @@ $conn->close();
             </div>
 
             <!-- Search Section -->
-            <form method="GET" action="viewCustomers.php" class="search-container">
+            <form method="GET" action="viewCustomer.php" class="search-container">
                 <input type="text" class="search-input" placeholder="Search customers by name or email..." name="search" value="<?php echo htmlspecialchars($search); ?>">
                 <button class="search-btn" type="submit">Search</button>
                 <?php if (!empty($search)): ?>
-                    <a href="viewCustomers.php" class="btn btn-secondary">Clear</a>
+                    <a href="viewCustomer.php" class="btn btn-secondary">Clear</a>
                 <?php endif; ?>
             </form>
 
@@ -642,7 +615,7 @@ $conn->close();
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="viewCustomers.php?customer_id=<?php echo $customer['id']; ?>" class="view-btn">View Details</a>
+                                            <a href="viewCustomer.php?customer_id=<?php echo $customer['id']; ?>" class="view-btn">View Details</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
