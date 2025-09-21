@@ -146,9 +146,6 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
                                             <li class="active"><a href="viewService.php">Services</a></li>
                                             <li class="active"><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
-                                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                                <li><a href="viewFeedBack.php">View Feedback</a></li>
-                                            <?php endif; ?>
                                         </ul>
                                     </nav>
                                 </div>

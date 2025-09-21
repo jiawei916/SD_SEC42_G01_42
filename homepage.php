@@ -12,6 +12,7 @@ if (!$isLoggedIn) {
 }
 $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 ?>
+
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
