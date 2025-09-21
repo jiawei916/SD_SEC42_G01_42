@@ -48,7 +48,7 @@ if (isset($_GET['delete_id'])) {
 
 // Handle add staff form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_staff'])) {
-    $name = trim($_POST['name']);
+    $name = trim($_POST['username']);
     $email = trim($_POST['email']);
     $role = $_POST['role'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_staff'])) {
     if ($check_email->num_rows > 0) {
         $error_message = "Email already exists!";
     } else {
-        $insert_sql = "INSERT INTO users (name, email, password, role, verified, created_at) VALUES (?, ?, ?, ?, 1, NOW())";
+        $insert_sql = "INSERT INTO users (name, email, password, role, verified) VALUES (?, ?, ?, ?, 1, NOW())";
         $stmt = $conn->prepare($insert_sql);
         $stmt->bind_param("ssss", $name, $email, $password, $role);
         
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_staff'])) {
 // Handle edit staff form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_staff'])) {
     $edit_id = $_POST['edit_id'];
-    $name = trim($_POST['name']);
+    $name = trim($_POST['username']);
     $email = trim($_POST['email']);
     $role = $_POST['role'];
     
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_staff'])) {
 }
 
 // Fetch all staff members (staff and admin roles)
-$sql = "SELECT id, name, role, email, verified, created_at FROM users WHERE role IN ('staff', 'admin') ORDER BY role, name";
+$sql = "SELECT id, username, role, email, verified FROM users WHERE role IN ('staff', 'admin') ORDER BY role, username";
 $result = $conn->query($sql);
 $staffMembers = $result->fetch_all(MYSQLI_ASSOC);
 
@@ -115,7 +115,7 @@ $staffMembers = $result->fetch_all(MYSQLI_ASSOC);
 $editStaff = null;
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
-    $edit_sql = "SELECT id, name, email, role FROM users WHERE id = ?";
+    $edit_sql = "SELECT id, username, email, role FROM users WHERE id = ?";
     $stmt = $conn->prepare($edit_sql);
     $stmt->bind_param("i", $edit_id);
     $stmt->execute();
@@ -193,6 +193,48 @@ $conn->close();
             font-size: 28px;
             margin-bottom: 10px;
             font-weight: 700;
+        }
+
+                /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Use existing .header-btn styling */
+        .dropdown > .header-btn {
+            display: inline-block;
+            text-align: center;
+        }
+
+        /* Dropdown box */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
         
         /* Form styling */
@@ -404,17 +446,8 @@ $conn->close();
             padding: 10px 0;
         }
         
-        .menu-main {
-            gap: 30px;
-        }
-        
-        .main-menu {
-            margin-right: 20px;
-        }
-        
         .main-menu ul {
             display: flex;
-            gap: 25px;
             list-style: none;
             margin: 0;
             padding: 0;
@@ -580,7 +613,7 @@ $conn->close();
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
                         <input type="text" class="form-input" name="name" 
-                               value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['name']) : ''; ?>" 
+                               value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['username']) : ''; ?>" 
                                required>
                     </div>
                     
@@ -639,7 +672,7 @@ $conn->close();
                             <?php foreach ($staffMembers as $staff): ?>
                                 <tr>
                                     <td><?php echo $staff['id']; ?></td>
-                                    <td><?php echo htmlspecialchars($staff['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($staff['username']); ?></td>
                                     <td>
                                         <span class="role-badge <?php echo $staff['role'] == 'admin' ? 'role-admin' : 'role-staff'; ?>">
                                             <?php echo ucfirst($staff['role']); ?>
@@ -651,7 +684,6 @@ $conn->close();
                                             <?php echo $staff['verified'] ? 'Verified' : 'Pending'; ?>
                                         </span>
                                     </td>
-                                    <td><?php echo date('M j, Y', strtotime($staff['created_at'])); ?></td>
                                     <td>
                                         <a href="viewStaff.php?edit_id=<?php echo $staff['id']; ?>" class="action-btn btn-edit">Edit</a>
                                         <a href="viewStaff.php?delete_id=<?php echo $staff['id']; ?>" 

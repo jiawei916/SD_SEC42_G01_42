@@ -3,14 +3,14 @@ session_start();
 
 // Check login session
 $isLoggedIn = isset($_SESSION['user_name']);
-$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+$userName   = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
+// Determine user role
 if (!$isLoggedIn) {
     $userRole = 'guest';
 } else {
-    $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'customer';
+    $userRole = $_SESSION['user_role'] ?? 'customer';
 }
-$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 ?>
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -138,15 +138,15 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
     <?php if (isset($_SESSION['user_role'])): ?>
         <a href="profile.php">Profile</a>
     <?php endif; ?>
-<?php if ($_SESSION['user_role'] == 'customer'): ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
-<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
-<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>

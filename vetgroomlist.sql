@@ -77,7 +77,7 @@ INSERT INTO feedback (id, username, email, feedback, date_submitted, created_at)
 CREATE TABLE pets (
   id INT(11) NOT NULL AUTO_INCREMENT,
   user_id INT(11) NOT NULL,
-  name VARCHAR(100) NOT NULL,
+  username VARCHAR(100) NOT NULL,
   species VARCHAR(50) NOT NULL,
   breed VARCHAR(100) DEFAULT NULL,
   age INT(11) DEFAULT NULL,
@@ -109,7 +109,7 @@ INSERT INTO pets (user_id, name, species, breed, age, weight, medical_notes) VAL
 
 CREATE TABLE services (
   id int(11) NOT NULL,
-  name varchar(255) NOT NULL,
+  username varchar(255) NOT NULL,
   description text DEFAULT NULL,
   price decimal(10,2) NOT NULL,
   duration int(11) NOT NULL COMMENT 'Duration in minutes',
@@ -136,7 +136,7 @@ INSERT INTO services (id, name, description, price, duration, is_active) VALUES
 
 CREATE TABLE users (
   id int(11) NOT NULL,
-  name varchar(100) NOT NULL,
+  username varchar(100) NOT NULL,
   role varchar(50) NOT NULL DEFAULT 'customer',
   email varchar(100) NOT NULL,
   password varchar(255) NOT NULL,

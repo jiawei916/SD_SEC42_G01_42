@@ -68,19 +68,19 @@ if ($tableCheck->num_rows == 0) {
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Fetch all customers
-$sql = "SELECT id, name, email, role, verified FROM users WHERE role = 'customer'";
+$sql = "SELECT id, username, email, role, verified FROM users WHERE role = 'customer'";
 $params = [];
 $types = "";
 
 if (!empty($search)) {
-    $sql .= " AND (name LIKE ? OR email LIKE ?)";
+    $sql .= " AND (username LIKE ? OR email LIKE ?)";
     $searchTerm = "%$search%";
     $params[] = $searchTerm;
     $params[] = $searchTerm;
     $types .= "ss";
 }
 
-$sql .= " ORDER BY name";
+$sql .= " ORDER BY username";
 
 $stmt = $conn->prepare($sql);
 if (!empty($params)) {
@@ -474,15 +474,15 @@ $conn->close();
     <?php if (isset($_SESSION['user_role'])): ?>
         <a href="profile.php">Profile</a>
     <?php endif; ?>
-<?php if ($_SESSION['user_role'] == 'customer'): ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
-<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
-<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
@@ -607,7 +607,7 @@ $conn->close();
                                 <?php foreach ($customers as $customer): ?>
                                     <tr>
                                         <td><?php echo $customer['id']; ?></td>
-                                        <td><?php echo htmlspecialchars($customer['name']); ?></td>
+                                        <td><?php echo htmlspecialchars($customer['username']); ?></td>
                                         <td><?php echo htmlspecialchars($customer['email']); ?></td>
                                         <td>
                                             <span class="status-badge <?php echo $customer['verified'] ? 'status-verified' : 'status-pending'; ?>">

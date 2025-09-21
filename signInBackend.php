@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check if user exists
-        $stmt = $conn->prepare("SELECT id, username, email, password, role, email_verified FROM users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, username, email, password, role, email FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit;
             }
 
-            if ($row["email_verified"] == 0) {
+            if ($row["email"] == 0) {
                 echo json_encode(["status" => "error", "message" => "Please verify your email before signing in."]);
                 exit;
             }

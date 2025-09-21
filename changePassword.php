@@ -13,11 +13,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->set_charset("utf8mb4");
 
         // ✅ Get data from request
-        $token          = $_POST["token"] ?? "";
+        $userId         = $_POST["user_id"] ?? "";
         $newPassword    = $_POST["newPassword"] ?? "";
         $confirmPassword= $_POST["confirmPassword"] ?? "";
 
-        if (empty($token) || empty($newPassword) || empty($confirmPassword)) {
+        if (empty($userId) || empty($newPassword) || empty($confirmPassword)) {
             echo json_encode(["status" => "error", "message" => "All fields are required."]);
             exit;
         }
@@ -27,9 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         }
 
-        // ✅ Find user by reset token
-        $stmt = $conn->prepare("SELECT email FROM users WHERE verification_token = ?");
-        $stmt->bind_param("s", $token);
+        // ✅ Find user by ID
+        $stmt = $conn->prepare("SELECT email FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -39,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // ✅ Hash new password
             $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-            // ✅ Update password & clear reset token
-            $update = $conn->prepare("UPDATE users SET password = ?, verification_token = NULL WHERE email = ?");
-            $update->bind_param("ss", $newHashedPassword, $userEmail);
+            // ✅ Update password
+            $update = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $update->bind_param("si", $newHashedPassword, $userId);
 
             if ($update->execute()) {
                 echo json_encode(["status" => "success", "message" => "Password updated successfully."]);
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $update->close();
         } else {
-            echo json_encode(["status" => "error", "message" => "Invalid or expired token."]);
+            echo json_encode(["status" => "error", "message" => "User not found."]);
         }
 
         $stmt->close();
@@ -64,4 +64,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ]);
     }
 }
-?>

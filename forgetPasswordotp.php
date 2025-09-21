@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $conn->set_charset("utf8mb4");
 
     // Check OTP validity only
-    $stmt = $conn->prepare("SELECT id, reset_expires FROM users WHERE otp=?");
+    $stmt = $conn->prepare("SELECT id, otp_expires FROM users WHERE otp=?");
     $stmt->bind_param("s", $otp);
     $stmt->execute();
     $stmt->store_result();

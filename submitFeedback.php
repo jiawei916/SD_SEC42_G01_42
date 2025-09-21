@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Get form data safely
-$name    = $conn->real_escape_string($_POST['name']);
+$name    = $conn->real_escape_string($_POST['username']);
 $email   = $conn->real_escape_string($_POST['email']);
 $message = $conn->real_escape_string($_POST['message']);
 

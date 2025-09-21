@@ -346,8 +346,8 @@ if (!$isLoggedIn) {
         <form id="registerForm" method="POST" novalidate>
             <div class="form-group">
                 <div class="input-wrapper">
-                    <input type="text" id="name" name="name" placeholder=" " required>
-                    <label for="name">Full Name</label>
+<input type="text" id="username" name="username" placeholder=" " required>
+<label for="username">Username</label>
                 </div>
                 <span class="error-message" id="nameError"></span>
             </div>
@@ -373,13 +373,12 @@ if (!$isLoggedIn) {
                     <input type="password" id="confirmPassword" name="confirmPassword" placeholder=" " required>
                     <label for="confirmPassword">Confirm Password</label>
                 </div>
-                <span class="error-message" id="confirmPasswordError"></span>
+                <span class="error-message" id="confirmError"></span>
             </div>
             <button type="submit" class="registration-btn">
                 <span class="btn-text">Register</span>
                 <span class="btn-loader"></span>
             </button>
-            <div id="message"></div>
         </form>
         <div class="login-link">
             <p>Already have an account? <a href="signIn.php">Sign In</a></p>
@@ -389,47 +388,63 @@ if (!$isLoggedIn) {
 </main>
 
 <script>
+// Password toggle
+document.getElementById("passwordToggle").addEventListener("click", function() {
+    const passwordInput = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text"; eyeIcon.textContent = "🔒";
+    } else {
+        passwordInput.type = "password"; eyeIcon.textContent = "👁️";
+    }
+});
+
+// Registration form AJAX
 document.getElementById("registerForm").addEventListener("submit", function(event){
     event.preventDefault();
+// Clear previous error messages
+document.getElementById("nameError").textContent = "";
+document.getElementById("emailError").textContent = "";
+document.getElementById("passwordError").textContent = "";
+document.getElementById("confirmError").textContent = "";
 
-    // Clear all error spans
-    document.querySelectorAll('.error-message').forEach(span => span.textContent = "");
+const name = document.getElementById("username").value.trim();
+const email = document.getElementById("email").value.trim();
+const password = document.getElementById("password").value.trim();
+const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+let hasError = false;
 
-    let hasError = false;
+if (!name) {
+    document.getElementById("nameError").textContent = "Full name is required.";
+    hasError = true;
+}
+if (!email) {
+    document.getElementById("emailError").textContent = "Email is required.";
+    hasError = true;
+} else {
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+    if (!emailPattern.test(email)) {
+        document.getElementById("emailError").textContent = "Please enter a valid email address.";
+        hasError = true;
+    }
+}
+if (!password) {
+    document.getElementById("passwordError").textContent = "Password is required.";
+    hasError = true;
+} else if (password.length < 5) {
+    document.getElementById("passwordError").textContent = "Password must be at least 5 characters.";
+    hasError = true;
+}
+if (!confirmPassword) {
+    document.getElementById("confirmError").textContent = "Please confirm your password.";
+    hasError = true;
+} else if (password !== confirmPassword) {
+    document.getElementById("confirmError").textContent = "Passwords do not match.";
+    hasError = true;
+}
 
-    if (!name) {
-        document.getElementById("nameError").textContent = "Full name is required.";
-        hasError = true;
-    }
-    if (!email) {
-        document.getElementById("emailError").textContent = "Email is required.";
-        hasError = true;
-    } else if (!emailPattern.test(email)) {
-        document.getElementById("emailError").textContent = "Please enter a valid email.";
-        hasError = true;
-    }
-    if (!password) {
-        document.getElementById("passwordError").textContent = "Password is required.";
-        hasError = true;
-    } else if (password.length < 5) {
-        document.getElementById("passwordError").textContent = "Password must be at least 5 characters.";
-        hasError = true;
-    }
-    if (!confirmPassword) {
-        document.getElementById("confirmPasswordError").textContent = "Please confirm your password.";
-        hasError = true;
-    } else if (password !== confirmPassword) {
-        document.getElementById("confirmPasswordError").textContent = "Passwords do not match.";
-        hasError = true;
-    }
-
-    if (hasError) return; // stop if validation failed
+if (hasError) return; // stop if validation failed
 
     // Show loader
     const btnText = document.querySelector('.btn-text');
@@ -440,28 +455,26 @@ document.getElementById("registerForm").addEventListener("submit", function(even
     const formData = new FormData(this);
     fetch("registerBackend.php", { method: "POST", body: formData })
     .then(res => res.json())
-    .then(data => {
-        btnText.style.opacity='1'; btnLoader.style.display='none';
+.then(data => {
+    btnText.style.opacity = '1'; 
+    btnLoader.style.display = 'none';
 
-        if (data.status === "success" || data.status === "warning") {
-            this.reset();
-            setTimeout(()=>{ if(data.redirect) window.location.href = data.redirect; }, 1000);
-        } else if (data.status === "error") {
-            // If backend sends field-specific errors, you can map them here
-            if (data.errors) {
-                for (let field in data.errors) {
-                    const errorSpan = document.getElementById(field + "Error");
-                    if (errorSpan) errorSpan.textContent = data.errors[field];
-                }
-            }
+    // Show popup alert
+    alert(data.message);
+
+    if (data.status === "success" || data.status === "warning") {
+        this.reset();
+        if (data.redirect) {
+            window.location.href = data.redirect;
         }
-    })
+    }
+})
+
     .catch(err => {
         btnText.style.opacity='1'; btnLoader.style.display='none';
-        alert("⚠️ Network error: " + err); // keep as alert since not tied to one field
+        message.textContent="⚠️ Network error: "+err; message.className="error";
     });
 });
-
 </script>
 </body>
 </html>

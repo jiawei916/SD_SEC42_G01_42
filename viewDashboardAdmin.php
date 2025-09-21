@@ -3,19 +3,13 @@ session_start();
 
 // Check login session
 $isLoggedIn = isset($_SESSION['user_name']);
-$userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
+$userName   = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
-// Determine user role based on session or default to guest
+// Determine user role
 if (!$isLoggedIn) {
     $userRole = 'guest';
 } else {
-    // Check if role is stored in session (you should set this during login)
-    if (isset($_SESSION['user_role'])) {
-        $userRole = $_SESSION['user_role'];
-    } else {
-        // Default role for logged-in users without a specific role
-        $userRole = 'customer';
-    }
+    $userRole = $_SESSION['user_role'] ?? 'customer';
 }
 ?>
 <!DOCTYPE html>
@@ -244,7 +238,6 @@ if (!$isLoggedIn) {
         /* Navigation styling */
         .main-menu ul {
             display: flex;
-            gap: 20px;
             list-style: none;
             margin: 0;
             padding: 0;
@@ -300,15 +293,15 @@ if (!$isLoggedIn) {
     <?php if (isset($_SESSION['user_role'])): ?>
         <a href="profile.php">Profile</a>
     <?php endif; ?>
-<?php if ($_SESSION['user_role'] == 'customer'): ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
-<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
-<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
@@ -361,8 +354,8 @@ if (!$isLoggedIn) {
 
             <!-- Quick Access Buttons -->
             <div class="nav-buttons">
-                <button class="nav-btn" onclick="location.href='appointmentsAdmin.html'">Appointments</button>
-                <button class="nav-btn" onclick="location.href='customersAdmin.html'">Customers</button>
+                <button class="nav-btn" onclick="location.href='viewAppointment.php'">Appointments</button>
+                <button class="nav-btn" onclick="location.href='viewCustomer.php'">Customers</button>
                 <button class="nav-btn" onclick="location.href='salesAdmin.html'">Sales</button>
                 <button class="nav-btn" onclick="location.href='viewFeedBack.php'">Feedback</button>
             </div>

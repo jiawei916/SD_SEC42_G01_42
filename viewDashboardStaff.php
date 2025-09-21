@@ -235,21 +235,6 @@ if (!$isLoggedIn) {
             display: block;
         }
         
-        /* Navigation styling */
-        .main-menu ul {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .main-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
         
         .main-menu a:hover {
             color: #f8f9fa;
@@ -264,10 +249,6 @@ if (!$isLoggedIn) {
             padding: 10px 0;
         }
         
-        .menu-main {
-            gap: 30px; /* Add space between navigation and profile dropdown */
-        }
-        
         /* Profile dropdown positioning adjustments */
         .profile-dropdown {
             position: relative;
@@ -276,14 +257,8 @@ if (!$isLoggedIn) {
             margin-left: auto; /* Push to the far right */
         }
         
-        /* Navigation menu adjustments */
-        .main-menu {
-            margin-right: 20px; /* Add space between menu and profile */
-        }
-        
         .main-menu ul {
             display: flex;
-            gap: 25px; /* Increase spacing between menu items */
             list-style: none;
             margin: 0;
             padding: 0;
@@ -354,15 +329,15 @@ if (!$isLoggedIn) {
     <?php if (isset($_SESSION['user_role'])): ?>
         <a href="profile.php">Profile</a>
     <?php endif; ?>
-<?php if ($_SESSION['user_role'] == 'customer'): ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
-<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
-<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
@@ -411,7 +386,7 @@ if (!$isLoggedIn) {
 
             <!-- Quick Access Buttons -->
             <div class="nav-buttons">
-                <button class="nav-btn" onclick="location.href='appointments.html'">Manage Appointments</button>
+                <button class="nav-btn" onclick="location.href='viewAppointment.php'">Manage Appointments</button>
                 <button class="nav-btn" onclick="location.href='viewService.php'">Manage Services</button>
                 <button class="nav-btn" onclick="location.href='viewFeedBack.php'">View Feedback</button>
             </div>

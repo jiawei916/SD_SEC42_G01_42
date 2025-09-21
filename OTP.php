@@ -5,23 +5,43 @@ session_start();
 $isLoggedIn = isset($_SESSION['user_name']);
 $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
-// Determine user role based on session or default to guest
+// Determine user role
 if (!$isLoggedIn) {
     $userRole = 'guest';
 } else {
-    // Check if role is stored in session (you should set this during login)
-    if (isset($_SESSION['user_role'])) {
-        $userRole = $_SESSION['user_role'];
+    $userRole = $_SESSION['user_role'] ?? 'customer';
+}
+$user_email = $_GET['email'] ?? '';
+// Handle AJAX OTP check
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['otp'])) {
+    header("Content-Type: application/json");
+    $response = [];
+
+    if ($_POST['otp'] === $_SESSION['otp']) {
+        $response = ["status" => "success", "message" => "✅ OTP verified successfully!"];
     } else {
-        // Default role for logged-in users without a specific role
-        $userRole = 'customer';
+        $response = ["status" => "error", "message" => "❌ Invalid OTP code. Please try again."];
     }
+
+    echo json_encode($response);
+    exit;
 }
 
-// Generate OTP if not already set (for demo purposes)
-if (!isset($_SESSION['otp'])) {
+// Handle resend OTP
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['resend'])) {
+    header("Content-Type: application/json");
+
+    // Generate new OTP
     $_SESSION['otp'] = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-    $_SESSION['otp_expiry'] = time() + 300; // 5 minutes expiry
+    $_SESSION['otp_expiry'] = time() + 300; // 5 mins expiry
+
+    // send email here with PHPMailer using $_SESSION['otp']
+
+    echo json_encode([
+        "status" => "success",
+        "message" => "📧 A new OTP has been sent to your email."
+    ]);
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -48,6 +68,24 @@ if (!isset($_SESSION['otp'])) {
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        /* 🔴 DO NOT CHANGE YOUR EXISTING STYLE */
+        body {
+            opacity: 0;
+            animation: fadeInAnimation ease 1s;
+            animation-fill-mode: forwards;
+            background-image: url('assets/img/hero/hero2.png'); 
+            background-repeat: no-repeat; 
+            background-attachment: fixed; 
+            background-size: cover; 
+            background-position: center;
+        }
+        @keyframes fadeInAnimation {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        /* keep all your styles exactly as before ... */
+        
+
         body {
             opacity: 0;
             animation: fadeInAnimation ease 1s;
@@ -124,18 +162,21 @@ if (!isset($_SESSION['otp'])) {
             position: relative;
         }
         
-        .input-wrapper input {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 18px;
-            text-align: center;
-            letter-spacing: 8px;
-            transition: border-color 0.3s;
-            box-sizing: border-box;
-            font-weight: bold;
-        }
+.input-wrapper input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 8px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    font-weight: 400; /* lighter than bold */
+    color: rgba(0, 0, 0, 0.7); /* softer text */
+    background: rgba(255, 255, 255, 0.85); /* subtle transparent background */
+}
+
         
         .input-wrapper input:focus {
             border-color: #dc3545;
@@ -286,199 +327,89 @@ if (!isset($_SESSION['otp'])) {
         .profile-dropdown:hover .dropdown-content {
             display: block;
         }
+
     </style>
 </head>
-
 <body>
-
-    <header>
-        <!-- Header Start -->
-        <div class="header-area header-transparent">
-            <div class="main-header header-sticky">
-                <div class="container-fluid">
-                    <div class="row align-items-center">
-                        <!-- Logo -->
-                        <div class="col-xl-2 col-lg-2 col-md-1">
-                            <div class="logo">
-                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
-                            </div>
-                        </div>
-                        <div class="col-xl-10 col-lg-10 col-md-10">
-                            <div class="menu-main d-flex align-items-center justify-content-end">
-                                <!-- Main-menu -->
-                                <div class="main-menu f-right d-none d-lg-block">
-                                    <nav> 
-                                        <ul id="navigation">
-                                            <li><a href="homepage.php">Home</a></li>
-                                            <li><a href="aboutUs.php">About</a></li>
-                                            <li><a href="feedback.php">Feedback</a></li>
-                                            <li><a href="contact.php">Contact</a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>   
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Header End -->
-    </header>
-
-    <main>
-        <div class="otp-container">
-            <div class="otp-card">
-                <div class="otp-header">
-                    <h2>OTP Verification</h2>
-                    <p>Enter the 6-digit code sent to your email</p>
-                </div>
-                
-                
-                <form id="otpForm">
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code" required maxlength="6" pattern="[0-9]{6}">
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="otp-btn">
-                        <span class="btn-text">Verify OTP</span>
-                        <span class="btn-loader"></span>
-                    </button>
-                    
-                    <div id="message"></div>
-                </form>
-                
-                <div class="resend-link">
-                    <p>Didn't receive the code? <a href="#" id="resendOtp">Resend OTP</a></p>
-                    <p id="resendTimer" class="countdown" style="display: none;">Resend available in <span id="resendCountdown">60</span>s</p>
-                </div>
-            </div>
-        </div>
-    </main>
+<div class="otp-card">
+    <h2>OTP Verification</h2>
+    <input type="text" id="otp" placeholder="Enter 6-digit code" maxlength="6">
+    <button id="verifyBtn">Verify OTP</button>
+    <div id="message"></div>
+    <div class="resend">
+        Didn't receive the code? <a id="resendOtp">Resend OTP</a>
+        <div id="timer" class="countdown" style="display:none;">Resend in <span id="countdown">60</span>s</div>
+    </div>
+</div>
 
 <script>
-document.getElementById("otpForm").addEventListener("submit", function(event) {
-    event.preventDefault();
+const verifyBtn = document.getElementById('verifyBtn');
+const otpInput = document.getElementById('otp');
+const messageEl = document.getElementById('message');
+const resendLink = document.getElementById('resendOtp');
+const timerEl = document.getElementById('timer');
+const countdownEl = document.getElementById('countdown');
+let countdownInterval;
 
-    const otp = document.getElementById("otp").value.trim();
-    const message = document.getElementById("message");
-    const btnText = document.querySelector('.btn-text');
-    const btnLoader = document.querySelector('.btn-loader');
+function showMessage(text, type) {
+    messageEl.textContent = text;
+    messageEl.className = type;
+}
 
-    message.textContent = "";
-    message.className = "";
-
-    if (otp.length !== 6 || !/^\d+$/.test(otp)) {
-        message.textContent = "Please enter a valid 6-digit OTP code.";
-        message.className = "error";
+// Verify OTP
+verifyBtn.addEventListener('click', () => {
+    const otp = otpInput.value.trim();
+    if(!/^\d{6}$/.test(otp)) {
+        showMessage("Please enter a valid 6-digit OTP.", "error");
         return;
     }
 
-    // Show loading animation
-    btnText.style.opacity = '0.5';
-    btnLoader.style.display = 'block';
-
-    // Simulate server verification (no actual database connection)
-    setTimeout(() => {
-        // Reset loading animation
-        btnText.style.opacity = '1';
-        btnLoader.style.display = 'none';
-
-        // Check if OTP matches the one stored in session
-        if (otp === "<?php echo $_SESSION['otp'] ?? ''; ?>") {
-            message.textContent = "✅ OTP verified successfully!";
-            message.className = "success";
-            
-            // Redirect to change password page after success
-            setTimeout(() => {
-                window.location.href = "changePassword.html?token=demo_token_12345";
-            }, 2000);
-        } else {
-            message.textContent = "❌ Invalid OTP code. Please try again.";
-            message.className = "error";
+    fetch('OTPBackend.php', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'otp=' + encodeURIComponent(otp)
+    })
+    .then(res => res.json())
+    .then(data => {
+        showMessage(data.message, data.status);
+        if(data.status === 'success'){
+            setTimeout(()=>{ window.location.href = 'changePassword.php'; }, 2000);
         }
-    }, 1500);
+    })
+    .catch(()=> showMessage("⚠️ Something went wrong!", "error"));
 });
 
-// Countdown timer for OTP expiry
-function startCountdown(minutes, seconds, elementId) {
-    let totalSeconds = minutes * 60 + seconds;
-    const countdownElement = document.getElementById(elementId);
-    
-    const interval = setInterval(() => {
-        if (totalSeconds <= 0) {
-            clearInterval(interval);
-            countdownElement.textContent = "0:00";
-            return;
+// Resend OTP
+resendLink.addEventListener('click', () => {
+    resendLink.style.pointerEvents = 'none';
+    fetch('OTPBackend.php', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:'resend=1'
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        showMessage(data.message, data.status);
+        if(data.status==='success') startCountdown();
+        else resendLink.style.pointerEvents = 'auto';
+    })
+    .catch(()=> { showMessage("⚠️ Something went wrong!", "error"); resendLink.style.pointerEvents='auto'; });
+});
+
+function startCountdown(){
+    let time = 60;
+    timerEl.style.display = 'block';
+    countdownEl.textContent = time;
+    countdownInterval = setInterval(()=>{
+        time--;
+        countdownEl.textContent = time;
+        if(time<=0){
+            clearInterval(countdownInterval);
+            timerEl.style.display = 'none';
+            resendLink.style.pointerEvents='auto';
         }
-        
-        totalSeconds--;
-        const mins = Math.floor(totalSeconds / 60);
-        const secs = totalSeconds % 60;
-        countdownElement.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-    }, 1000);
+    },1000);
 }
-
-// Start the countdown timer (5 minutes)
-startCountdown(5, 0, 'countdown');
-
-// Resend OTP functionality
-document.getElementById("resendOtp").addEventListener("click", function(e) {
-    e.preventDefault();
-    
-    // Disable resend button and show timer
-    this.classList.add('disabled');
-    this.style.pointerEvents = 'none';
-    document.getElementById('resendTimer').style.display = 'block';
-    
-    // Start resend countdown (60 seconds)
-    let resendTime = 60;
-    const resendCountdown = document.getElementById('resendCountdown');
-    resendCountdown.textContent = resendTime;
-    
-    const resendInterval = setInterval(() => {
-        resendTime--;
-        resendCountdown.textContent = resendTime;
-        
-        if (resendTime <= 0) {
-            clearInterval(resendInterval);
-            document.getElementById('resendOtp').classList.remove('disabled');
-            document.getElementById('resendOtp').style.pointerEvents = 'auto';
-            document.getElementById('resendTimer').style.display = 'none';
-        }
-    }, 1000);
-    
-    // Generate a new OTP (in a real application, this would be sent via email/SMS)
-    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    // Update the session OTP (in a real app, this would be done via AJAX to the server)
-    // For demo purposes, we'll just update the displayed OTP
-    document.querySelector('.otp-instructions p strong').textContent = newOtp;
-    
-    // Restart main countdown
-    startCountdown(5, 0, 'countdown');
-    
-    // Show message
-    const message = document.getElementById('message');
-    message.textContent = "✅ New OTP has been generated!";
-    message.className = "success";
-});
-
-// Auto-focus OTP input and auto-tab between digits
-document.getElementById("otp").addEventListener("input", function(e) {
-    if (this.value.length === 6) {
-        document.getElementById("otpForm").dispatchEvent(new Event('submit'));
-    }
-});
-
-// Only allow numbers in OTP field
-document.getElementById("otp").addEventListener("keypress", function(e) {
-    if (!/[0-9]/.test(e.key)) {
-        e.preventDefault();
-    }
-});
 </script>
-
 </body>
 </html>

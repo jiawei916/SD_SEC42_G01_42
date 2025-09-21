@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['name'];
+    $name = $_POST['username'];
     $description = $_POST['description'];
     $price = $_POST['price'];
     $duration = $_POST['duration'];
