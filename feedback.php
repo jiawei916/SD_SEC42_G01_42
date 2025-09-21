@@ -124,9 +124,6 @@ if (!$isLoggedIn) {
                                             <li><a href="aboutUs.php">About</a></li>
                                             <li class="active"><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
-                                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                                <li><a href="viewFeedBack.php">View Feedback</a></li>
-                                            <?php endif; ?>
                                         </ul>
                                     </nav>
                                 </div>
@@ -244,3 +241,4 @@ if (!$isLoggedIn) {
     <script src="./assets/js/main.js"></script>
 </body>
 </html>
+
