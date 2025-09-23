@@ -436,6 +436,43 @@ $conn->close();
         }
     </style>
 </head>
+<!-- Edit Staff Modal -->
+<div id="editStaffModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+    <div style="background:#fff; padding:20px; border-radius:8px; width:450px; max-width:95%;">
+        <div class="staff-form">
+            <h3>Edit Staff Member</h3>
+            <form id="editStaffForm" novalidate>
+                <input type="hidden" name="edit_id" id="editStaffId">
+                <input type="hidden" name="edit_staff" value="1">
+                
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" name="name" id="editStaffName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" name="email" id="editStaffEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select class="form-input" name="role" id="editStaffRole" required>
+                        <option value="staff">Staff</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="action-btn btn-add">Update Staff</button>
+                    <button type="button" class="btn-cancel" onclick="closeEditStaffModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <body>
 
     <!-- ✅ Header Start -->
@@ -526,6 +563,8 @@ $conn->close();
                 <?php endif; ?>
             </form>
 
+            
+
             <?php if ($selectedCustomer): ?>
                 <!-- Back button -->
                 <button class="back-btn" onclick="window.history.back()">← Back to Customer List</button>
@@ -615,7 +654,13 @@ $conn->close();
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="viewCustomer.php?customer_id=<?php echo $customer['id']; ?>" class="view-btn">View Details</a>
+<button class="view-btn" onclick="openEditStaffModal(
+    <?php echo $customer['id']; ?>, 
+    '<?php echo htmlspecialchars($customer['username']); ?>', 
+    '<?php echo htmlspecialchars($customer['email']); ?>', 
+    '<?php echo $customer['role']; ?>'
+)">Edit</button>
+        <button class="view-btn" style="background-color:#dc3545;" onclick="deleteCustomer(<?php echo $customer['id']; ?>)">Delete</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -670,5 +715,33 @@ $conn->close();
     <script src="./assets/js/owl.carousel.min.js"></script>
     <script src="./assets/js/slick.min.js"></script>
     <script src="./assets/js/main.js"></script>
+<script>
+function openEditStaffModal(id, name, email, role) {
+    document.getElementById("editStaffId").value = id;
+    document.getElementById("editStaffName").value = name;
+    document.getElementById("editStaffEmail").value = email;
+    document.getElementById("editStaffRole").value = role;
+    document.getElementById("editStaffModal").style.display = "flex";
+}
+
+function closeEditStaffModal() {
+    document.getElementById("editStaffModal").style.display = "none";
+}
+
+document.getElementById("editStaffForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+
+    fetch("viewStaff.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert("Staff updated successfully!");
+        location.reload(); // refresh staff list
+    });
+});
+</script>
 </body>
 </html>

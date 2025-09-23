@@ -393,87 +393,114 @@ document.getElementById("passwordToggle").addEventListener("click", function() {
     const passwordInput = document.getElementById("password");
     const eyeIcon = document.getElementById("eyeIcon");
     if (passwordInput.type === "password") {
-        passwordInput.type = "text"; eyeIcon.textContent = "🔒";
+        passwordInput.type = "text";
+        eyeIcon.textContent = "🔒";
     } else {
-        passwordInput.type = "password"; eyeIcon.textContent = "👁️";
+        passwordInput.type = "password";
+        eyeIcon.textContent = "👁️";
     }
 });
 
 // Registration form AJAX
 document.getElementById("registerForm").addEventListener("submit", function(event){
     event.preventDefault();
-// Clear previous error messages
-document.getElementById("nameError").textContent = "";
-document.getElementById("emailError").textContent = "";
-document.getElementById("passwordError").textContent = "";
-document.getElementById("confirmError").textContent = "";
 
-const name = document.getElementById("username").value.trim();
-const email = document.getElementById("email").value.trim();
-const password = document.getElementById("password").value.trim();
-const confirmPassword = document.getElementById("confirmPassword").value.trim();
+    // Clear previous error messages
+    document.getElementById("nameError").textContent = "";
+    document.getElementById("emailError").textContent = "";
+    document.getElementById("passwordError").textContent = "";
+    document.getElementById("confirmError").textContent = "";
 
-let hasError = false;
+    const name = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-if (!name) {
-    document.getElementById("nameError").textContent = "Full name is required.";
-    hasError = true;
-}
-if (!email) {
-    document.getElementById("emailError").textContent = "Email is required.";
-    hasError = true;
-} else {
-    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
-    if (!emailPattern.test(email)) {
-        document.getElementById("emailError").textContent = "Please enter a valid email address.";
+    let hasError = false;
+
+    // Client-side validation
+    if (!name) {
+        document.getElementById("nameError").textContent = "Full name is required.";
         hasError = true;
     }
-}
-if (!password) {
-    document.getElementById("passwordError").textContent = "Password is required.";
-    hasError = true;
-} else if (password.length < 5) {
-    document.getElementById("passwordError").textContent = "Password must be at least 5 characters.";
-    hasError = true;
-}
-if (!confirmPassword) {
-    document.getElementById("confirmError").textContent = "Please confirm your password.";
-    hasError = true;
-} else if (password !== confirmPassword) {
-    document.getElementById("confirmError").textContent = "Passwords do not match.";
-    hasError = true;
-}
+    if (!email) {
+        document.getElementById("emailError").textContent = "Email is required.";
+        hasError = true;
+    } else {
+        const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById("emailError").textContent = "Please enter a valid email address.";
+            hasError = true;
+        }
+    }
+    if (!password) {
+        document.getElementById("passwordError").textContent = "Password is required.";
+        hasError = true;
+    } else if (password.length < 5) {
+        document.getElementById("passwordError").textContent = "Password must be at least 5 characters.";
+        hasError = true;
+    }
+    if (!confirmPassword) {
+        document.getElementById("confirmError").textContent = "Please confirm your password.";
+        hasError = true;
+    } else if (password !== confirmPassword) {
+        document.getElementById("confirmError").textContent = "Passwords do not match.";
+        hasError = true;
+    }
 
-if (hasError) return; // stop if validation failed
+    if (hasError) return; // stop if validation failed
 
     // Show loader
     const btnText = document.querySelector('.btn-text');
     const btnLoader = document.querySelector('.btn-loader');
-    btnText.style.opacity='0.5'; btnLoader.style.display='block';
+    btnText.style.opacity = '0.5';
+    btnLoader.style.display = 'block';
 
     // AJAX POST
     const formData = new FormData(this);
     fetch("registerBackend.php", { method: "POST", body: formData })
-    .then(res => res.json())
-.then(data => {
-    btnText.style.opacity = '1'; 
-    btnLoader.style.display = 'none';
+        .then(res => res.json())
+        .then(data => {
+            btnText.style.opacity = '1';
+            btnLoader.style.display = 'none';
 
-    // Show popup alert
-    alert(data.message);
+            // Clear previous backend errors
+            document.getElementById("nameError").textContent = "";
+            document.getElementById("emailError").textContent = "";
+            document.getElementById("passwordError").textContent = "";
+            document.getElementById("confirmError").textContent = "";
 
-    if (data.status === "success" || data.status === "warning") {
-        this.reset();
-        if (data.redirect) {
-            window.location.href = data.redirect;
-        }
-    }
-})
+            if (data.status === "error" && data.errors) {
+                // Display backend validation errors inline
+                if (data.errors.username) {
+                    document.getElementById("nameError").textContent = data.errors.username;
+                }
+                if (data.errors.email) {
+                    document.getElementById("emailError").textContent = data.errors.email;
+                }
+                if (data.errors.password) {
+                    document.getElementById("passwordError").textContent = data.errors.password;
+                }
+                if (data.errors.confirmPassword) {
+                    document.getElementById("confirmError").textContent = data.errors.confirmPassword;
+                }
+            } else {
+                // Show popup alert for success/warning
+                alert(data.message);
 
-    .catch(err => {
-        btnText.style.opacity='1'; btnLoader.style.display='none';
-        message.textContent="⚠️ Network error: "+err; message.className="error";
-    });
+                if (data.status === "success" || data.status === "warning") {
+                    document.getElementById("registerForm").reset();
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                }
+            }
+        })
+        .catch(err => {
+            btnText.style.opacity = '1';
+            btnLoader.style.display = 'none';
+            alert("⚠️ Network error: " + err);
+        });
 });
 </script>
 </body>

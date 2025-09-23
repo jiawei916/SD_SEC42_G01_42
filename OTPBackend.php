@@ -52,6 +52,7 @@ if (isset($_POST['otp'])) {
     if ($otp_input === $otp_db) {
         // Clear OTP
         $stmt = $conn->prepare("UPDATE users SET otp=NULL WHERE id=?");
+        $stmt = $conn->prepare("UPDATE users SET verified=1 WHERE id=?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $stmt->close();

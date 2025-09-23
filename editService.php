@@ -47,10 +47,31 @@ if (isset($_GET['id'])) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['username'];
+
+    $errors = [];
+    $name = $_POST['name'];
     $description = $_POST['description'];
     $price = $_POST['price'];
     $duration = $_POST['duration'];
+
+
+    // Validation
+    if (empty($name)) {
+        $errors['name'] = "Service name is required.";
+    }
+    if (empty($description)){
+        $errors['description'] = "Description is required.";
+    }
+    if (empty($price)){
+        $errors['price'] = "Price is required.";
+    } else if (!is_numeric($price)){
+        $errors['price'] = "Please enter a valid price.";
+    }
+    if (empty($duration)){
+        $errors['duration'] = "Duration is required.";
+    } else if (!is_numeric($duration)){
+        $errors['duration'] = "Please enter a valid duration.";
+    }
     
     // Validate inputs
     if (empty($name) || empty($price) || empty($duration)) {
@@ -436,7 +457,7 @@ $conn->close();
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="editService.php<?php echo $isEditMode ? '?id=' . $service['id'] : ''; ?>">
+        <form method="POST" action="editService.php<?php echo $isEditMode ? '?id=' . $service['id'] : ''; ?>" novalidate>
             <?php if ($isEditMode && !empty($service)): ?>
                 <input type="hidden" name="id" value="<?php echo $service['id']; ?>">
             <?php endif; ?>
@@ -446,23 +467,35 @@ $conn->close();
                 <input type="text" class="form-control" id="name" name="name" 
                        value="<?php echo !empty($service['name']) ? htmlspecialchars($service['name']) : (isset($name) ? htmlspecialchars($name) : ''); ?>" required>
             </div>
+            <?php if (!empty($errors['name'])): ?>
+                <span class="text-danger"><?php echo $errors['name']; ?></span>
+            <?php endif; ?>
             
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea class="form-control" id="description" name="description" rows="3"><?php echo !empty($service['description']) ? htmlspecialchars($service['description']) : (isset($description) ? htmlspecialchars($description) : ''); ?></textarea>
             </div>
+            <?php if (!empty($errors['description'])): ?>
+                <span class="text-danger"><?php echo $errors['description']; ?></span>
+            <?php endif; ?>
             
             <div class="form-group">
                 <label for="price">Price ($) *</label>
                 <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" 
                        value="<?php echo !empty($service['price']) ? $service['price'] : (isset($price) ? $price : ''); ?>" required>
             </div>
+            <?php if (!empty($errors['price'])): ?>
+                <span class="text-danger"><?php echo $errors['price']; ?></span>
+            <?php endif; ?>
             
             <div class="form-group">
                 <label for="duration">Duration (minutes) *</label>
                 <input type="number" class="form-control" id="duration" name="duration" min="1" 
                        value="<?php echo !empty($service['duration']) ? $service['duration'] : (isset($duration) ? $duration : ''); ?>" required>
             </div>
+            <?php if (!empty($errors['duration'])): ?>
+                <span class="text-danger"><?php echo $errors['duration']; ?></span> 
+            <?php endif; ?>
             
             <div class="form-group">
                 <a href="viewService.php" class="btn-cancel">Cancel</a>
@@ -520,6 +553,22 @@ $conn->close();
     
     <script>
     // Dismiss alert when close button is clicked
+
+    $errors = []; // array to hold field-specific errors
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+
+
+    if (empty($errors)) {
+        if ($isEditMode && isset($_POST['id'])) {
+            // update logic ...
+        } else {
+            // insert logic ...
+        }
+    }
+}
+
     $(document).ready(function() {
         $('.alert .close').on('click', function() {
             $(this).closest('.alert').alert('close');

@@ -220,7 +220,7 @@ $conn->close();
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-top: 100px;
+            margin-top: 50px;
             margin-bottom: 50px;
         }
         
@@ -319,6 +319,18 @@ $conn->close();
             font-size: 14px;
             color: #666;
         }
+        #service_type {
+    white-space: normal;   /* allow text to wrap */
+    line-height: 1.4;      /* improve spacing */
+    min-width: 100%;   /* full width of parent */
+    width: auto;  /* adjust width based on content */
+        height: 40px;         /* fixed height */
+    line-height: 40px;    /* vertically centers text */
+    padding: 0 12px;      /* balanced left/right spacing */
+}
+#service_type option {
+    white-space: normal;   /* apply inside dropdown options too */
+}
     </style>
 </head>
 <body>
@@ -355,20 +367,30 @@ $conn->close();
                                         <a href="#" class="header-btn">
                                             Welcome, <?php echo htmlspecialchars($userName); ?> ▼
                                         </a>
-                                        <div class="dropdown-content">
-                                            <a href="profile.php">Profile</a>
-                                            <?php if ($userRole == 'admin'): ?>
-                                                <a href="viewDashboardAdmin.php">Dashboard</a>
-                                                <a href="viewFeedBack.php">View Feedback</a>
-                                                <a href="viewCustomer.php">View Customer</a>
-                                                <a href="viewStaff.php">View Staff</a>
-                                            <?php elseif ($userRole == 'staff'): ?>
-                                                <a href="viewDashboardStaff.php">Dashboard</a>
-                                                <a href="viewFeedBack.php">View Feedback</a>
-                                                <a href="viewCustomer.php">View Customer</a>
-                                            <?php endif; ?>
-                                            <a href="signOut.php">Sign Out</a>
-                                        </div>
+<div class="dropdown-content">
+    <?php if (isset($_SESSION['user_role'])): ?>
+        <a href="profile.php">Profile</a>
+    <?php endif; ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
+    <a href="bookAppointment.php">Book Appointment</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
+    <a href="viewDashboardAdmin.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewStaff.php">View Staff</a>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
+    <a href="viewDashboardStaff.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+<?php endif; ?>
+<?php if (isset($_SESSION['user_role'])): ?>
+    <a href="signOut.php">Sign Out</a>
+<?php else: ?>
+    <a href="signIn.php">Sign In</a>
+    <a href="registerGuest.php">Register</a>
+<?php endif; ?>
+</div>
                                     </div>
                                 </div>
                             </div>
@@ -385,7 +407,7 @@ $conn->close();
     <!-- ✅ Header End -->
 
     <!-- ✅ Booking Section -->
-    <main class="container">
+    <main class="container" style="margin-top:80px;">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="booking-section">
@@ -395,7 +417,7 @@ $conn->close();
                         <div class="alert alert-success">
                             <?php echo $successMessage; ?>
                             <br><br>
-                            <a href="profile.php" class="btn btn-primary">View My Appointments</a>
+                            <a href="viewAppointment.php" class="btn btn-primary">View My Appointments</a>
                         </div>
                     <?php endif; ?>
                     
@@ -405,46 +427,38 @@ $conn->close();
                         </div>
                     <?php endif; ?>
                     
-                    <form id="appointmentForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                        <div class="form-group">
-                            <label for="service_type">Service Type</label>
-                            <select class="form-control" id="service_type" name="service_type" required>
-                                <option value="">Select a service</option>
-                                <?php foreach ($services as $service): ?>
-                                    <option value="<?php echo htmlspecialchars($service['name']); ?>" data-price="<?php echo $service['price']; ?>">
-                                        <?php echo htmlspecialchars($service['name']); ?> - 
-                                        $<?php echo number_format($service['price'], 2); ?>
-                                    </option>
-                                    <div class="service-info">
-                                        <?php echo htmlspecialchars($service['description']); ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </select>
-                            <small class="text-muted">Select the service you need for your pet</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="appointment_date">Date</label>
-                            <input type="text" class="form-control" id="appointment_date" name="appointment_date" placeholder="Select date" required>
-                            <small class="text-muted">Select a date for your appointment</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="appointment_time">Time</label>
-                            <input type="text" class="form-control" id="appointment_time" name="appointment_time" placeholder="Select time" required>
-                            <small class="text-muted">Our operating hours are 9:00 AM to 6:00 PM</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="address">Address</label>
-                            <textarea class="form-control" id="address" name="address" placeholder="Enter address where service is needed" required><?php 
-                                // Try to prefill with user's address if available
-                                if (isset($_SESSION['user_address'])) {
-                                    echo htmlspecialchars($_SESSION['user_address']);
-                                }
-                            ?></textarea>
-                            <small class="text-muted">Where would you like the service to be performed?</small>
-                        </div>
+                    <form id="appointmentForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" novalidate>
+<div class="form-group">
+    <label for="service_type">Service Type</label>
+    <select class="form-control" id="service_type" name="service_type" required style="min-height: 40px;">
+        <option value="">Select a service</option>
+        <?php foreach ($services as $service): ?>
+            <option value="<?php echo htmlspecialchars($service['name']); ?>">
+                <?php echo htmlspecialchars($service['name']); ?> - 
+                $<?php echo number_format($service['price'], 2); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <span class="error-message text-danger" id="serviceError"></span>
+</div>
+
+<div class="form-group">
+    <label for="appointment_date">Date</label>
+    <input type="text" class="form-control" id="appointment_date" name="appointment_date" placeholder="Select date" required>
+    <span class="error-message text-danger" id="dateError"></span>
+</div>
+
+<div class="form-group">
+    <label for="appointment_time">Time</label>
+    <input type="text" class="form-control" id="appointment_time" name="appointment_time" placeholder="Select time" required>
+    <span class="error-message text-danger" id="timeError"></span>
+</div>
+
+<div class="form-group">
+    <label for="address">Address</label>
+    <textarea class="form-control" id="address" name="address" required></textarea>
+    <span class="error-message text-danger" id="addressError"></span>
+</div>
                         
                         <div class="form-group">
                             <label for="special_instructions">Special Instructions (Optional)</label>
@@ -508,94 +522,71 @@ $conn->close();
     <!-- Date and time picker JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
     
-    <script>
-        // Initialize date picker
-        flatpickr("#appointment_date", {
-            minDate: "today",
-            dateFormat: "Y-m-d",
-            disableMobile: true,
-            onChange: function(selectedDates, dateStr, instance) {
-                // Update time picker min/max based on selected date
-                updateTimePicker(selectedDates[0]);
-            }
-        });
-        
-        // Initialize time picker
-        const timePicker = flatpickr("#appointment_time", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true,
-            minuteIncrement: 30,
-            disableMobile: true,
-            minTime: "09:00",
-            maxTime: "17:30" // Last appointment at 5:30 PM
-        });
-        
-        // Function to update time picker based on selected date
-        function updateTimePicker(selectedDate) {
-            const today = new Date();
-            const isToday = selectedDate.toDateString() === today.toDateString();
-            
-            if (isToday) {
-                // If today is selected, set minTime to current time + 1 hour
-                const currentHour = today.getHours();
-                const currentMinute = today.getMinutes();
-                let minHour = currentHour;
-                
-                // If current time is after 5 PM, disable today
-                if (currentHour >= 17) {
-                    alert("Sorry, no more appointments available for today. Please select another date.");
-                    document.getElementById("appointment_date").value = "";
-                    return;
-                }
-                
-                // Set minimum time to next half hour
-                let minTime = `${String(minHour).padStart(2, '0')}:30`;
-                if (currentMinute < 30) {
-                    minTime = `${String(minHour).padStart(2, '0')}:30`;
-                } else {
-                    minHour += 1;
-                    minTime = `${String(minHour).padStart(2, '0')}:00`;
-                }
-                
-                timePicker.set("minTime", minTime);
-            } else {
-                // For future dates, use normal business hours
-                timePicker.set("minTime", "09:00");
-            }
+  <script>
+document.getElementById("appointmentForm").addEventListener("submit", function(e) {
+    let isValid = true;
+
+    // Reset error messages
+    document.querySelectorAll(".error-message").forEach(span => span.textContent = "");
+
+    const service = document.getElementById("service_type");
+    const date = document.getElementById("appointment_date");
+    const time = document.getElementById("appointment_time");
+    const address = document.getElementById("address");
+
+    // Service validation
+    if (!service.value.trim()) {
+        document.getElementById("serviceError").textContent = "Please select a service.";
+        isValid = false;
+    }
+
+    // Date validation
+    if (!date.value.trim()) {
+        document.getElementById("dateError").textContent = "Please select a date.";
+        isValid = false;
+    } else {
+        const appointmentDate = new Date(date.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (appointmentDate < today) {
+            document.getElementById("dateError").textContent = "Date cannot be in the past.";
+            isValid = false;
         }
-        
-        // Form validation
-        document.getElementById("appointmentForm").addEventListener("submit", function(e) {
-            let isValid = true;
-            const requiredFields = document.querySelectorAll("#appointmentForm [required]");
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.style.borderColor = "red";
-                } else {
-                    field.style.borderColor = "#ddd";
-                }
-            });
-            
-            // Validate date is not in the past
-            const appointmentDate = new Date(document.getElementById("appointment_date").value);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            if (appointmentDate < today) {
-                isValid = false;
-                document.getElementById("appointment_date").style.borderColor = "red";
-                alert("Please select a current or future date for your appointment.");
-            }
-            
-            if (!isValid) {
-                e.preventDefault();
-                alert("Please fill in all required fields correctly.");
-            }
-        });
-    </script>
+    }
+
+    // Time validation
+    if (!time.value.trim()) {
+        document.getElementById("timeError").textContent = "Please select a time.";
+        isValid = false;
+    }
+
+    // Address validation
+    if (!address.value.trim()) {
+        document.getElementById("addressError").textContent = "Please enter an address.";
+        isValid = false;
+    }
+
+    if (!isValid) {
+        e.preventDefault(); // Stop form submission
+    }
+});
+</script>
+<script>
+  // ✅ Calendar for date
+  flatpickr("#appointment_date", {
+      dateFormat: "Y-m-d",  // Format: 2025-09-22
+      minDate: "today",     // Disable past dates
+      defaultDate: "today"  // Preselect today
+  });
+
+  // ✅ Time picker
+  flatpickr("#appointment_time", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",   // Format: 14:30
+      time_24hr: true
+  });
+</script>
+
 </body>
 </html>

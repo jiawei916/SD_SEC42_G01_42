@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $conn->set_charset("utf8mb4");
 
     $userId = $_SESSION["user_id"];
-    $name   = trim($_POST["username"] ?? "");
+    $name   = trim($_POST["name"] ?? "");
     $email  = trim($_POST["email"] ?? "");
 
     if (empty($name) || empty($email)) {
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $check->close();
 
     // Update DB
-    $stmt = $conn->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE users SET username = ?, email = ? WHERE id = ?");
     $stmt->bind_param("ssi", $name, $email, $userId);
 
     if ($stmt->execute()) {

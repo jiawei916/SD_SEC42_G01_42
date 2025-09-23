@@ -45,65 +45,114 @@ if (isset($_GET['delete_id'])) {
         $error_message = "You cannot delete your own account!";
     }
 }
-
+$errors = [];
+$success_message = "";
 // Handle add staff form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_staff'])) {
-    $name = trim($_POST['username']);
+    $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $role = $_POST['role'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    
-    // Check if email already exists
-    $check_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $check_email->bind_param("s", $email);
-    $check_email->execute();
-    $check_email->store_result();
-    
-    if ($check_email->num_rows > 0) {
-        $error_message = "Email already exists!";
-    } else {
-        $insert_sql = "INSERT INTO users (name, email, password, role, verified) VALUES (?, ?, ?, ?, 1, NOW())";
-        $stmt = $conn->prepare($insert_sql);
-        $stmt->bind_param("ssss", $name, $email, $password, $role);
-        
-        if ($stmt->execute()) {
-            $success_message = "Staff member added successfully!";
-        } else {
-            $error_message = "Error adding staff member: " . $stmt->error;
-        }
-        $stmt->close();
+    $passwordInput = $_POST['password'];
+
+    // Validation
+    if (empty($name)) {
+        $errors['name'] = "Name is required";
     }
-    $check_email->close();
+
+    if (empty($email)) {
+        $errors['email'] = "Email is required";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = "Please enter a valid email address";
+    }
+
+    if (empty($passwordInput)) {
+        $errors['password'] = "Password is required";
+    }
+
+    if (empty($role)) {
+        $errors['role'] = "Role is required";
+    }
+
+    // If no validation errors, proceed
+    if (empty($errors)) {
+        $password = password_hash($passwordInput, PASSWORD_DEFAULT);
+
+        // Check if email already exists
+        $check_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $check_email->bind_param("s", $email);
+        $check_email->execute();
+        $check_email->store_result();
+
+        if ($check_email->num_rows > 0) {
+            $error_message = "Email already exists!";
+        } else {
+            $stmt = $conn->prepare("
+                INSERT INTO users (username, email, password, role, verified) 
+                VALUES (?, ?, ?, ?, 1)
+            ");
+            $stmt->bind_param("ssss", $name, $email, $password, $role);
+
+            if ($stmt->execute()) {
+                $success_message = "Staff member added successfully!";
+            } else {
+                $error_message = "Error adding staff member: " . $stmt->error;
+            }
+            $stmt->close();
+        }
+        $check_email->close();
+    }
 }
 
 // Handle edit staff form submission
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_staff'])) {
     $edit_id = $_POST['edit_id'];
-    $name = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $role = $_POST['role'];
-    
-    // Check if email already exists (excluding current user)
-    $check_email = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
-    $check_email->bind_param("si", $email, $edit_id);
-    $check_email->execute();
-    $check_email->store_result();
-    
-    if ($check_email->num_rows > 0) {
-        $error_message = "Email already exists!";
+    $name    = trim($_POST['name']);
+    $email   = trim($_POST['email']);
+    $role    = $_POST['role'];
+
+    // ✅ Validation
+    if (empty($name)) {
+        $errors['name'] = "Name is required";
+    }
+
+    if (empty($email)) {
+        $errors['email'] = "Email is required";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = "Please enter a valid email address";
     } else {
-        $update_sql = "UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?";
+        // Check if email already exists (excluding current user)
+        $check_email = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+        $check_email->bind_param("si", $email, $edit_id);
+        $check_email->execute();
+        $check_email->store_result();
+
+        if ($check_email->num_rows > 0) {
+            $errors['email'] = "Email already exists!";
+        }
+
+        $check_email->close();
+    }
+
+    if (empty($role)) {
+        $errors['role'] = "Role is required";
+    }
+
+    // ✅ If no errors, update DB
+    if (empty($errors)) {
+        $update_sql = "UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?";
         $stmt = $conn->prepare($update_sql);
         $stmt->bind_param("sssi", $name, $email, $role, $edit_id);
-        
+
         if ($stmt->execute()) {
             $success_message = "Staff member updated successfully!";
         } else {
-            $error_message = "Error updating staff member: " . $stmt->error;
+            $errors['general'] = "Error updating staff member: " . $stmt->error;
         }
+
         $stmt->close();
     }
-    $check_email->close();
 }
 
 // Fetch all staff members (staff and admin roles)
@@ -516,25 +565,30 @@ $conn->close();
                                         <a href="#" class="header-btn">
                                             Welcome, <?php echo htmlspecialchars($userName); ?> ▼
                                         </a>
-                                        <div class="dropdown-content">
-                                            <?php if ($isLoggedIn): ?>
-                                                <a href="profile.php">Profile</a>
-                                                <?php if ($userRole == 'admin'): ?>
-                                                    <a href="viewDashboardAdmin.php">Dashboard</a>
-                                                    <a href="viewFeedBack.php">View Feedback</a>
-                                                    <a href="viewCustomer.php">View Customer</a>
-                                                    <a href="viewStaff.php">View Staff</a>
-                                                <?php elseif ($userRole == 'staff'): ?>
-                                                    <a href="viewDashboardStaff.php">Dashboard</a>
-                                                    <a href="viewFeedBack.php">View Feedback</a>
-                                                    <a href="viewCustomer.php">View Customer</a>
-                                                <?php endif; ?>
-                                                <a href="signOut.php">Sign Out</a>
-                                            <?php else: ?>
-                                                <a href="signIn.php">Sign In</a>
-                                                <a href="registerGuest.php">Register</a>
-                                            <?php endif; ?>
-                                        </div>
+<div class="dropdown-content">
+    <?php if (isset($_SESSION['user_role'])): ?>
+        <a href="profile.php">Profile</a>
+    <?php endif; ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
+    <a href="bookAppointment.php">Book Appointment</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
+    <a href="viewDashboardAdmin.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewStaff.php">View Staff</a>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
+    <a href="viewDashboardStaff.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+<?php endif; ?>
+<?php if (isset($_SESSION['user_role'])): ?>
+    <a href="signOut.php">Sign Out</a>
+<?php else: ?>
+    <a href="signIn.php">Sign In</a>
+    <a href="registerGuest.php">Register</a>
+<?php endif; ?>
+</div>
                                     </div>
                                 </div>
                             </div>
@@ -602,7 +656,7 @@ $conn->close();
             <!-- Add/Edit Staff Form -->
             <div class="staff-form">
                 <h3><?php echo isset($editStaff) ? 'Edit Staff Member' : 'Add New Staff Member'; ?></h3>
-                <form method="POST" action="viewStaff.php">
+                <form method="POST" action="viewStaff.php" novalidate>
                     <?php if (isset($editStaff)): ?>
                         <input type="hidden" name="edit_id" value="<?php echo $editStaff['id']; ?>">
                         <input type="hidden" name="edit_staff" value="1">
@@ -616,6 +670,9 @@ $conn->close();
                                value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['username']) : ''; ?>" 
                                required>
                     </div>
+                    <?php if (!empty($errors['name'])): ?>
+                        <div class="text-danger"><?php echo $errors['name']; ?></div>
+                    <?php endif; ?>
                     
                     <div class="form-group">
                         <label class="form-label">Email Address</label>
@@ -623,12 +680,18 @@ $conn->close();
                                value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['email']) : ''; ?>" 
                                required>
                     </div>
+                    <?php if (!empty($errors['email'])): ?>
+                        <div class="text-danger"><?php echo $errors['email']; ?></div>
+                    <?php endif; ?>
                     
                     <?php if (!isset($editStaff)): ?>
                     <div class="form-group">
                         <label class="form-label">Password</label>
                         <input type="password" class="form-input" name="password" required>
                     </div>
+                    <?php if (!empty($errors['password'])): ?>
+                        <div class="text-danger"><?php echo $errors['password']; ?></div>
+                    <?php endif; ?>
                     <?php endif; ?>
                     
                     <div class="form-group">
@@ -638,6 +701,9 @@ $conn->close();
                             <option value="admin" <?php echo (isset($editStaff) && $editStaff['role'] == 'admin') ? 'selected' : ''; ?>>Administrator</option>
                         </select>
                     </div>
+                    <?php if (!empty($errors['role'])): ?>
+                        <div class="text-danger"><?php echo $errors['role']; ?></div>
+                    <?php endif; ?>
                     
                     <div class="form-buttons">
                         <button type="submit" class="action-btn btn-add">
@@ -664,7 +730,6 @@ $conn->close();
                                 <th>Role</th>
                                 <th>Email</th>
                                 <th>Status</th>
-                                <th>Member Since</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

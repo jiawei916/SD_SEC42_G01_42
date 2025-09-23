@@ -198,6 +198,13 @@ $isLoggedIn = true;
         .btn-cancel:hover {
             background-color: #e0e0e0;
         }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -280,16 +287,18 @@ $isLoggedIn = true;
                 <div class="profile-section">
                     <h2>Account settings</h2>
 
-<form id="profileForm">
+<form id="profileForm" novalidate>
     <div class="profile-info">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" value="<?php echo htmlspecialchars($userName); ?>" readonly>
         
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($userName); ?>">
+        <span class="error-message" id="nameError"></span>
         
         <label for="email">E-mail</label>
         <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($userEmail); ?>">
+        <span class="error-message" id="emailError"></span>
     </div>
 
     <div class="action-buttons">
@@ -383,6 +392,35 @@ document.getElementById("profileForm").addEventListener("submit", async function
     e.preventDefault();
 
     const formData = new FormData(this);
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const nameError = document.getElementById("nameError");
+    const emailError = document.getElementById("emailError");
+    emailError.textContent = ""; // reset error
+
+    // Simple email regex pattern
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    document.getElementById("nameError").textContent = "";
+    document.getElementById("emailError").textContent = "";
+
+    let hasError = false;
+if (!name) {
+    document.getElementById("nameError").textContent = "Name is required.";
+    hasError = true;
+}
+if (!email) {
+    document.getElementById("emailError").textContent = "Email is required.";
+    hasError = true;
+} else {
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+    if (!emailPattern.test(email)) {
+        document.getElementById("emailError").textContent = "Please enter a valid email address.";
+        hasError = true;
+    }
+}
+
+    if (hasError) return; // stop if client-side validation fails
 
     try {
         const response = await fetch("profileUpdate.php", {
@@ -394,12 +432,13 @@ document.getElementById("profileForm").addEventListener("submit", async function
 
         if (result.status === "success") {
             alert("✅ Profile updated successfully!");
-            window.location.reload(); // reload page to reflect changes
+            window.location.reload(); 
         } else {
-            alert("⚠️ " + result.message);
+            // Show server error in the emailError span instead of alert
+            emailError.textContent = result.message;
         }
     } catch (err) {
-        alert("Server error: " + err);
+        emailError.textContent = "⚠️ Server error. Please try again later.";
     }
 });
 </script>
