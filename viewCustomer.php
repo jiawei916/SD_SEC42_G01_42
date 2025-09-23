@@ -1,11 +1,7 @@
 <?php
 session_start();
 
-// Check if admin is logged in
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] != 'admin') {
-    header("Location: signIn.php");
-    exit();
-}
+
 
 $userName = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : null;
 $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'guest';
@@ -24,6 +20,60 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_customer'])) {
+    $deleteId = intval($_POST['delete_id']);
+
+    // First delete pets linked to this customer (to avoid foreign key error)
+    $stmt = $conn->prepare("DELETE FROM pets WHERE user_id = ?");
+    $stmt->bind_param("i", $deleteId);
+    $stmt->execute();
+    $stmt->close();
+
+    // Then delete customer
+    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->bind_param("i", $deleteId);
+    $stmt->execute();
+    $stmt->close();
+
+    echo "success";
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_customer'])) {
+    $editId = intval($_POST['edit_id']);
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+
+    // ✅ Basic validation
+    if (empty($name) || empty($email)) {
+        echo "error";
+        exit;
+    }
+
+    // ✅ Prevent duplicate emails
+    $check = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+    $check->bind_param("si", $email, $editId);
+    $check->execute();
+    $check->store_result();
+    if ($check->num_rows > 0) {
+        echo "duplicate_email";
+        exit;
+    }
+    $check->close();
+
+    // ✅ Update customer
+    $stmt = $conn->prepare("UPDATE users SET username = ?, email = ? WHERE id = ?");
+    $stmt->bind_param("ssi", $name, $email, $editId);
+    if ($stmt->execute()) {
+        echo "success";
+    } else {
+        echo "error";
+    }
+    $stmt->close();
+    exit;
+}
+
 
 // Check if pets table exists, if not create it
 $tableCheck = $conn->query("SHOW TABLES LIKE 'pets'");
@@ -434,44 +484,125 @@ $conn->close();
         .container-fluid {
             padding: 0 20px;
         }
+        
+/* Overlay (dimmed background) */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Popup box */
+.modal-content {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 420px;
+    max-width: 95%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeInUp 0.3s ease;
+}
+
+/* Heading */
+.modal-content h3 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+/* Form inputs */
+.customer-form .form-group {
+    margin-bottom: 15px;
+}
+
+.customer-form .form-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.customer-form .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.2s ease;
+}
+
+.customer-form .form-input:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74,144,226,0.15);
+}
+
+/* Buttons */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.action-btn {
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: #357abd;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
-<!-- Edit Staff Modal -->
-<div id="editStaffModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-    background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
-    <div style="background:#fff; padding:20px; border-radius:8px; width:450px; max-width:95%;">
-        <div class="staff-form">
-            <h3>Edit Staff Member</h3>
-            <form id="editStaffForm" novalidate>
-                <input type="hidden" name="edit_id" id="editStaffId">
-                <input type="hidden" name="edit_staff" value="1">
-                
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" name="name" id="editStaffName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" name="email" id="editStaffEmail" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Role</label>
-                    <select class="form-input" name="role" id="editStaffRole" required>
-                        <option value="staff">Staff</option>
-                        <option value="admin">Administrator</option>
-                    </select>
-                </div>
-                
-                <div class="form-buttons">
-                    <button type="submit" class="action-btn btn-add">Update Staff</button>
-                    <button type="button" class="btn-cancel" onclick="closeEditStaffModal()">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <body>
 
@@ -563,6 +694,35 @@ $conn->close();
                 <?php endif; ?>
             </form>
 
+<!-- ✅ Edit Customer Modal -->
+<div id="editCustomerModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="customer-form">
+            <h3>Edit Customer</h3>
+            <form id="editCustomerForm" novalidate>
+                <input type="hidden" name="edit_id" id="editCustomerId">
+                <input type="hidden" name="edit_customer" value="1">
+                
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" name="name" id="editCustomerName" required>
+                    <span class="error-message" id="nameError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" name="email" id="editCustomerEmail" required>
+                    <span class="error-message" id="emailError"></span>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="action-btn btn-add">Update Customer</button>
+                    <button type="button" class="btn-cancel" onclick="closeEditCustomerModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
             
 
             <?php if ($selectedCustomer): ?>
@@ -654,11 +814,10 @@ $conn->close();
                                             </span>
                                         </td>
                                         <td>
-<button class="view-btn" onclick="openEditStaffModal(
+<button class="view-btn" onclick="openEditCustomerModal(
     <?php echo $customer['id']; ?>, 
     '<?php echo htmlspecialchars($customer['username']); ?>', 
-    '<?php echo htmlspecialchars($customer['email']); ?>', 
-    '<?php echo $customer['role']; ?>'
+    '<?php echo htmlspecialchars($customer['email']); ?>'
 )">Edit</button>
         <button class="view-btn" style="background-color:#dc3545;" onclick="deleteCustomer(<?php echo $customer['id']; ?>)">Delete</button>
                                         </td>
@@ -716,32 +875,77 @@ $conn->close();
     <script src="./assets/js/slick.min.js"></script>
     <script src="./assets/js/main.js"></script>
 <script>
-function openEditStaffModal(id, name, email, role) {
-    document.getElementById("editStaffId").value = id;
-    document.getElementById("editStaffName").value = name;
-    document.getElementById("editStaffEmail").value = email;
-    document.getElementById("editStaffRole").value = role;
-    document.getElementById("editStaffModal").style.display = "flex";
+function openEditCustomerModal(id, name, email) {
+    document.getElementById("editCustomerId").value = id;
+    document.getElementById("editCustomerName").value = name;
+    document.getElementById("editCustomerEmail").value = email;
+    document.getElementById("editCustomerModal").style.display = "flex";
 }
 
-function closeEditStaffModal() {
-    document.getElementById("editStaffModal").style.display = "none";
+function closeEditCustomerModal() {
+    document.getElementById("editCustomerModal").style.display = "none";
 }
 
-document.getElementById("editStaffForm").addEventListener("submit", function(e) {
+document.getElementById("editCustomerForm").addEventListener("submit", function(e) {
     e.preventDefault();
     let formData = new FormData(this);
+    const name = document.getElementById("editCustomerName").value.trim();
+    const email = document.getElementById("editCustomerEmail").value.trim();
+    const nameError = document.getElementById("nameError");
+    const emailError = document.getElementById("emailError");
+    nameError.textContent = "";
+    emailError.textContent = "";
 
-    fetch("viewStaff.php", {
+    let hasError = false;
+
+    if (!name) {
+        document.getElementById("nameError").textContent = "Name is required.";
+        hasError = true;
+    }
+    if (!email) {
+        document.getElementById("emailError").textContent = "Email is required.";
+        hasError = true;
+    } else {
+        const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById("emailError").textContent = "Please enter a valid email address.";
+            hasError = true;
+        }
+    }
+    if (hasError) return;
+
+    fetch("viewCustomer.php", {   // ✅ now points to customer handler
         method: "POST",
         body: formData
     })
     .then(res => res.text())
     .then(data => {
-        alert("Staff updated successfully!");
-        location.reload(); // refresh staff list
+        alert("Customer updated successfully!");
+        location.reload();
     });
 });
+
+function deleteCustomer(id) {
+    if (!confirm("Are you sure you want to delete this customer?")) return;
+
+    let formData = new FormData();
+    formData.append("delete_customer", "1");
+    formData.append("delete_id", id);
+
+    fetch("viewCustomer.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert("Customer deleted successfully!");
+        location.reload();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error deleting customer.");
+    });
+}
 </script>
 </body>
 </html>
