@@ -70,6 +70,22 @@ if ($userRole == 'admin') {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_service'])) {
+    $deleteId = intval($_POST['delete_id']);
+
+    // Delete the service
+    $stmt = $conn->prepare("DELETE FROM services WHERE id = ?");
+    $stmt->bind_param("i", $deleteId);
+    if ($stmt->execute()) {
+        echo "success";
+    } else {
+        echo "error";
+    }
+    $stmt->close();
+    exit;
+}
+
+
 $stmt->execute();
 $result = $stmt->get_result();
 $services = $result->fetch_all(MYSQLI_ASSOC);
@@ -556,7 +572,7 @@ $conn->close();
                             </form>
                         </div>
                         <div class="col-md-4 text-right">
-                            <?php if ($userRole == 'admin'): ?>
+                            <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
                                 <a href="editService.php" class="btn btn-success">Add New Service</a>
                             <?php endif; ?>
                         </div>
@@ -663,11 +679,18 @@ $conn->close();
     
     <script>
     // Delete confirmation function
-    function confirmDelete(id, name) {
-        if (confirm("Are you sure you want to delete the service: " + name + "?\nThis action cannot be undone.")) {
-            window.location.href = "deleteService.php?id=" + id;
-        }
+function confirmDelete(id, name) {
+    if (confirm("Are you sure you want to delete the service: " + name + "?\nThis action cannot be undone.")) {
+        $.post("viewService.php", { delete_service: true, delete_id: id }, function(response) {
+            if (response === "success") {
+                alert("Service deleted successfully.");
+                location.reload();
+            } else {
+                alert("Error deleting service.");
+            }
+        });
     }
+}
     
     // Dismiss alert when close button is clicked
     $(document).ready(function() {
