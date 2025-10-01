@@ -24,6 +24,7 @@ $service = [];
 $message = "";
 $error = "";
 $isEditMode = false;
+$errors = [];
 
 // Check if ID is provided for editing
 if (isset($_GET['id'])) {
@@ -54,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $price = $_POST['price'];
     $duration = $_POST['duration'];
 
-
     // Validation
     if (empty($name)) {
         $errors['name'] = "Service name is required.";
@@ -73,15 +73,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['duration'] = "Please enter a valid duration.";
     }
     
+    // Image upload handling
+    $image_path = $service['image_path'] ?? ''; // Keep existing image if no new upload
+
+    if (isset($_FILES['service_image']) && $_FILES['service_image']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+        $max_size = 2 * 1024 * 1024; // 2MB
+        
+        $file_type = $_FILES['service_image']['type'];
+        $file_size = $_FILES['service_image']['size'];
+        
+        if (!in_array($file_type, $allowed_types)) {
+            $errors['service_image'] = "Only JPG, PNG, and GIF images are allowed.";
+        } elseif ($file_size > $max_size) {
+            $errors['service_image'] = "Image size must be less than 2MB.";
+        } else {
+            // Create uploads directory if it doesn't exist
+            $upload_dir = 'assets/img/services/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            
+            // Generate unique filename
+            $file_extension = pathinfo($_FILES['service_image']['name'], PATHINFO_EXTENSION);
+            $filename = 'service_' . uniqid() . '.' . $file_extension;
+            $upload_path = $upload_dir . $filename;
+            
+            if (move_uploaded_file($_FILES['service_image']['tmp_name'], $upload_path)) {
+                $image_path = $upload_path;
+                
+                // Delete old image if it exists and we're updating
+                if ($isEditMode && !empty($service['image_path']) && file_exists($service['image_path'])) {
+                    unlink($service['image_path']);
+                }
+            } else {
+                $errors['service_image'] = "Failed to upload image. Please try again.";
+            }
+        }
+    } elseif (isset($_FILES['service_image']) && $_FILES['service_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $errors['service_image'] = "Error uploading image: " . $_FILES['service_image']['error'];
+    }
+    
     // Validate inputs
-    if (empty($name) || empty($price) || empty($duration)) {
-        $error = "Please fill in all required fields!";
-    } else {
+    if (empty($errors)) {
         if ($isEditMode && isset($_POST['id'])) {
             // Update existing service
             $id = $_POST['id'];
-            $stmt = $conn->prepare("UPDATE services SET name = ?, description = ?, price = ?, duration = ? WHERE id = ?");
-            $stmt->bind_param("ssdii", $name, $description, $price, $duration, $id);
+            $stmt = $conn->prepare("UPDATE services SET name = ?, description = ?, price = ?, duration = ?, image_path = ? WHERE id = ?");
+            $stmt->bind_param("ssdisi", $name, $description, $price, $duration, $image_path, $id);
             
             if ($stmt->execute()) {
                 $message = "Service updated successfully!";
@@ -96,14 +135,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             // Add new service
-            $stmt = $conn->prepare("INSERT INTO services (name, description, price, duration, is_active) VALUES (?, ?, ?, ?, 1)");
-            $stmt->bind_param("ssdi", $name, $description, $price, $duration);
+            $stmt = $conn->prepare("INSERT INTO services (name, description, price, duration, image_path, is_active) VALUES (?, ?, ?, ?, ?, 1)");
+            $stmt->bind_param("ssdis", $name, $description, $price, $duration, $image_path);
             
             if ($stmt->execute()) {
                 $message = "Service added successfully!";
                 // Clear form if not in edit mode
                 if (!$isEditMode) {
                     $name = $description = $price = $duration = "";
+                    $image_path = "";
                 }
             } else {
                 $error = "Error adding service: " . $conn->error;
@@ -327,6 +367,15 @@ $conn->close();
             opacity: .75;
         }
         
+        /* Image preview styling */
+        .image-preview {
+            max-width: 200px;
+            height: auto;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+        }
+        
         /* Header adjustments for better spacing */
         .header-area {
             position: relative;
@@ -457,7 +506,7 @@ $conn->close();
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="editService.php<?php echo $isEditMode ? '?id=' . $service['id'] : ''; ?>" novalidate>
+        <form method="POST" action="editService.php<?php echo $isEditMode ? '?id=' . $service['id'] : ''; ?>" enctype="multipart/form-data" novalidate>
             <?php if ($isEditMode && !empty($service)): ?>
                 <input type="hidden" name="id" value="<?php echo $service['id']; ?>">
             <?php endif; ?>
@@ -466,36 +515,51 @@ $conn->close();
                 <label for="name">Service Name *</label>
                 <input type="text" class="form-control" id="name" name="name" 
                        value="<?php echo !empty($service['name']) ? htmlspecialchars($service['name']) : (isset($name) ? htmlspecialchars($name) : ''); ?>" required>
+                <?php if (!empty($errors['name'])): ?>
+                    <span class="text-danger"><?php echo $errors['name']; ?></span>
+                <?php endif; ?>
             </div>
-            <?php if (!empty($errors['name'])): ?>
-                <span class="text-danger"><?php echo $errors['name']; ?></span>
-            <?php endif; ?>
             
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description">Description *</label>
                 <textarea class="form-control" id="description" name="description" rows="3"><?php echo !empty($service['description']) ? htmlspecialchars($service['description']) : (isset($description) ? htmlspecialchars($description) : ''); ?></textarea>
+                <?php if (!empty($errors['description'])): ?>
+                    <span class="text-danger"><?php echo $errors['description']; ?></span>
+                <?php endif; ?>
             </div>
-            <?php if (!empty($errors['description'])): ?>
-                <span class="text-danger"><?php echo $errors['description']; ?></span>
-            <?php endif; ?>
             
             <div class="form-group">
                 <label for="price">Price ($) *</label>
                 <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" 
                        value="<?php echo !empty($service['price']) ? $service['price'] : (isset($price) ? $price : ''); ?>" required>
+                <?php if (!empty($errors['price'])): ?>
+                    <span class="text-danger"><?php echo $errors['price']; ?></span>
+                <?php endif; ?>
             </div>
-            <?php if (!empty($errors['price'])): ?>
-                <span class="text-danger"><?php echo $errors['price']; ?></span>
-            <?php endif; ?>
             
             <div class="form-group">
                 <label for="duration">Duration (minutes) *</label>
                 <input type="number" class="form-control" id="duration" name="duration" min="1" 
                        value="<?php echo !empty($service['duration']) ? $service['duration'] : (isset($duration) ? $duration : ''); ?>" required>
+                <?php if (!empty($errors['duration'])): ?>
+                    <span class="text-danger"><?php echo $errors['duration']; ?></span> 
+                <?php endif; ?>
             </div>
-            <?php if (!empty($errors['duration'])): ?>
-                <span class="text-danger"><?php echo $errors['duration']; ?></span> 
-            <?php endif; ?>
+            
+            <div class="form-group">
+                <label for="service_image">Service Image</label>
+                <input type="file" class="form-control" id="service_image" name="service_image" accept="image/*">
+                <small class="text-muted">Recommended size: 400x300px. Supported formats: JPG, PNG, GIF (Max: 2MB)</small>
+                <?php if (!empty($errors['service_image'])): ?>
+                    <span class="text-danger"><?php echo $errors['service_image']; ?></span>
+                <?php endif; ?>
+                <?php if (!empty($service['image_path'])): ?>
+                    <div class="mt-2">
+                        <p>Current Image:</p>
+                        <img src="<?php echo htmlspecialchars($service['image_path']); ?>" alt="Current service image" class="image-preview">
+                    </div>
+                <?php endif; ?>
+            </div>
             
             <div class="form-group">
                 <a href="viewService.php" class="btn-cancel">Cancel</a>
@@ -553,22 +617,6 @@ $conn->close();
     
     <script>
     // Dismiss alert when close button is clicked
-
-    $errors = []; // array to hold field-specific errors
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
-
-
-    if (empty($errors)) {
-        if ($isEditMode && isset($_POST['id'])) {
-            // update logic ...
-        } else {
-            // insert logic ...
-        }
-    }
-}
-
     $(document).ready(function() {
         $('.alert .close').on('click', function() {
             $(this).closest('.alert').alert('close');
