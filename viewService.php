@@ -459,6 +459,14 @@ $conn->close();
             margin-left: auto; /* Push to the far right */
         }
         
+        .service-image {
+        height: 200px;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -579,57 +587,78 @@ $conn->close();
                     </div>
                 </div>
                 
-                <!-- Services Grid -->
-                <div class="row">
-                    <?php if (count($services) > 0): ?>
-                        <?php foreach ($services as $service): ?>
-                            <div class="col-lg-4 col-md-6">
-                                <div class="service-card">
-                                    <div class="service-image">
-                                        <i class="fas fa-paw"></i>
-                                    </div>
-                                    <div class="service-content">
-                                        <h3 class="service-title"><?php echo htmlspecialchars($service['name']); ?></h3>
-                                        <p class="service-description"><?php echo htmlspecialchars($service['description']); ?></p>
-                                        
-                                        <div class="service-details">
-                                            <span class="service-price">$<?php echo number_format($service['price'], 2); ?></span>
-                                            <span class="service-duration"><?php echo $service['duration']; ?> mins</span>
-                                        </div>
-                                        
-                                        <?php if ($isLoggedIn && $userRole == 'customer'): ?>
-                                            <a href="bookAppointment.php?service=<?php echo $service['id']; ?>" class="btn-book">Book Now</a>
-                                        <?php elseif (!$isLoggedIn): ?>
-                                            <a href="signIn.php" class="btn-book">Login to Book</a>
-                                        <?php endif; ?>
-                                        
-                                        <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                                            <div class="admin-controls">
-                                                <small class="text-muted d-block mb-2">Admin Controls:</small>
-                                                <a href="editService.php?id=<?php echo $service['id']; ?>" class="btn btn-admin">Edit</a>
-                                                <a href="toggleService.php?id=<?php echo $service['id']; ?>&action=<?php echo $service['is_active'] ? 'deactivate' : 'activate'; ?>" class="btn btn-admin btn-deactivate">
-                                                    <?php echo $service['is_active'] ? 'Deactivate' : 'Activate'; ?>
-                                                </a>
-                                                <!-- Add delete button with confirmation -->
-                                                <button class="btn btn-admin btn-danger" onclick="confirmDelete(<?php echo $service['id']; ?>, '<?php echo htmlspecialchars($service['name']); ?>')">Delete</button>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="col-12">
-                            <div class="no-services">
-                                <h3>No services found</h3>
-                                <p>Try adjusting your search criteria or check back later.</p>
-                                <?php if ($userRole == 'admin'): ?>
-                                    <a href="editService.php" class="btn btn-primary">Add New Service</a>
-                                <?php endif; ?>
-                            </div>
+<!-- Services Grid -->
+<div class="row">
+    <?php if (count($services) > 0): ?>
+        <?php foreach ($services as $service): ?>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-card">
+                    <div class="service-image">
+                        <?php
+                        // Determine which image to display based on service name or category
+                        $serviceName = strtolower($service['name']);
+                        $imagePath = 'assets/img/services/';
+                        
+                        if (strpos($serviceName, 'groom') !== false) {
+                            $imageFile = 'grooming.jpg';
+                        } elseif (strpos($serviceName, 'bath') !== false) {
+                            $imageFile = 'bathing.jpg';
+                        } elseif (strpos($serviceName, 'vaccin') !== false || strpos($serviceName, 'medical') !== false) {
+                            $imageFile = 'vaccination.jpg';
+                        } elseif (strpos($serviceName, 'dental') !== false) {
+                            $imageFile = 'dental.jpg';
+                        } elseif (strpos($serviceName, 'check') !== false || strpos($serviceName, 'consult') !== false) {
+                            $imageFile = 'checkup.jpg';
+                        } elseif (strpos($serviceName, 'nail') !== false) {
+                            $imageFile = 'nail-trimming.jpg';
+                        } else {
+                            $imageFile = 'default-service.jpg';
+                        }
+                        ?>
+                        <img src="<?php echo $imagePath . $imageFile; ?>" alt="<?php echo htmlspecialchars($service['name']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="service-content">
+                        <h3 class="service-title"><?php echo htmlspecialchars($service['name']); ?></h3>
+                        <p class="service-description"><?php echo htmlspecialchars($service['description']); ?></p>
+                        
+                        <div class="service-details">
+                            <span class="service-price">$<?php echo number_format($service['price'], 2); ?></span>
+                            <span class="service-duration"><?php echo $service['duration']; ?> mins</span>
                         </div>
-                    <?php endif; ?>
+                        
+                        <?php if ($isLoggedIn && $userRole == 'customer'): ?>
+                            <a href="bookAppointment.php?service=<?php echo $service['id']; ?>" class="btn-book">Book Now</a>
+                        <?php elseif (!$isLoggedIn): ?>
+                            <a href="signIn.php" class="btn-book">Login to Book</a>
+                        <?php endif; ?>
+                        
+                        <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
+                            <div class="admin-controls">
+                                <small class="text-muted d-block mb-2">Admin Controls:</small>
+                                <a href="editService.php?id=<?php echo $service['id']; ?>" class="btn btn-admin">Edit</a>
+                                <a href="toggleService.php?id=<?php echo $service['id']; ?>&action=<?php echo $service['is_active'] ? 'deactivate' : 'activate'; ?>" class="btn btn-admin btn-deactivate">
+                                    <?php echo $service['is_active'] ? 'Deactivate' : 'Activate'; ?>
+                                </a>
+                                <!-- Add delete button with confirmation -->
+                                <button class="btn btn-admin btn-danger" onclick="confirmDelete(<?php echo $service['id']; ?>, '<?php echo htmlspecialchars($service['name']); ?>')">Delete</button>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="col-12">
+            <div class="no-services">
+                <h3>No services found</h3>
+                <p>Try adjusting your search criteria or check back later.</p>
+                <?php if ($userRole == 'admin'): ?>
+                    <a href="editService.php" class="btn btn-primary">Add New Service</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
             </div>
         </div>
     </main>
