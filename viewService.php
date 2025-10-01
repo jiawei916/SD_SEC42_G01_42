@@ -73,6 +73,19 @@ if ($userRole == 'admin') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_service'])) {
     $deleteId = intval($_POST['delete_id']);
 
+    // First, get the service to check if it has an image
+    $stmt = $conn->prepare("SELECT image_path FROM services WHERE id = ?");
+    $stmt->bind_param("i", $deleteId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $service = $result->fetch_assoc();
+    $stmt->close();
+
+    // Delete the image file if it exists
+    if (!empty($service['image_path']) && file_exists($service['image_path'])) {
+        unlink($service['image_path']);
+    }
+
     // Delete the service
     $stmt = $conn->prepare("DELETE FROM services WHERE id = ?");
     $stmt->bind_param("i", $deleteId);
@@ -206,12 +219,28 @@ $conn->close();
         
         .service-image {
             height: 200px;
-            background-color: #dc3545;
+            background-color: #f8f9fa;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .service-card:hover .service-image img {
+            transform: scale(1.05);
+        }
+        
+        .service-image .placeholder-icon {
             font-size: 48px;
+            color: #dc3545;
         }
         
         .service-content {
@@ -257,6 +286,9 @@ $conn->close();
             font-weight: 600;
             width: 100%;
             transition: background-color 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
         }
         
         .btn-book:hover {
@@ -273,6 +305,8 @@ $conn->close();
             font-size: 14px;
             margin-right: 5px;
             margin-bottom: 5px;
+            text-decoration: none;
+            display: inline-block;
         }
         
         .btn-admin:hover {
@@ -285,6 +319,14 @@ $conn->close();
         }
         
         .btn-deactivate:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        
+        .btn-danger:hover {
             background-color: #c82333;
         }
         
@@ -414,6 +456,26 @@ $conn->close();
             opacity: .75;
         }
         
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .status-inactive {
+            background-color: #6c757d;
+            color: white;
+        }
+        
         @media (max-width: 768px) {
             .service-card {
                 margin-bottom: 20px;
@@ -421,6 +483,9 @@ $conn->close();
             
             .service-image {
                 height: 150px;
+            }
+            
+            .service-image .placeholder-icon {
                 font-size: 36px;
             }
             
@@ -435,6 +500,17 @@ $conn->close();
             
             .search-btn, .clear-btn, .btn-edit-service {
                 width: 100%;
+            }
+            
+            .admin-controls {
+                text-align: center;
+            }
+            
+            .btn-admin {
+                display: block;
+                width: 100%;
+                margin-bottom: 5px;
+                margin-right: 0;
             }
         }
         
@@ -459,14 +535,6 @@ $conn->close();
             margin-left: auto; /* Push to the far right */
         }
         
-        .service-image {
-        height: 200px;
-        background-color: #f8f9fa;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        }
     </style>
 </head>
 <body>
@@ -587,78 +655,70 @@ $conn->close();
                     </div>
                 </div>
                 
-<!-- Services Grid -->
-<div class="row">
-    <?php if (count($services) > 0): ?>
-        <?php foreach ($services as $service): ?>
-            <div class="col-lg-4 col-md-6">
-                <div class="service-card">
-                    <div class="service-image">
-                        <?php
-                        // Determine which image to display based on service name or category
-                        $serviceName = strtolower($service['name']);
-                        $imagePath = 'assets/img/services/';
-                        
-                        if (strpos($serviceName, 'groom') !== false) {
-                            $imageFile = 'grooming.jpg';
-                        } elseif (strpos($serviceName, 'bath') !== false) {
-                            $imageFile = 'bathing.jpg';
-                        } elseif (strpos($serviceName, 'vaccin') !== false || strpos($serviceName, 'medical') !== false) {
-                            $imageFile = 'vaccination.jpg';
-                        } elseif (strpos($serviceName, 'dental') !== false) {
-                            $imageFile = 'dental.jpg';
-                        } elseif (strpos($serviceName, 'check') !== false || strpos($serviceName, 'consult') !== false) {
-                            $imageFile = 'checkup.jpg';
-                        } elseif (strpos($serviceName, 'nail') !== false) {
-                            $imageFile = 'nail-trimming.jpg';
-                        } else {
-                            $imageFile = 'default-service.jpg';
-                        }
-                        ?>
-                        <img src="<?php echo $imagePath . $imageFile; ?>" alt="<?php echo htmlspecialchars($service['name']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="service-content">
-                        <h3 class="service-title"><?php echo htmlspecialchars($service['name']); ?></h3>
-                        <p class="service-description"><?php echo htmlspecialchars($service['description']); ?></p>
-                        
-                        <div class="service-details">
-                            <span class="service-price">$<?php echo number_format($service['price'], 2); ?></span>
-                            <span class="service-duration"><?php echo $service['duration']; ?> mins</span>
-                        </div>
-                        
-                        <?php if ($isLoggedIn && $userRole == 'customer'): ?>
-                            <a href="bookAppointment.php?service=<?php echo $service['id']; ?>" class="btn-book">Book Now</a>
-                        <?php elseif (!$isLoggedIn): ?>
-                            <a href="signIn.php" class="btn-book">Login to Book</a>
-                        <?php endif; ?>
-                        
-                        <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
-                            <div class="admin-controls">
-                                <small class="text-muted d-block mb-2">Admin Controls:</small>
-                                <a href="editService.php?id=<?php echo $service['id']; ?>" class="btn btn-admin">Edit</a>
-                                <a href="toggleService.php?id=<?php echo $service['id']; ?>&action=<?php echo $service['is_active'] ? 'deactivate' : 'activate'; ?>" class="btn btn-admin btn-deactivate">
-                                    <?php echo $service['is_active'] ? 'Deactivate' : 'Activate'; ?>
-                                </a>
-                                <!-- Add delete button with confirmation -->
-                                <button class="btn btn-admin btn-danger" onclick="confirmDelete(<?php echo $service['id']; ?>, '<?php echo htmlspecialchars($service['name']); ?>')">Delete</button>
+                <!-- Services Grid -->
+                <div class="row">
+                    <?php if (count($services) > 0): ?>
+                        <?php foreach ($services as $service): ?>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="service-card">
+                                    <div class="service-image">
+                                        <?php if (!empty($service['image_path']) && file_exists($service['image_path'])): ?>
+                                            <img src="<?php echo htmlspecialchars($service['image_path']); ?>" alt="<?php echo htmlspecialchars($service['name']); ?>">
+                                        <?php else: ?>
+                                            <div class="placeholder-icon">
+                                                <i class="fas fa-paw"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <!-- Status badge for admin view -->
+                                        <?php if ($userRole == 'admin'): ?>
+                                            <span class="status-badge <?php echo $service['is_active'] ? 'status-active' : 'status-inactive'; ?>">
+                                                <?php echo $service['is_active'] ? 'Active' : 'Inactive'; ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="service-content">
+                                        <h3 class="service-title"><?php echo htmlspecialchars($service['name']); ?></h3>
+                                        <p class="service-description"><?php echo htmlspecialchars($service['description']); ?></p>
+                                        
+                                        <div class="service-details">
+                                            <span class="service-price">$<?php echo number_format($service['price'], 2); ?></span>
+                                            <span class="service-duration"><?php echo $service['duration']; ?> mins</span>
+                                        </div>
+                                        
+                                        <?php if ($isLoggedIn && $userRole == 'customer'): ?>
+                                            <a href="bookAppointment.php?service=<?php echo $service['id']; ?>" class="btn-book">Book Now</a>
+                                        <?php elseif (!$isLoggedIn): ?>
+                                            <a href="signIn.php" class="btn-book">Login to Book</a>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
+                                            <div class="admin-controls">
+                                                <small class="text-muted d-block mb-2">Admin Controls:</small>
+                                                <a href="editService.php?id=<?php echo $service['id']; ?>" class="btn btn-admin">Edit</a>
+                                                <a href="toggleService.php?id=<?php echo $service['id']; ?>&action=<?php echo $service['is_active'] ? 'deactivate' : 'activate'; ?>" class="btn btn-admin btn-deactivate">
+                                                    <?php echo $service['is_active'] ? 'Deactivate' : 'Activate'; ?>
+                                                </a>
+                                                <!-- Add delete button with confirmation -->
+                                                <button class="btn btn-admin btn-danger" onclick="confirmDelete(<?php echo $service['id']; ?>, '<?php echo htmlspecialchars($service['name']); ?>')">Delete</button>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
-                        <?php endif; ?>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="col-12">
+                            <div class="no-services">
+                                <h3>No services found</h3>
+                                <p>Try adjusting your search criteria or check back later.</p>
+                                <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
+                                    <a href="editService.php" class="btn btn-primary">Add New Service</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div class="col-12">
-            <div class="no-services">
-                <h3>No services found</h3>
-                <p>Try adjusting your search criteria or check back later.</p>
-                <?php if ($userRole == 'admin'): ?>
-                    <a href="editService.php" class="btn btn-primary">Add New Service</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    <?php endif; ?>
-</div>
             </div>
         </div>
     </main>
@@ -708,18 +768,18 @@ $conn->close();
     
     <script>
     // Delete confirmation function
-function confirmDelete(id, name) {
-    if (confirm("Are you sure you want to delete the service: " + name + "?\nThis action cannot be undone.")) {
-        $.post("viewService.php", { delete_service: true, delete_id: id }, function(response) {
-            if (response === "success") {
-                alert("Service deleted successfully.");
-                location.reload();
-            } else {
-                alert("Error deleting service.");
-            }
-        });
+    function confirmDelete(id, name) {
+        if (confirm("Are you sure you want to delete the service: " + name + "?\nThis action cannot be undone.")) {
+            $.post("viewService.php", { delete_service: true, delete_id: id }, function(response) {
+                if (response === "success") {
+                    alert("Service deleted successfully.");
+                    location.reload();
+                } else {
+                    alert("Error deleting service.");
+                }
+            });
+        }
     }
-}
     
     // Dismiss alert when close button is clicked
     $(document).ready(function() {
