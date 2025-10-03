@@ -166,10 +166,12 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
+    <a href="viewAppointment.php">View Appointments</a> 
 <?php elseif ($_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
+    <a href="viewAppointment.php">View Appointments</a> 
 <?php endif; ?>
 <?php if (isset($_SESSION['user_role'])): ?>
     <a href="signOut.php">Sign Out</a>

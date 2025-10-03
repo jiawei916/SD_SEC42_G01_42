@@ -207,6 +207,24 @@ $conn->close();
             color: white;
         }
         
+        .btn-edit-custom {
+            background-color: #ffc107;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: #212529;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        
+        .btn-edit-custom:hover {
+            background-color: #e0a800;
+            color: #212529;
+        }
+        
         @media (max-width: 768px) {
             .appointments-section {
                 padding: 60px 0 30px 0;
@@ -222,7 +240,7 @@ $conn->close();
                 text-align: center;
             }
             
-            .btn-custom, .btn-secondary-custom {
+            .btn-custom, .btn-secondary-custom, .btn-edit-custom {
                 display: block;
                 width: 100%;
                 margin-bottom: 10px;
@@ -277,10 +295,12 @@ $conn->close();
                                                 <a href="viewFeedBack.php">View Feedback</a>
                                                 <a href="viewCustomer.php">View Customer</a>
                                                 <a href="viewStaff.php">View Staff</a>
+                                                <a href="viewAppointment.php">View Appointments</a> 
                                             <?php elseif ($userRole == 'staff'): ?>
                                                 <a href="viewDashboardStaff.php">Dashboard</a>
                                                 <a href="viewFeedBack.php">View Feedback</a>
                                                 <a href="viewCustomer.php">View Customer</a>
+                                                <a href="viewAppointment.php">View Appointments</a> 
                                             <?php endif; ?>
                                             <?php if (isset($_SESSION['user_role'])): ?>
                                                 <a href="signOut.php">Sign Out</a>
@@ -311,6 +331,11 @@ $conn->close();
             <div class="mt-3">
                 <a href="homepage.php" class="btn-secondary-custom">Home</a>
                 <a href="bookAppointment.php" class="btn-custom">Book New Appointment</a>
+                <?php if ($userRole == 'admin' || $userRole == 'staff'): ?>
+                    <a href="editAppointment.php" class="btn-edit-custom">
+                        Edit Appointments
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
 
