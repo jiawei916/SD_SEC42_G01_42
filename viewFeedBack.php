@@ -160,6 +160,7 @@ $conn->close();
 <?php if ($_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
+    <a href="viewReceipt.php">View Receipt</a> 
 <?php elseif ($_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
@@ -167,6 +168,7 @@ $conn->close();
     <a href="viewStaff.php">View Staff</a>
     <a href="viewAppointment.php">View Appointments</a> 
     <a href="viewSalesReport.php">View Sales Report</a> 
+    <a href="viewReceipt.php">View Receipt</a> 
 <?php elseif ($_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>

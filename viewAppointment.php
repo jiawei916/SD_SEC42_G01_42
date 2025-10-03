@@ -283,34 +283,36 @@ $conn->close();
                                         <a href="#" class="header-btn">
                                             Welcome, <?php echo htmlspecialchars($userName); ?> ▼
                                         </a>
-                                        <div class="dropdown-content">
-                                            <?php if (isset($_SESSION['user_role'])): ?>
-                                                <a href="profile.php">Profile</a>
-                                            <?php endif; ?>
-                                            <?php if ($userRole == 'customer'): ?>
-                                                <a href="bookAppointment.php">Book Appointment</a>
-                                                <a href="viewAppointment.php">View Appointments</a> 
-                                            <?php elseif ($userRole == 'admin'): ?>
-                                                <a href="viewDashboardAdmin.php">Dashboard</a>
-                                                <a href="viewFeedBack.php">View Feedback</a>
-                                                <a href="viewCustomer.php">View Customer</a>
-                                                <a href="viewStaff.php">View Staff</a>
-                                                <a href="viewAppointment.php">View Appointments</a> 
-                                                <a href="viewSalesReport.php">View Sales Report</a> 
-                                            <?php elseif ($userRole == 'staff'): ?>
-                                                <a href="viewDashboardStaff.php">Dashboard</a>
-                                                <a href="viewFeedBack.php">View Feedback</a>
-                                                <a href="viewCustomer.php">View Customer</a>
-                                                <a href="viewAppointment.php">View Appointments</a> 
-                                                <a href="viewSalesReport.php">View Sales Report</a> 
-                                            <?php endif; ?>
-                                            <?php if (isset($_SESSION['user_role'])): ?>
-                                                <a href="signOut.php">Sign Out</a>
-                                            <?php else: ?>
-                                                <a href="signIn.php">Sign In</a>
-                                                <a href="registerGuest.php">Register</a>
-                                            <?php endif; ?>
-                                        </div>
+<div class="dropdown-content">
+    <?php if (isset($_SESSION['user_role'])): ?>
+        <a href="profile.php">Profile</a>
+    <?php endif; ?>
+<?php if ($_SESSION['user_role'] == 'customer'): ?>
+    <a href="bookAppointment.php">Book Appointment</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+    <a href="viewReceipt.php">View Receipt</a> 
+<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+    <a href="viewDashboardAdmin.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewStaff.php">View Staff</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+    <a href="viewSalesReport.php">View Sales Report</a> 
+    <a href="viewReceipt.php">View Receipt</a> 
+<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+    <a href="viewDashboardStaff.php">Dashboard</a>
+    <a href="viewFeedBack.php">View Feedback</a>
+    <a href="viewCustomer.php">View Customer</a>
+    <a href="viewAppointment.php">View Appointments</a> 
+    <a href="viewSalesReport.php">View Sales Report</a> 
+<?php endif; ?>
+<?php if (isset($_SESSION['user_role'])): ?>
+    <a href="signOut.php">Sign Out</a>
+<?php else: ?>
+    <a href="signIn.php">Sign In</a>
+    <a href="registerGuest.php">Register</a>
+<?php endif; ?>
+</div>
                                     </div>
                                 </div>
                             </div>
