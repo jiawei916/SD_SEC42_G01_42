@@ -501,11 +501,13 @@ $conn->close();
                                                 <a href="viewCustomer.php">View Customer</a>
                                                 <a href="viewStaff.php">View Staff</a>
                                                 <a href="viewAppointment.php">View Appointments</a> 
+                                                <a href="viewSalesReport.php">View Sales Report</a> 
                                             <?php elseif ($userRole == 'staff'): ?>
                                                 <a href="viewDashboardStaff.php">Dashboard</a>
                                                 <a href="viewFeedBack.php">View Feedback</a>
                                                 <a href="viewCustomer.php">View Customer</a>
                                                 <a href="viewAppointment.php">View Appointments</a> 
+                                                <a href="viewSalesReport.php">View Sales Report</a> 
                                             <?php endif; ?>
                                             <a href="viewAppointment.php">View Appointments</a>
                                             <a href="signOut.php">Sign Out</a>
