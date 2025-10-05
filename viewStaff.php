@@ -221,7 +221,7 @@ $conn->close();
         .dashboard-container {
             padding: 20px;
             max-width: 1400px;
-            margin: 80px auto;
+            margin: auto;
         }
         
         .dashboard-card {
@@ -569,24 +569,18 @@ $conn->close();
     <?php if (isset($_SESSION['user_role'])): ?>
         <a href="profile.php">Profile</a>
     <?php endif; ?>
-<?php if ($_SESSION['user_role'] == 'customer'): ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewReceipt.php">View Receipt</a> 
-<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
-    <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewSalesReport.php">View Sales Report</a> 
-    <a href="viewReceipt.php">View Receipt</a> 
-<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
-    <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewSalesReport.php">View Sales Report</a> 
 <?php endif; ?>
 <?php if (isset($_SESSION['user_role'])): ?>
     <a href="signOut.php">Sign Out</a>
@@ -617,6 +611,7 @@ $conn->close();
                 <h2>Staff Management</h2>
                 <p>Manage all staff members and administrators</p>
             </div>
+            
 
             <!-- Display messages -->
             <?php if (isset($success_message)): ?>
@@ -660,8 +655,9 @@ $conn->close();
             </div>
 
             <!-- Add/Edit Staff Form -->
-            <div class="staff-form">
-                <h3><?php echo isset($editStaff) ? 'Edit Staff Member' : 'Add New Staff Member'; ?></h3>
+<div class="staff-form" id="staffForm" style="<?php echo isset($editStaff) ? '' : 'display:none;'; ?>">
+    <h3><?php echo isset($editStaff) ? 'Edit Staff Member' : 'Add New Staff Member'; ?></h3>
+
                 <form method="POST" action="viewStaff.php" novalidate>
                     <?php if (isset($editStaff)): ?>
                         <input type="hidden" name="edit_id" value="<?php echo $editStaff['id']; ?>">
@@ -675,29 +671,30 @@ $conn->close();
                         <input type="text" class="form-input" name="name" 
                                value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['username']) : ''; ?>" 
                                required>
+                        <?php if (!empty($errors['name'])): ?>
+                            <div class="text-danger"><?php echo $errors['name']; ?></div>
+                        <?php endif; ?>
                     </div>
-                    <?php if (!empty($errors['name'])): ?>
-                        <div class="text-danger"><?php echo $errors['name']; ?></div>
-                    <?php endif; ?>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Email Address</label>
                         <input type="email" class="form-input" name="email" 
                                value="<?php echo isset($editStaff) ? htmlspecialchars($editStaff['email']) : ''; ?>" 
                                required>
+                        <?php if (!empty($errors['email'])): ?>
+                            <div class="text-danger"><?php echo $errors['email']; ?></div>
+                        <?php endif; ?>
                     </div>
-                    <?php if (!empty($errors['email'])): ?>
-                        <div class="text-danger"><?php echo $errors['email']; ?></div>
-                    <?php endif; ?>
+                        
                     
                     <?php if (!isset($editStaff)): ?>
                     <div class="form-group">
                         <label class="form-label">Password</label>
                         <input type="password" class="form-input" name="password" required>
+                        <?php if (!empty($errors['password'])): ?>
+                            <div class="text-danger"><?php echo $errors['password']; ?></div>
+                        <?php endif; ?>
                     </div>
-                    <?php if (!empty($errors['password'])): ?>
-                        <div class="text-danger"><?php echo $errors['password']; ?></div>
-                    <?php endif; ?>
                     <?php endif; ?>
                     
                     <div class="form-group">
@@ -706,26 +703,28 @@ $conn->close();
                             <option value="staff" <?php echo (isset($editStaff) && $editStaff['role'] == 'staff') ? 'selected' : ''; ?>>Staff</option>
                             <option value="admin" <?php echo (isset($editStaff) && $editStaff['role'] == 'admin') ? 'selected' : ''; ?>>Administrator</option>
                         </select>
+                        <?php if (!empty($errors['role'])): ?>
+                            <div class="text-danger"><?php echo $errors['role']; ?></div>
+                        <?php endif; ?>
                     </div>
-                    <?php if (!empty($errors['role'])): ?>
-                        <div class="text-danger"><?php echo $errors['role']; ?></div>
-                    <?php endif; ?>
                     
                     <div class="form-buttons">
                         <button type="submit" class="action-btn btn-add">
                             <?php echo isset($editStaff) ? 'Update Staff' : 'Add Staff'; ?>
                         </button>
                         
-                        <?php if (isset($editStaff)): ?>
                             <a href="viewStaff.php" class="btn-cancel">Cancel</a>
-                        <?php endif; ?>
+
                     </div>
                 </form>
             </div>
 
             <!-- Staff List -->
             <div class="staff-list">
-                <h3>Staff Members (<?php echo count($staffMembers); ?>)</h3>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Staff Members (<?php echo count($staffMembers); ?>)</h3>
+    <button type="button" class="action-btn btn-add" id="addStaffBtn">+ Add Staff</button>
+</div>
                 
                 <?php if (count($staffMembers) > 0): ?>
                     <table class="staff-table">
@@ -816,6 +815,13 @@ $conn->close();
     <script src="./assets/js/owl.carousel.min.js"></script>
     <script src="./assets/js/slick.min.js"></script>
     <script src="./assets/js/main.js"></script>
-</body>
+<script>
+document.getElementById('addStaffBtn').addEventListener('click', function() {
+    const form = document.getElementById('staffForm');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    window.scrollTo({ top: form.offsetTop - 80, behavior: 'smooth' });
+});
+</script>
 
+</body>
 </html>
