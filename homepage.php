@@ -189,7 +189,7 @@ if (!$isLoggedIn) {
                                     <span data-animation="fadeInUp" data-delay=".3s">Professional pet care in one place</span>
                                     <h1 data-animation="fadeInUp" data-delay=".3s">VetGroom Hub — We Care for Your Pets</h1>
                                     <p data-animation="fadeInUp" data-delay=".6s">Full grooming, veterinary services and convenient appointment bookings for dogs and cats.</p>
-                                    <a href="index.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
+                                    <a href="bookAppointment.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
                                 </div>
                             </div>
                         </div>
