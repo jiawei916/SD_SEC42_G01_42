@@ -27,62 +27,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if appointments table exists, if not create it
-$tableCheck = $conn->query("SHOW TABLES LIKE 'appointments'");
-if ($tableCheck->num_rows == 0) {
-    // Create appointments table
-    $createTableSQL = "CREATE TABLE appointments (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
-        service_type VARCHAR(255) NOT NULL,
-        appointment_date DATE NOT NULL,
-        appointment_time TIME NOT NULL,
-        address TEXT NOT NULL,
-        special_instructions TEXT,
-        status ENUM('pending', 'confirmed', 'completed', 'cancelled') DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )";
-    
-    if (!$conn->query($createTableSQL)) {
-        die("Error creating appointments table: " . $conn->error);
-    }
-}
-
-// Check if services table exists, if not create it with some sample data
-$tableCheck = $conn->query("SHOW TABLES LIKE 'services'");
-if ($tableCheck->num_rows == 0) {
-    // Create services table
-    $createServicesSQL = "CREATE TABLE services (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description TEXT,
-        price DECIMAL(10,2) NOT NULL,
-        duration INT NOT NULL,
-        is_active TINYINT(1) DEFAULT 1
-    )";
-    
-    if (!$conn->query($createServicesSQL)) {
-        die("Error creating services table: " . $conn->error);
-    }
-    
-    // Insert sample services
-    $sampleServices = [
-        ["Basic Grooming", "Bath, brush, nail trim, and ear cleaning", 45.00, 60],
-        ["Full Grooming", "Basic grooming plus haircut and styling", 65.00, 90],
-        ["Veterinary Checkup", "General health examination and consultation", 55.00, 30],
-        ["Vaccination", "Essential vaccinations for your pet", 35.00, 20],
-        ["Dental Cleaning", "Teeth cleaning and oral health check", 75.00, 45]
-    ];
-    
-    $stmt = $conn->prepare("INSERT INTO services (name, description, price, duration) VALUES (?, ?, ?, ?)");
-    foreach ($sampleServices as $service) {
-        $stmt->bind_param("ssdi", $service[0], $service[1], $service[2], $service[3]);
-        $stmt->execute();
-    }
-    $stmt->close();
-}
-
 // Fetch available services
 $services = [];
 $sql = "SELECT * FROM services WHERE is_active = 1";
@@ -98,22 +42,33 @@ if ($result->num_rows > 0) {
 $successMessage = "";
 $errorMessage = "";
 
+// Get the selected service name + price
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $serviceType = $_POST['service_type'];
+        $serviceId = $_POST['service_id']; // now contains the service ID
+    $serviceQuery = $conn->prepare("SELECT name, price FROM services WHERE id = ?");
+    $serviceQuery->bind_param("i", $serviceId);
+    $serviceQuery->execute();
+    $serviceResult = $serviceQuery->get_result();
+    $serviceData = $serviceResult->fetch_assoc();
+    $serviceType = $serviceData['name'];
+    $servicePrice = $serviceData['price'];
+    $serviceQuery->close();
     $appointmentDate = $_POST['appointment_date'];
     $appointmentTime = $_POST['appointment_time'];
     $address = $_POST['address'];
     $specialInstructions = $_POST['special_instructions'] ?? '';
-    
+
     // Validate date is not in the past
     $currentDate = date('Y-m-d');
     if ($appointmentDate < $currentDate) {
         $errorMessage = "Please select a current or future date for your appointment.";
     } else {
-        // Insert appointment into database
-        $stmt = $conn->prepare("INSERT INTO appointments (user_id, service_type, appointment_date, appointment_time, address, special_instructions, status) VALUES (?, ?, ?, ?, ?, ?, 'pending')");
-        $stmt->bind_param("isssss", $userId, $serviceType, $appointmentDate, $appointmentTime, $address, $specialInstructions);
-        
+        // Insert appointment into database using service_id
+$stmt = $conn->prepare("INSERT INTO appointments 
+    (user_id, service_id, service_type, appointment_date, appointment_time, address, special_instructions, status) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')");
+$stmt->bind_param("iisssss", $userId, $serviceId, $serviceType, $appointmentDate, $appointmentTime, $address, $specialInstructions);
+
         if ($stmt->execute()) {
             $appointmentId = $stmt->insert_id;
             $successMessage = "Appointment booked successfully! Your reference number is: APT" . str_pad($appointmentId, 5, '0', STR_PAD_LEFT);
@@ -124,7 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
     }
 }
-
 $conn->close();
 ?>
 <!doctype html>
@@ -319,7 +273,7 @@ $conn->close();
             font-size: 14px;
             color: #ff6363ff;
         }
-        #service_type {
+        #service_id {
     white-space: normal;   /* allow text to wrap */
     line-height: 1.4;      /* improve spacing */
     min-width: 100%;   /* full width of parent */
@@ -328,7 +282,7 @@ $conn->close();
     line-height: 40px;    /* vertically centers text */
     padding: 0 12px;      /* balanced left/right spacing */
 }
-#service_type option {
+#service_id option {
     white-space: normal;   /* apply inside dropdown options too */
 }
     </style>
@@ -413,14 +367,30 @@ $conn->close();
                 <div class="booking-section">
                     <h2>Book an Appointment</h2>
                     
-                    <?php if (!empty($successMessage)): ?>
-                        <div class="alert alert-success">
-                            <?php echo $successMessage; ?>
-                            <br><br>
-                            <a href="viewAppointment.php" class="btn btn-primary">View My Appointments</a>
-                        </div>
-                    <?php endif; ?>
-                    
+<?php if (!empty($successMessage)): ?>
+    <div class="alert alert-success">
+        <?php echo $successMessage; ?>
+        <br><br>
+
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+            <!-- Identify your business -->
+            <input type="hidden" name="business" value="sb-ghpbf46875543@business.example.com">
+
+            <!-- Payment details -->
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="item_name" value="<?php echo htmlspecialchars($serviceType); ?>">
+            <input type="hidden" name="amount" value="<?php echo number_format($servicePrice, 2, '.', ''); ?>">
+            <input type="hidden" name="currency_code" value="USD">
+
+            <!-- Redirect URLs -->
+            <input type="hidden" name="return" value="http://localhost/vetgroom/paymentSuccess.php">
+            <input type="hidden" name="cancel_return" value="http://localhost/vetgroom/paymentCancel.php">
+
+            <!-- Pay button -->
+            <button type="submit" class="btn btn-success">Pay Now with PayPal</button>
+        </form>
+    </div>
+<?php endif; ?>
                     <?php if (!empty($errorMessage)): ?>
                         <div class="alert alert-danger">
                             <?php echo $errorMessage; ?>
@@ -429,16 +399,16 @@ $conn->close();
                     
                     <form id="appointmentForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" novalidate>
 <div class="form-group">
-    <label for="service_type">Service Type</label>
-    <select class="form-control" id="service_type" name="service_type" required style="min-height: 40px;">
-        <option value="">Select a service</option>
-        <?php foreach ($services as $service): ?>
-            <option value="<?php echo htmlspecialchars($service['name']); ?>">
+    <label for="service_id">Service Type</label>
+        <select class="form-control" id="service_id" name="service_id" required>
+            <option value="">Select a service</option>
+            <?php foreach ($services as $service): ?>
+            <option value="<?php echo $service['id']; ?>">
                 <?php echo htmlspecialchars($service['name']); ?> - 
                 $<?php echo number_format($service['price'], 2); ?>
             </option>
-        <?php endforeach; ?>
-    </select>
+            <?php endforeach; ?>
+        </select>
     <span class="error-message text-danger" id="serviceError"></span>
 </div>
 
@@ -529,7 +499,7 @@ document.getElementById("appointmentForm").addEventListener("submit", function(e
     // Reset error messages
     document.querySelectorAll(".error-message").forEach(span => span.textContent = "");
 
-    const service = document.getElementById("service_type");
+    const service = document.getElementById("service_id");
     const date = document.getElementById("appointment_date");
     const time = document.getElementById("appointment_time");
     const address = document.getElementById("address");
