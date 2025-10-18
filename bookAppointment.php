@@ -372,25 +372,17 @@ $conn->close();
         <?php echo $successMessage; ?>
         <br><br>
 
-        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
-            <!-- Identify your business -->
-            <input type="hidden" name="business" value="sb-ghpbf46875543@business.example.com">
-
-            <!-- Payment details -->
-            <input type="hidden" name="cmd" value="_xclick">
-            <input type="hidden" name="item_name" value="<?php echo htmlspecialchars($serviceType); ?>">
+        <!-- ✅ Redirects to payment.php for FPX payment -->
+        <form action="payment.php" method="POST">
             <input type="hidden" name="amount" value="<?php echo number_format($servicePrice, 2, '.', ''); ?>">
-            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="service" value="<?php echo htmlspecialchars($serviceType); ?>">
+            <input type="hidden" name="appointment_id" value="<?php echo $appointmentId; ?>">
 
-            <!-- Redirect URLs -->
-            <input type="hidden" name="return" value="http://localhost/vetgroom/paymentSuccess.php">
-            <input type="hidden" name="cancel_return" value="http://localhost/vetgroom/paymentCancel.php">
-
-            <!-- Pay button -->
-            <button type="submit" class="btn btn-success">Pay Now with PayPal</button>
+            <button type="submit" class="btn btn-success">Pay Now with FPX</button>
         </form>
     </div>
 <?php endif; ?>
+
                     <?php if (!empty($errorMessage)): ?>
                         <div class="alert alert-danger">
                             <?php echo $errorMessage; ?>
