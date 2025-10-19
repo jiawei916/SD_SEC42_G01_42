@@ -205,66 +205,6 @@ $isLoggedIn = true;
             margin-top: 5px;
             display: block;
         }
-        /* 🔹 上面那排按钮容器 */
-.d-grid.gap-2 {
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;
-    gap: 15px;
-    width: 100%;
-    max-width: 800px; /* 控制按钮总长度范围 */
-    margin: 0 auto;
-}
-
-/* 🔹 通用按钮样式 */
-.d-grid.gap-2 a {
-    flex: 1; /* 自动平均分配宽度 */
-    background-color: #f58a6c;
-    color: #000;
-    text-align: center;
-    padding: 15px 0;
-    border-radius: 6px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-/* Hover 效果 */
-.d-grid.gap-2 a:hover {
-    background-color: #e16e50;
-    transform: translateY(-2px);
-    color: #fff;
-}
-
-/* 🔹 Sign Out 按钮单独一行但宽度与上面一致 */
-.text-center.mt-4 {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.text-center.mt-4 a.btn-danger {
-    display: inline-block;
-    background-color: #d95841;
-    color: white;
-    padding: 15px 0;
-    border-radius: 6px;
-    font-weight: 600;
-    border: none;
-    width: 100%;
-    max-width: 800px; /* 与上面按钮总宽一致 */
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-/* Hover 效果 */
-.text-center.mt-4 a.btn-danger:hover {
-    background-color: #c44530;
-    transform: translateY(-2px);
-}
-
-
     </style>
 </head>
 <body>
@@ -305,24 +245,18 @@ $isLoggedIn = true;
     <?php if (isset($_SESSION['user_role'])): ?>
         <a href="profile.php">Profile</a>
     <?php endif; ?>
-<?php if ($_SESSION['user_role'] == 'customer'): ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewReceipt.php">View Receipt</a> 
-<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
-    <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewSalesReport.php">View Sales Report</a> 
-    <a href="viewReceipt.php">View Receipt</a> 
-<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
-    <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewSalesReport.php">View Sales Report</a> 
 <?php endif; ?>
 <?php if (isset($_SESSION['user_role'])): ?>
     <a href="signOut.php">Sign Out</a>

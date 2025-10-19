@@ -133,21 +133,15 @@ if (!$isLoggedIn) {
 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'customer'): ?>
     <a href="bookAppointment.php">Book Appointment</a>
     <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewReceipt.php">View Receipt</a> 
-<?php elseif ($_SESSION['user_role'] == 'admin'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'admin'): ?>
     <a href="viewDashboardAdmin.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
     <a href="viewStaff.php">View Staff</a>
-    <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewSalesReport.php">View Sales Report</a> 
-    <a href="viewReceipt.php">View Receipt</a> 
-<?php elseif ($_SESSION['user_role'] == 'staff'): ?>
+<?php elseif ((isset($_SESSION['user_role'])) && $_SESSION['user_role'] == 'staff'): ?>
     <a href="viewDashboardStaff.php">Dashboard</a>
     <a href="viewFeedBack.php">View Feedback</a>
     <a href="viewCustomer.php">View Customer</a>
-    <a href="viewAppointment.php">View Appointments</a> 
-    <a href="viewSalesReport.php">View Sales Report</a> 
 <?php endif; ?>
 <?php if (isset($_SESSION['user_role'])): ?>
     <a href="signOut.php">Sign Out</a>
@@ -189,7 +183,7 @@ if (!$isLoggedIn) {
                                     <span data-animation="fadeInUp" data-delay=".3s">Professional pet care in one place</span>
                                     <h1 data-animation="fadeInUp" data-delay=".3s">VetGroom Hub — We Care for Your Pets</h1>
                                     <p data-animation="fadeInUp" data-delay=".6s">Full grooming, veterinary services and convenient appointment bookings for dogs and cats.</p>
-                                    <a href="bookAppointment.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
+                                    <a href="index.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
                                 </div>
                             </div>
                         </div>

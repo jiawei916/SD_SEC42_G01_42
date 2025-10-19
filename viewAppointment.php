@@ -119,6 +119,7 @@ $conn->close();
             background-attachment: fixed; 
             background-size: cover; 
             background-position: center;
+            padding-top: 10px;
         }
 
         @keyframes fadeInAnimation {
@@ -438,6 +439,14 @@ $conn->close();
             border-radius: 8px;
             margin-top: 20px;
         }
+
+        .header-sticky {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    position: sticky;
+}
 </style>
 
 </head>
@@ -445,7 +454,7 @@ $conn->close();
 
 <!-- ✅ Header (Identical to viewStaff.php) -->
 <header>
-    <div class="header-area header-transparent">
+    <div class="header-area">
         <div class="main-header header-sticky">
             <div class="container-fluid">
                 <div class="row align-items-center">
