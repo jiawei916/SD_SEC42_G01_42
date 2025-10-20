@@ -75,7 +75,7 @@ $conn->close();
             padding: 30px;
         }
         .feedback-table th {
-            background-color: #4a90e2;
+            background-color: #dc3545;
             color: white;
         }
 

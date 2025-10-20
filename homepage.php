@@ -175,7 +175,7 @@ if (!$isLoggedIn) {
                             <div class="col-xl-7 col-lg-8 col-md-10 ">
                                 <!-- Video icon -->
                                 <div class="video-icon">
-                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=up68UAfH0d0" data-animation="bounceIn" data-delay=".4s">
+                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=qu0qJb_KOAQ" data-animation="bounceIn" data-delay=".4s">
                                         <i class="fas fa-play"></i>
                                     </a>
                                 </div>
@@ -183,7 +183,7 @@ if (!$isLoggedIn) {
                                     <span data-animation="fadeInUp" data-delay=".3s">Professional pet care in one place</span>
                                     <h1 data-animation="fadeInUp" data-delay=".3s">VetGroom Hub — We Care for Your Pets</h1>
                                     <p data-animation="fadeInUp" data-delay=".6s">Full grooming, veterinary services and convenient appointment bookings for dogs and cats.</p>
-                                    <a href="index.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
+                                    <a href="bookAppointment.php" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Book Appointment<i class="ti-arrow-right"></i> </a>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +195,7 @@ if (!$isLoggedIn) {
                         <div class="row align-items-center">
                             <div class="col-xl-7 col-lg-8 col-md-10 ">
                                 <div class="video-icon">
-                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU" data-animation="bounceIn" data-delay=".4s">
+                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1U12tOi2Tdw" data-animation="bounceIn" data-delay=".4s">
                                         <i class="fas fa-play"></i>
                                     </a>
                                 </div>
@@ -281,7 +281,7 @@ if (!$isLoggedIn) {
                     <div class="about-more">
                         <p class="pera-top">VetGroom Hub provides professional grooming and veterinary services with a focus on safety and comfort for every pet.</p>
                         <p class="mb-65 pera-bottom">Our team includes certified veterinarians and experienced groomers. We offer appointment bookings, preventive care plans, and grooming packages suitable for dogs and cats of all sizes.</p>
-                        <a href="about.php" class="btn">Read More</a>
+                        <a href="aboutUs.php" class="btn">Read More</a>
                     </div>
                 </div>
             </div>
