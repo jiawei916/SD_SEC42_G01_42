@@ -216,11 +216,7 @@ if (!$isLoggedIn) {
                     <div id="map" style="height: 480px; position: relative; overflow: hidden;">
                         <!-- Map placeholder - you can implement actual Google Maps API here -->
                         <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223); display: flex; justify-content: center; align-items: center;">
-                            <div style="text-align: center; color: #666;">
-                                <i class="fas fa-map-marker-alt" style="font-size: 48px; margin-bottom: 15px;"></i>
-                                <h3>VetGroom Hub Location</h3>
-                                <p>Kuala Lumpur, Malaysia</p>
-                            </div>
+<img src="assets/img/gallery/mAP_page_1_1.png" alt="VetGroom Hub Location" class="map-image">
                         </div>
                     </div>
                 </div>
@@ -411,4 +407,5 @@ if (!$isLoggedIn) {
     <script src="./assets/js/main.js"></script>
 
 </body>
+
 </html>
