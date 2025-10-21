@@ -440,23 +440,6 @@ $conn->close();
 
     <!-- ✅ Footer -->
     <footer>
-        <div class="footer-area footer-padding">
-            <div class="container">
-                <div class="row d-flex justify-content-between">
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
-                        <div class="single-footer-caption mb-50">
-                            <div class="footer-logo mb-25">
-                                <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
-                            </div>
-                            <div class="footer-tittle">
-                                <p>Professional grooming and veterinary services for your beloved pets.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Add more footer columns if needed -->
-                </div>
-            </div>
-        </div>
         <div class="footer-bottom-area">
             <div class="container">
                 <div class="footer-border">
