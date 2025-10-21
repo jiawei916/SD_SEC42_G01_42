@@ -3,10 +3,7 @@ header("Content-Type: application/json");
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $servername = "localhost";
-    $username   = "root";
-    $password   = "";
-    $dbname     = "vetGroomList";
+require_once 'config.php';
 
     try {
         $conn = new mysqli($servername, $username, $password, $dbname);

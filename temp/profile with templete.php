@@ -211,7 +211,7 @@ $isLoggedIn = true;
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                                <a href="index.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -220,7 +220,7 @@ $isLoggedIn = true;
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav> 
                                         <ul id="navigation">
-                                            <li><a href="homepage.php">Home</a></li>
+                                            <li><a href="index.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
                                             <li><a href="feedback.php">Feedback</a></li>
                                             <li class="active"><a href="profile.php">Profile</a></li>
@@ -330,7 +330,7 @@ $isLoggedIn = true;
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
                         <div class="single-footer-caption mb-50">
                             <div class="footer-logo mb-25">
-                                <a href="homepage.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
+                                <a href="index.php"><img src="assets/img/logo/logo2.png" alt="VetGroom Hub"></a>
                             </div>
                             <div class="footer-tittle">
                                 <p>Professional grooming and veterinary services for your beloved pets.</p>

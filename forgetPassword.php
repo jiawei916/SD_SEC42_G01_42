@@ -13,10 +13,7 @@ require 'vendor/phpmailer/src/PHPMailer.php';
 require 'vendor/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $servername = "localhost";
-    $username   = "root";
-    $password   = "";
-    $dbname     = "vetGroomList";
+require_once 'config.php';
 
     try {
         $conn = new mysqli($servername, $username, $password, $dbname);

@@ -116,7 +116,7 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : "Guest";
 
   <!-- Navigation bar -->
   <nav>
-    <a href="homepage.php">Homepage</a>
+    <a href="index.php">Homepage</a>
     <a href="aboutUs.php"><strong>About</strong></a>
     <a href="contact.php">Contact</a>
     <a href="feedback.php">Feedback</a>

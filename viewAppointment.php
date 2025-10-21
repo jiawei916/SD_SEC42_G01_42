@@ -11,10 +11,8 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : "customer";
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "vetgroomlist";
+require_once 'config.php';
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -461,7 +459,7 @@ $conn->close();
                     <!-- Logo -->
                     <div class="col-xl-2 col-lg-2 col-md-1">
                         <div class="logo">
-                            <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                            <a href="index.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
                         </div>
                     </div>
                     <div class="col-xl-10 col-lg-10 col-md-10">
@@ -470,7 +468,7 @@ $conn->close();
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav> 
                                     <ul id="navigation">
-                                        <li><a href="homepage.php">Home</a></li>
+                                        <li><a href="index.php">Home</a></li>
                                         <li><a href="aboutUs.php">About</a></li>
                                         <li><a href="viewService.php">Services</a></li>
                                         <li><a href="feedback.php">Feedback</a></li>

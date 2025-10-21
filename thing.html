@@ -85,7 +85,7 @@
 
 <!-- ===== Navigation Bar ===== -->
 <nav>
-    <a href="homepage.php">Home</a>
+    <a href="index.php">Home</a>
     <a href="aboutUs.php">About</a>
     <a href="contact.php">Contact</a>
     <a href="registerGuest.php">Register</a>
@@ -147,7 +147,7 @@
 
             if (result.status === "success") {
                 // ✅ Redirect to homepage (all users share the same page since no role)
-                window.location.href = "homepage.php";
+                window.location.href = "index.php";
             } else {
                 errorMessage.textContent = result.message || "Login failed.";
             }

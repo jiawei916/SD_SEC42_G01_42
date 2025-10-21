@@ -279,7 +279,7 @@ $isLoggedIn = true;
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                                <a href="index.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -288,7 +288,7 @@ $isLoggedIn = true;
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav> 
                                         <ul id="navigation">
-                                            <li><a href="homepage.php">Home</a></li>
+                                            <li><a href="index.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
                                             <li class="active"><a href="viewService.php">Services</a></li>
                                             <li class="active"><a href="feedback.php">Feedback</a></li>

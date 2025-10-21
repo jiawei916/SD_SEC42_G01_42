@@ -14,10 +14,7 @@ if (!$isLoggedIn) {
 }
 
 // Database connection
-$servername = "localhost";
-$username = "root"; 
-$password = ""; 
-$dbname = "vetgroomlist";
+require_once 'config.php';
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -132,7 +129,7 @@ $conn->close();
                     <div class="row align-items-center">
                         <div class="col-xl-2 col-lg-2">
                             <div class="logo">
-                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
+                                <a href="index.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10">
@@ -140,7 +137,7 @@ $conn->close();
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="homepage.php">Home</a></li>
+                                            <li><a href="index.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
                                             <li><a href="viewService.php">Services</a></li>
                                             <li class="active"><a href="feedback.php">Feedback</a></li>

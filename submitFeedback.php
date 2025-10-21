@@ -1,9 +1,6 @@
 <?php
 // Database connection settings
-$servername = "localhost";
-$username   = "root";     // default in XAMPP
-$password   = "";         // default in XAMPP
-$dbname     = "vetgroomlist";
+require_once 'config.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

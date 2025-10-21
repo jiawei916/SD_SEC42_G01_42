@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit;
             }
 
-            // Store session data (match homepage.php expectation)
+            // Store session data (match index.php expectation)
             $_SESSION["user_id"]   = $row["id"];
             $_SESSION["user_name"] = $row["name"];
             $_SESSION["email"]     = $row["email"];

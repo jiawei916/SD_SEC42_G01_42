@@ -1,8 +1,5 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "vetGroomList";
+require_once 'config.php';
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -27,7 +24,7 @@ if (isset($_GET['email']) && isset($_GET['token'])) {
 
         echo "<div style='text-align:center;'>
                 <h2 style='color:green;'>Your email has been verified successfully. You can now log in!</h2>
-                <a href='homepage.php' style='
+                <a href='index.php' style='
                     display:inline-block;
                     margin-top:20px;
                     padding:10px 20px;

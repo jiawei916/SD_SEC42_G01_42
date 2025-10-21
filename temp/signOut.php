@@ -189,7 +189,7 @@ if (!$isLoggedIn) {
                     <div class="row align-items-center">
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a href="homepage.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
+                                <a href="index.php"><img src="assets/img/logo/logo.png" alt="VetGroom Hub Logo"></a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -197,7 +197,7 @@ if (!$isLoggedIn) {
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav> 
                                         <ul id="navigation">
-                                            <li><a href="homepage.php">Home</a></li>
+                                            <li><a href="index.php">Home</a></li>
                                             <li><a href="aboutUs.php">About</a></li>
                                             <li><a href="feedback.php">Feedback</a></li>
                                             <li><a href="contact.php">Contact</a></li>
@@ -221,7 +221,7 @@ if (!$isLoggedIn) {
                     <button type="submit" class="signout-btn">Sign Out</button>
                 </form>
                 <div class="login-link">
-                    <p>Want to go back to the homepage? <a href="homepage.php">Home</a></p>
+                    <p>Want to go back to the homepage? <a href="index.php">Home</a></p>
                 </div>
             </div>
         </div>

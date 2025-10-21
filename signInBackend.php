@@ -4,10 +4,7 @@ session_start();
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $servername = "localhost";
-    $username   = "root";
-    $password   = "";
-    $dbname     = "vetGroomList";
+require_once 'config.php';
 
     try {
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -38,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit;
             }
 
-            // Store session data (match homepage.php expectation)
+            // Store session data (match index.php expectation)
             $_SESSION["user_id"]   = $row["id"];
             $_SESSION["user_name"] = $row["username"];
             $_SESSION["email"]     = $row["email"];
