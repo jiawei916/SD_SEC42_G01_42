@@ -251,12 +251,13 @@ $conn->close();
         .btn-book {
             background-color: #dc3545;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 6px;
             color: white;
             font-weight: 600;
             width: 100%;
             transition: background-color 0.3s;
+            min-height: 45px;
         }
         
         .btn-book:hover {
@@ -267,10 +268,10 @@ $conn->close();
         .btn-admin {
             background-color: #28a745;
             border: none;
-            padding: 6px 12px;
+            padding: 10px 18px;
             border-radius: 4px;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
             margin-right: 5px;
             margin-bottom: 5px;
         }
@@ -281,13 +282,20 @@ $conn->close();
         }
         
         .btn-deactivate {
-            background-color: #dc3545;
+            background-color: #007bff;
         }
         
         .btn-deactivate:hover {
-            background-color: #c82333;
+            background-color: #0056b3;
         }
-        
+        .btn-danger {
+            background-color: #dc3545; 
+        }
+
+        .btn-danger:hover {
+            background-color: #ff707f; 
+        }
+
         .search-filter-section {
             background: #fff;
             padding: 20px;

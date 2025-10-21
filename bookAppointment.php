@@ -236,7 +236,7 @@ $conn->close();
         }
         
         .btn-book {
-            background-color: #4a90e2;
+            background-color: #dc3545;
             border: none;
             padding: 12px 24px;
             border-radius: 6px;
@@ -248,7 +248,7 @@ $conn->close();
         }
         
         .btn-book:hover {
-            background-color: #357abd;
+            background-color: #ff707f;
         }
         
         .btn-cancel {

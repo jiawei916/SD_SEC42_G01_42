@@ -174,7 +174,7 @@ $isLoggedIn = true;
         }
         
         .btn-save {
-            background-color: #4a90e2;
+            background-color: #dc3545;
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
@@ -183,7 +183,7 @@ $isLoggedIn = true;
         }
         
         .btn-save:hover {
-            background-color: #357abd;
+            background-color: #ff707f;
         }
         
         .btn-cancel {

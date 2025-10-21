@@ -654,9 +654,21 @@ $conn->close();
     </div>
 </main>
 
-<footer>
-    <p>&copy; <?php echo date("Y"); ?> VetGroom Hub. All rights reserved.</p>
-</footer>
+    <footer>
+        <div class="footer-bottom-area">
+            <div class="container">
+                <div class="footer-border">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-xl-12">
+                            <div class="footer-copy-right text-center">
+                                <p>&copy; <?php echo date("Y"); ?> VetGroom Hub. All Rights Reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="./assets/js/popper.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
