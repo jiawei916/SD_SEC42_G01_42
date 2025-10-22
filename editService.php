@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_role']) || ($_SESSION['user_role'] != 'admin' && $_SE
 }
 
 // Database connection
-require_once 'config.php';
+require_once 'config.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

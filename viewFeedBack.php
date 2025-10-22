@@ -13,24 +13,75 @@ if (!$isLoggedIn) {
     $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'customer';
 }
 
-// Database connection
-require_once 'config.php';
+// Enhanced Database connection with error handling
+require_once 'config.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch feedback
-$sql = "SELECT username, email, feedback, created_at FROM feedback ORDER BY created_at DESC";
-$result = $conn->query($sql);
-$feedbackData = [];
-if ($result && $result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $feedbackData[] = $row;
+class DatabaseHandler {
+    private $servername;
+    private $username;
+    private $password;
+    private $dbname;
+    
+    public function __construct($servername, $username, $password, $dbname) {
+        $this->servername = $servername;
+        $this->username = $username;
+        $this->password = $password;
+        $this->dbname = $dbname;
+    }
+    
+    public function connect() {
+        $max_retries = 3;
+        $retry_delay = 1; // seconds
+        
+        for ($attempt = 1; $attempt <= $max_retries; $attempt++) {
+            try {
+                $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+                
+                if (!$conn->connect_error) {
+                    return $conn;
+                }
+                
+                // If specific IP error, wait and retry
+                if (strpos($conn->connect_error, '192.168.0.') !== false) {
+                    error_log("Database connection attempt $attempt failed: " . $conn->connect_error);
+                    if ($attempt < $max_retries) {
+                        sleep($retry_delay);
+                        continue;
+                    }
+                }
+                
+            } catch (Exception $e) {
+                error_log("Connection exception: " . $e->getMessage());
+            }
+            
+            sleep($retry_delay);
+        }
+        
+        return false;
     }
 }
-$conn->close();
+
+// Initialize database connection
+$dbHandler = new DatabaseHandler($servername, $username, $password, $dbname);
+$conn = $dbHandler->connect();
+
+$feedbackData = [];
+
+if ($conn) {
+    // Fetch feedback if connection successful
+    $sql = "SELECT username, email, feedback, created_at FROM feedback ORDER BY created_at DESC";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $feedbackData[] = $row;
+        }
+    }
+    $conn->close();
+} else {
+    // If database is down, show limited functionality
+    $databaseError = true;
+}
 ?>
 
 <!doctype html>

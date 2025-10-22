@@ -1,7 +1,6 @@
 <?php
 // Database connection settings
-require_once 'config.php';
-
+require_once 'config.php';
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -11,7 +10,7 @@ if ($conn->connect_error) {
 }
 
 // Get form data safely
-$name    = $conn->real_escape_string($_POST['username']);
+$name    = $conn->real_escape_string($_POST['name']);
 $email   = $conn->real_escape_string($_POST['email']);
 $message = $conn->real_escape_string($_POST['message']);
 

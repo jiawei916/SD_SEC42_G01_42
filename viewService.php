@@ -12,7 +12,7 @@ $successMessage = isset($_GET['success']) ? $_GET['success'] : '';
 $errorMessage = isset($_GET['error']) ? $_GET['error'] : '';
 
 // Database connection
-require_once 'config.php';
+require_once 'config.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

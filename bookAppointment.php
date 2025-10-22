@@ -14,7 +14,7 @@ $userId    = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $isLoggedIn = true;
 
 // Database connection
-require_once 'config.php';
+require_once 'config.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -427,7 +427,7 @@ $conn->close();
                         
                         <div class="action-buttons">
                             <button type="submit" class="btn-book">Book Appointment</button>
-                            <button type="button" class="btn-cancel" onclick="window.location.href='services.php'">Cancel</button>
+                            <button type="button" class="btn-cancel" onclick="window.location.href='viewService.php';">Cancel</button>
                         </div>
                     </form>
                 </div>

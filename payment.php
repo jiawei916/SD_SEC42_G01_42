@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'appointment_id' => $appointment_id,
                 'user' => $_SESSION['user_name']
             ],
-            'success_url' => 'http://localhost/vetgroom/paymentSuccess.php?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => 'http://localhost/vetgroom/paymentCancel.php',
+            'success_url' => 'https://vetgroomhub.free.nf/paymentSuccess.php?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => 'https://vetgroomhub.free.nf/paymentCancel.php',
         ]);
 
         // Redirect user to Stripe-hosted FPX payment page

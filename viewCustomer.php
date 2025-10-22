@@ -8,7 +8,7 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'guest';
 $isLoggedIn = isset($_SESSION['user_name']);
 
 // Database connection
-require_once 'config.php';
+require_once 'config.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

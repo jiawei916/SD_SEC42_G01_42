@@ -12,7 +12,7 @@ require 'vendor/phpmailer/src/PHPMailer.php';
 require 'vendor/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-require_once 'config.php';
+require_once 'config.php';
 
     $errors = [];
 

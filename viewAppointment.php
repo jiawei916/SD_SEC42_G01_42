@@ -11,7 +11,7 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : "customer";
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 // Database connection
-require_once 'config.php';
+require_once 'config.php';
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

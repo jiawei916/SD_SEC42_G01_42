@@ -214,7 +214,7 @@ if (!$isLoggedIn) {
                 <div class="d-none d-sm-block mb-5 pb-4">
                     <!-- Google Map (simplified version) -->
                     <div id="map" style="height: 480px; position: relative; overflow: hidden;">
-                        <!-- Map placeholder - you can implement actual Google Maps API here -->
+                        ️
                         <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223); display: flex; justify-content: center; align-items: center;">
 <img src="assets/img/gallery/mAP_page_1_1.png" alt="VetGroom Hub Location" class="map-image">
                         </div>
@@ -407,5 +407,4 @@ if (!$isLoggedIn) {
     <script src="./assets/js/main.js"></script>
 
 </body>
-
 </html>
