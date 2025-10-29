@@ -20,17 +20,16 @@ This folder contains links to all required external software, frameworks, and op
 You must install a local web server to run the PHP and MySQL code.
 * **XAMPP:** [https://www.apachefriends.org/download.html] (Includes Apache, MySQL, PHP)
 
-## 2. Frameworks and Libraries (Required)
+## 2. Frameworks (Recommended)
 
 These links point to the official resources for the frameworks used in the project:
 * **Bootstrap:** We use the Bootstrap CSS framework for front-end development.
     * **Link:** [https://getbootstrap.com/]
-* **jQuery/Other JS Libraries:** [Insert links for any other necessary external JavaScript libraries or plugins.]
 
 ## 3. Development Tools (Recommended)
 
 The development team used the following tools, which are recommended for project work:
 * **Code Editor (Visual Studio Code):**
-    * **Link:** [Insert VS Code download link]
+    * **Link:** [https://code.visualstudio.com/download]
 * **Version Control (GitHub Desktop):**
     * **Link:** [https://desktop.github.com/download/]
