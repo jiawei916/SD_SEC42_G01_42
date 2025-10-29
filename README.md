@@ -10,7 +10,6 @@ The VetGroom Hub is a web-based application developed to streamline and automate
 | **Technology** | HTML, CSS, JavaScript, PHP, MySQL  |
 | **Framework** | Bootstrap  |
 | **User Roles** | Administrator, Staff, Customer, Guest  |
-| **Final Documentation Due** | 31 October 2025  |
 
 ---
 
