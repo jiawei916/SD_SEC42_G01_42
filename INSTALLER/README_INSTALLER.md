@@ -6,7 +6,7 @@ The `INSTALLER` folder is designed to house everything a new developer or system
 
 ### 📁 `INSTALLER` Folder
 
-### 📄 Content for `INSTALLER/README_INSTALLER.txt`
+### 📄 Content for `INSTALLER/README_INSTALLER.md`
 
 This file serves as a guide for what is contained in the installer folder and links to all necessary external tools.
 
